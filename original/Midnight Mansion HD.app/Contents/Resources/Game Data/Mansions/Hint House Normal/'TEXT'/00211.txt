@@ -1,0 +1,1 @@
+Skull Spiders won't climb up or down ledges.

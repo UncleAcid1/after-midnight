@@ -1,0 +1,1 @@
+Left: way backRight: way forwardUp & Down: not an option since you already know by now that you are neither bird nor mole!

@@ -1,0 +1,1 @@
+TIP: Push Command-D to display statistics like:Current room number (upper-left)Frame rate (upper-right)Secrets found so far (lower-right)If asking for help on the Midnight Mansion forums (www.actionsoft.com/forums), be sure to mention the room number you need help with!

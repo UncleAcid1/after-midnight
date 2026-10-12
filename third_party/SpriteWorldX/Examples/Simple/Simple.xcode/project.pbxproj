@@ -1,0 +1,505 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 39;
+	objects = {
+		05952DFCFFF02D1B11CA0E50 = {
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OPTIMIZATION_CFLAGS = "-O0";
+				ZERO_LINK = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		05952DFDFFF02D1B11CA0E50 = {
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				ZERO_LINK = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+//050
+//051
+//052
+//053
+//054
+//080
+//081
+//082
+//083
+//084
+		0867D6AAFE840B52C02AAC07 = {
+			children = (
+				0867D6ABFE840B52C02AAC07,
+			);
+			isa = PBXVariantGroup;
+			name = InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0867D6ABFE840B52C02AAC07 = {
+			fileEncoding = 10;
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = English;
+			path = English.lproj/InfoPlist.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//080
+//081
+//082
+//083
+//084
+//190
+//191
+//192
+//193
+//194
+		195DF8C9FE9D4F0611CA2CBB = {
+			children = (
+				A497947A083A1BDB00C75AF2,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//190
+//191
+//192
+//193
+//194
+//200
+//201
+//202
+//203
+//204
+		20286C28FDCF999611CA2CEA = {
+			buildSettings = {
+			};
+			buildStyles = (
+				05952DFCFFF02D1B11CA0E50,
+				05952DFDFFF02D1B11CA0E50,
+			);
+			hasScannedForEncodings = 0;
+			isa = PBXProject;
+			mainGroup = 20286C29FDCF999611CA2CEA;
+			projectDirPath = "";
+			targets = (
+				A4979467083A1BDA00C75AF2,
+			);
+		};
+		20286C29FDCF999611CA2CEA = {
+			children = (
+				20286C2AFDCF999611CA2CEA,
+				20286C2CFDCF999611CA2CEA,
+				F5BBA37502CCB49101000102,
+				20286C32FDCF999611CA2CEA,
+				195DF8C9FE9D4F0611CA2CBB,
+				A4979479083A1BDA00C75AF2,
+			);
+			isa = PBXGroup;
+			name = "¬´PROJECTNAME¬ª";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		20286C2AFDCF999611CA2CEA = {
+			children = (
+				F58DB77202CC8E2201000102,
+				A48ED537085E33B2007FCC7D,
+			);
+			isa = PBXGroup;
+			name = Sources;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		20286C2CFDCF999611CA2CEA = {
+			children = (
+				0867D6AAFE840B52C02AAC07,
+				A49796A2083A281700C75AF2,
+				A4EB2DE60845321E00C5AA32,
+			);
+			isa = PBXGroup;
+			name = Resources;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		20286C32FDCF999611CA2CEA = {
+			children = (
+				20286C33FDCF999611CA2CEA,
+				A4C1131508430950007F5FF9,
+				A4915762083B7A0300A4399E,
+				A4915734083B793200A4399E,
+				F5BBA37B02CCB62301000102,
+				A4C1094A083CB610007F5FF9,
+			);
+			isa = PBXGroup;
+			name = Frameworks;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		20286C33FDCF999611CA2CEA = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Carbon.framework;
+			path = /System/Library/Frameworks/Carbon.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+//200
+//201
+//202
+//203
+//204
+//A40
+//A41
+//A42
+//A43
+//A44
+		A48ED537085E33B2007FCC7D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.c;
+			path = Simple.c;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		A48ED538085E33B2007FCC7D = {
+			fileRef = A48ED537085E33B2007FCC7D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4915734083B793200A4399E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = SDL_image.framework;
+			path = /Library/Frameworks/SDL_image.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		A4915735083B793200A4399E = {
+			fileRef = A4915734083B793200A4399E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A491574C083B794800A4399E = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A4915764083B7A1400A4399E,
+				A491574D083B795A00A4399E,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A491574D083B795A00A4399E = {
+			fileRef = A4915734083B793200A4399E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4915762083B7A0300A4399E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = SDL.framework;
+			path = /Library/Frameworks/SDL.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		A4915763083B7A0300A4399E = {
+			fileRef = A4915762083B7A0300A4399E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4915764083B7A1400A4399E = {
+			fileRef = A4915762083B7A0300A4399E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4979467083A1BDA00C75AF2 = {
+			buildPhases = (
+				A4979468083A1BDA00C75AF2,
+				A497946C083A1BDA00C75AF2,
+				A497946E083A1BDA00C75AF2,
+				A4979470083A1BDA00C75AF2,
+				A4979476083A1BDA00C75AF2,
+				A491574C083B794800A4399E,
+				A4C1137208430B61007F5FF9,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\"";
+				HEADER_SEARCH_PATHS = ../SpriteWorldX/Headers;
+				INFOPLIST_FILE = "Info-Simple.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = ../SpriteWorldX/Libraries;
+				MACOSX_DEPLOYMENT_TARGET = 10.1;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-lSDLmain";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Simple;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = app;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = Simple;
+			productInstallPath = "$(HOME)/Applications";
+			productName = "¬´PROJECTNAME¬ª";
+			productReference = A497947A083A1BDB00C75AF2;
+			productType = "com.apple.product-type.application";
+		};
+		A4979468083A1BDA00C75AF2 = {
+			buildActionMask = 2147483647;
+			files = (
+				A4979469083A1BDA00C75AF2,
+				A4979575083A1E9100C75AF2,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4979469083A1BDA00C75AF2 = {
+			fileRef = F58DB77202CC8E2201000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A497946C083A1BDA00C75AF2 = {
+			buildActionMask = 2147483647;
+			files = (
+				A497946D083A1BDA00C75AF2,
+				A49796A4083A281700C75AF2,
+				A4EB2DE70845321E00C5AA32,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A497946D083A1BDA00C75AF2 = {
+			fileRef = 0867D6AAFE840B52C02AAC07;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A497946E083A1BDA00C75AF2 = {
+			buildActionMask = 2147483647;
+			files = (
+				A48ED538085E33B2007FCC7D,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4979470083A1BDA00C75AF2 = {
+			buildActionMask = 2147483647;
+			files = (
+				A4979471083A1BDA00C75AF2,
+				A4979475083A1BDA00C75AF2,
+				A4979571083A1E7500C75AF2,
+				A4915735083B793200A4399E,
+				A4915763083B7A0300A4399E,
+				A4C1094B083CB610007F5FF9,
+				A4C1131608430950007F5FF9,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4979471083A1BDA00C75AF2 = {
+			fileRef = 20286C33FDCF999611CA2CEA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4979475083A1BDA00C75AF2 = {
+			fileRef = F5BBA37B02CCB62301000102;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4979476083A1BDA00C75AF2 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4979479083A1BDA00C75AF2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			path = "Info-Simple.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		A497947A083A1BDB00C75AF2 = {
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = Simple.app;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A4979570083A1E7500C75AF2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = archive.ar;
+			name = libSpriteWorldX.a;
+			path = Libraries/libSpriteWorldX.a;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		A4979571083A1E7500C75AF2 = {
+			fileRef = A4979570083A1E7500C75AF2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4979574083A1E9100C75AF2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SWCommonHeaders.h;
+			path = Headers/SWCommonHeaders.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		A4979575083A1E9100C75AF2 = {
+			fileRef = A4979574083A1E9100C75AF2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A49796A2083A281700C75AF2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			path = yinyang.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		A49796A4083A281700C75AF2 = {
+			fileRef = A49796A2083A281700C75AF2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4C1094A083CB610007F5FF9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AGL.framework;
+			path = /System/Library/Frameworks/AGL.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		A4C1094B083CB610007F5FF9 = {
+			fileRef = A4C1094A083CB610007F5FF9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4C1131508430950007F5FF9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Cocoa.framework;
+			path = /System/Library/Frameworks/Cocoa.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		A4C1131608430950007F5FF9 = {
+			fileRef = A4C1131508430950007F5FF9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4C1137208430B61007F5FF9 = {
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				A4EB2DE80845323000C5AA32,
+				A4C1137308430B6E007F5FF9,
+			);
+			isa = PBXCopyFilesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4C1137308430B6E007F5FF9 = {
+			fileRef = A49796A2083A281700C75AF2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4EB2DE60845321E00C5AA32 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			path = donut.tga;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		A4EB2DE70845321E00C5AA32 = {
+			fileRef = A4EB2DE60845321E00C5AA32;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		A4EB2DE80845323000C5AA32 = {
+			fileRef = A4EB2DE60845321E00C5AA32;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//A40
+//A41
+//A42
+//A43
+//A44
+//F50
+//F51
+//F52
+//F53
+//F54
+		F58DB77202CC8E2201000102 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = Simple.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5BBA37502CCB49101000102 = {
+			children = (
+				A4979574083A1E9100C75AF2,
+				A4979570083A1E7500C75AF2,
+			);
+			isa = PBXGroup;
+			name = SpriteWorldX;
+			path = ../SpriteWorldX;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F5BBA37B02CCB62301000102 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = OpenGL.framework;
+			path = /System/Library/Frameworks/OpenGL.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+	};
+	rootObject = 20286C28FDCF999611CA2CEA;
+}

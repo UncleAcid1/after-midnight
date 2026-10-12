@@ -1,0 +1,1076 @@
+___FUNCTION__.27458	116c6d	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28023	116d9e	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28191	116e1a	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28433	116ec9	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28457	116eda	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28517	116f43	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28605	11706c	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28640	117088	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28753	1170d4	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28814	1170e7	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28834	117102	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28874	117118	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28894	117138	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28923	117152	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.28965	117167	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29067	117175	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29096	117183	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29142	117198	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29188	1171aa	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29234	1171bb	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29287	1171ca	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29335	1171d9	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29364	1171ee	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29418	1171fe	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29442	117214	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29462	11722d	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29539	11723d	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29569	117251	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29596	117265	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29649	11727d	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29692	117296	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29731	1172a8	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29780	1172b6	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29802	1172c5	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29838	1172da	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29891	1172ee	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29931	117308	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29952	11731e	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29975	11732d	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.29999	11733d	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30021	11734c	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30044	117361	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30075	117375	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30099	11738d	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30125	1173a7	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30149	1173b6	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30168	1173c6	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30198	1173da	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30227	1173f1	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30251	117403	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30270	117411	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30291	117426	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30316	117434	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30341	117442	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30364	11745c	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30419	117475	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30434	11748a	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30450	11749f	__cstring	Sources & Headers/NewSprite.c
+___FUNCTION__.30475	1174b2	__cstring	Sources & Headers/NewSprite.c
+_gSDLWhiteColor	1483e0	__data	Sources & Headers/NewSprite.c
+_gSDLTealColor	1483e4	__data	Sources & Headers/NewSprite.c
+_gSDLPurpleColor	1483e8	__data	Sources & Headers/NewSprite.c
+_gSDLBlackColor	1483ec	__data	Sources & Headers/NewSprite.c
+_gTitleScreenSpritesAreValid	1483f0	__data	Sources & Headers/NewSprite.c
+_gDifficultyScreenSpritesAreValid	1483f1	__data	Sources & Headers/NewSprite.c
+_gOrganScreenSpritesAreValid	1483f2	__data	Sources & Headers/NewSprite.c
+_gMapScreenSpritesAreValid	1483f3	__data	Sources & Headers/NewSprite.c
+_gStatsAreaSpritesAreValid	1483f4	__data	Sources & Headers/NewSprite.c
+_gSpriteArrayWasInited	1483f5	__data	Sources & Headers/NewSprite.c
+_spriteFlagsWereInitialized	1483f6	__data	Sources & Headers/NewSprite.c
+_barColor	1483f8	__data	Sources & Headers/NewSprite.c
+_fontSpacingArray	148400	__data	Sources & Headers/NewSprite.c
+_gLastValidPICTResIDIndex	1493d4	__common	Sources & Headers/NewSprite.c
+_gValidPICTResIDs	1493e0	__common	Sources & Headers/NewSprite.c
+_scannedPath	14bb00	__common	Sources & Headers/NewSprite.c
+_spriteFlags	14bd00	__common	Sources & Headers/NewSprite.c
+___FUNCTION__.22713	11751c	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22726	117584	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22740	117596	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22751	1175aa	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22762	1175bb	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22772	1175d6	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22782	1175e9	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22804	1175fd	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22819	117612	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22904	11762a	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22932	117642	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22954	117651	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22966	11766b	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22976	117680	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.22999	117694	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23008	1176a9	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23021	1176b8	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23032	1176ca	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23041	1176e0	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23081	1176fd	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23415	117712	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23454	117721	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23552	117734	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23806	1177e4	__cstring	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.23828	1177fb	__cstring	Sources - My Utils/MyButtonSprite.c
+_prevButtonFirstSpriteLayerP	1485c0	__data	Sources - My Utils/MyButtonSprite.c
+_prevButtonLastSpriteLayerP	1485c4	__data	Sources - My Utils/MyButtonSprite.c
+_prevSelectedSpriteP	1485c8	__data	Sources - My Utils/MyButtonSprite.c
+_curHilightedSpriteP	1485cc	__data	Sources - My Utils/MyButtonSprite.c
+_prevButtonWasDown	1485d0	__data	Sources - My Utils/MyButtonSprite.c
+_gKeyCodeArray	1485e0	__data	Sources - My Utils/MyButtonSprite.c
+_gKeyCodeTextArray	148700	__data	Sources - My Utils/MyButtonSprite.c
+_charCString	14bee0	__common	Sources - My Utils/MyButtonSprite.c
+___FUNCTION__.21862	11798c	__cstring	Sources - My Utils/MyUtils.c
+___FUNCTION__.21889	1179e5	__cstring	Sources - My Utils/MyUtils.c
+___FUNCTION__.21919	1179f7	__cstring	Sources - My Utils/MyUtils.c
+_gFileStickyError	148810	__data	Sources - My Utils/MyUtils.c
+_gCursorIsVisible	14bfdf	__common	Sources - My Utils/MyUtils.c
+_gLastMilliseconds	14bfe0	__common	Sources - My Utils/MyUtils.c
+_oldTicks	14bfe4	__common	Sources - My Utils/MyUtils.c
+___FUNCTION__.21335	117a2c	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.21421	117a8f	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.21508	117aab	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.21558	117ac6	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.21633	117ae3	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.21646	117af9	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.21731	117b0e	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.21904	117b27	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22070	117b40	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22187	117b5d	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22321	117b78	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22406	117b99	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22442	117bb1	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22481	117bcd	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22561	117be2	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22584	117bfb	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22698	117c11	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22721	117c23	__cstring	Sources - My Utils/MySWUtils.c
+___FUNCTION__.22740	117c34	__cstring	Sources - My Utils/MySWUtils.c
+_gNumLayersSaved	148814	__data	Sources - My Utils/MySWUtils.c
+_gSpritesWereSaved	148816	__data	Sources - My Utils/MySWUtils.c
+_gTileMapsWereSaved	148817	__data	Sources - My Utils/MySWUtils.c
+_gSaveTileLayerArray	14c000	__common	Sources - My Utils/MySWUtils.c
+_gTempLayerArray	14c040	__common	Sources - My Utils/MySWUtils.c
+___FUNCTION__.19629	117e30	__cstring	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+___FUNCTION__.20060	117f4e	__cstring	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+_debugRedColor	148818	__data	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+_debugGreenColor	148819	__data	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+_debugBlueColor	14881a	__data	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+_gTextureIndices	14881b	__data	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+_GL_functions_loaded	1c2a80	__bss	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+_GL_capabilities_loaded	1c2a84	__bss	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+_GL_functions	1c2aa0	__bss	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+_GL_capabilities	1c2b60	__bss	../SpriteWorldX/BlitKernel/BlitKernelGL.c
+___FUNCTION__.20626	118428	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.20703	118491	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.20721	11849e	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.20740	1184ad	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.20773	1184b8	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.20815	1184c6	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.20854	1184d4	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.20888	1184e3	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.20931	1184fd	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21110	118511	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21195	11852c	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21226	11853e	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21328	118555	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21336	11856c	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21344	118584	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21353	1185a0	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21376	1185b6	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21396	1185cb	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21407	1185e0	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21433	1185f4	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21443	11860a	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21453	11861f	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21460	118633	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21470	118647	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21481	11865b	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21490	118675	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21511	118688	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21529	1186a5	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21551	1186b6	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21577	1186cb	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21597	1186db	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21614	1186ec	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21635	1186fd	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21685	118711	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21695	118727	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21728	11873e	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21759	118756	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21769	118773	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21780	118791	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21798	1187a9	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21840	1187c4	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21863	1187e6	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21872	1187fb	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21882	11880e	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21896	118822	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21906	11883c	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21916	118855	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21935	118866	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21954	118878	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21964	118895	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21974	1188a8	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.21987	1188bf	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22017	1188cc	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22045	1188db	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22088	1188f5	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22100	118908	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22202	118917	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22254	118929	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22335	11893a	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22364	118948	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22417	11895a	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22474	11896b	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22543	11897e	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22593	11898f	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22643	1189a5	__cstring	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.22695	1189b7	__cstring	../SpriteWorldX/Sources/Sprite.c
+_gDegree	148824	__data	../SpriteWorldX/Sources/Sprite.c
+___FUNCTION__.20701	1189d0	__cstring	../SpriteWorldX/Sources/SpriteCreation.c
+___FUNCTION__.20888	118a41	__cstring	../SpriteWorldX/Sources/SpriteCreation.c
+___FUNCTION__.20956	118a5e	__cstring	../SpriteWorldX/Sources/SpriteCreation.c
+_gSWTransparentColor	148828	__data	../SpriteWorldX/Sources/SpriteCreation.c
+___FUNCTION__.20148	118a6c	__cstring	../SpriteWorldX/Sources/SpriteFrame.c
+___FUNCTION__.20864	118ade	__cstring	../SpriteWorldX/Sources/SpriteFrame.c
+___FUNCTION__.21013	118afa	__cstring	../SpriteWorldX/Sources/SpriteFrame.c
+___FUNCTION__.21023	118b06	__cstring	../SpriteWorldX/Sources/SpriteFrame.c
+___FUNCTION__.21038	118b14	__cstring	../SpriteWorldX/Sources/SpriteFrame.c
+___FUNCTION__.21156	118b3c	__cstring	../SpriteWorldX/Sources/SpriteFrame.c
+___FUNCTION__.21171	118b4e	__cstring	../SpriteWorldX/Sources/SpriteFrame.c
+___FUNCTION__.20843	118b68	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.20869	118bc6	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.20899	118bd5	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.20912	118bf1	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.20928	118c0c	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.20944	118c25	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21025	118c32	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21051	118c4c	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21075	118c67	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21089	118c77	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21103	118c8b	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21114	118c9d	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21132	118cb1	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21312	118cc6	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21366	118ce0	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21398	118cf8	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21405	118d0b	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21413	118d20	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21420	118d38	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21433	118d50	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21452	118d69	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21473	118d82	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.21491	118d97	__cstring	../SpriteWorldX/Sources/SpriteLayer.c
+___FUNCTION__.20962	118dd1	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21284	118e3c	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21421	118e5d	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21441	118e73	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21452	118e8c	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21463	118e9f	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21504	118ebc	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21566	118ece	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21617	118ee1	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21628	118ef2	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21652	118f06	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21728	118f18	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21741	118f2d	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21748	118f3f	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21873	118f53	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21888	118f6a	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21906	118f84	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.21922	118f99	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.22196	118fae	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.22257	118fc4	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.22521	118fe4	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.22983	118ff9	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.23120	119012	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.23150	119028	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.23252	119043	__cstring	../SpriteWorldX/Sources/SpriteWorld.c
+_gSWInitializedSDL	14882c	__data	../SpriteWorldX/Sources/SpriteWorld.c
+_gSWUseOpenGL	14882d	__data	../SpriteWorldX/Sources/SpriteWorld.c
+_gSWTexExtension	148830	__data	../SpriteWorldX/Sources/SpriteWorld.c
+_gSWCurrentSpriteWorld	148834	__data	../SpriteWorldX/Sources/SpriteWorld.c
+_gSWCleanUpSpriteWorldP	148838	__data	../SpriteWorldX/Sources/SpriteWorld.c
+_gSWCleanUpCallBackP	14883c	__data	../SpriteWorldX/Sources/SpriteWorld.c
+_gSWStickyError	148840	__data	../SpriteWorldX/Sources/SpriteWorld.c
+_gSWAssertFailProc	148844	__data	../SpriteWorldX/Sources/SpriteWorld.c
+_gAssertFailCallback	148848	__data	../SpriteWorldX/Sources/SpriteWorld.c
+___FUNCTION__.20934	1190c4	__cstring	../SpriteWorldX/Utils/SWStats.c
+___FUNCTION__.89633	1192a2	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.90012	11930d	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.90078	119350	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.90113	11935c	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.90246	119375	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.90662	119693	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.90871	119abb	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.90927	119af6	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.90941	119b03	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.91369	119b4e	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.91669	119b5d	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.91753	119b68	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.91806	119b72	__cstring	Sources & Headers/Midnight Mansion.c
+___FUNCTION__.92179	119bd0	__cstring	Sources & Headers/Midnight Mansion.c
+_gDoOpeningMusic	148860	__data	Sources & Headers/Midnight Mansion.c
+_gShowEpisode2LinkedMessage	148861	__data	Sources & Headers/Midnight Mansion.c
+_gShowEpisode1LinkedMessage	148862	__data	Sources & Headers/Midnight Mansion.c
+_gLightSaberFloorTranslucency	148864	__data	Sources & Headers/Midnight Mansion.c
+_gIgnoreCheating	148868	__data	Sources & Headers/Midnight Mansion.c
+_worldRectIsSetForGame	148869	__data	Sources & Headers/Midnight Mansion.c
+_tileColorVars	148880	__data	Sources & Headers/Midnight Mansion.c
+_tileFlagsWereInitialized	1488c8	__data	Sources & Headers/Midnight Mansion.c
+_gamepadInitialized	1488c9	__data	Sources & Headers/Midnight Mansion.c
+_initedSubsystem	1488ca	__data	Sources & Headers/Midnight Mansion.c
+_gNumTilesDrawnThisFrame	1488cc	__data	Sources & Headers/Midnight Mansion.c
+_fpsAccum.90938	1488d0	__data	Sources & Headers/Midnight Mansion.c
+_gDidFadeAllMonitors	1488d4	__data	Sources & Headers/Midnight Mansion.c
+_gCustomCursorIsVisible	1488d5	__data	Sources & Headers/Midnight Mansion.c
+_gCursorIsShielded	1488d6	__data	Sources & Headers/Midnight Mansion.c
+_gAppResFile	14c1d0	__common	Sources & Headers/Midnight Mansion.c
+_gArrowKeysAreEnabledForTesting	14c1d2	__common	Sources & Headers/Midnight Mansion.c
+_gArrowKeysEnabled	14c1d3	__common	Sources & Headers/Midnight Mansion.c
+_gBackLavaSplashSpriteLayerP	14c1d4	__common	Sources & Headers/Midnight Mansion.c
+_gBackgroundMusicVolume	14c1d8	__common	Sources & Headers/Midnight Mansion.c
+_gBackgroundPictureSpriteLayerP	14c1dc	__common	Sources & Headers/Midnight Mansion.c
+_gBackgroundScreenSpriteLayerP	14c1e0	__common	Sources & Headers/Midnight Mansion.c
+_gBackgroundSpriteLayerP	14c1e4	__common	Sources & Headers/Midnight Mansion.c
+_gBeatGameScreenWasDismissed	14c1e8	__common	Sources & Headers/Midnight Mansion.c
+_gBeatMansionScreenWasDismissed	14c1e9	__common	Sources & Headers/Midnight Mansion.c
+_gBeatTheMansion	14c1ea	__common	Sources & Headers/Midnight Mansion.c
+_gBigSpiderSpriteLayerP	14c1ec	__common	Sources & Headers/Midnight Mansion.c
+_gBirdSpriteLayerP	14c1f0	__common	Sources & Headers/Midnight Mansion.c
+_gBloodDripSpriteLayerP	14c1f4	__common	Sources & Headers/Midnight Mansion.c
+_gBottomCircleOfLightSpriteLayerP	14c1f8	__common	Sources & Headers/Midnight Mansion.c
+_gBottomSpriteLayerP	14c1fc	__common	Sources & Headers/Midnight Mansion.c
+_gBrickSwitchSpriteLayerP	14c200	__common	Sources & Headers/Midnight Mansion.c
+_gCanControlWhileJumping	14c204	__common	Sources & Headers/Midnight Mansion.c
+_gCanPlayBothEpisodes	14c205	__common	Sources & Headers/Midnight Mansion.c
+_gCanQuit	14c206	__common	Sources & Headers/Midnight Mansion.c
+_gCanUseLadderJump	14c207	__common	Sources & Headers/Midnight Mansion.c
+_gCandleHolderSpriteLayerP	14c208	__common	Sources & Headers/Midnight Mansion.c
+_gCandleSpriteLayerP	14c20c	__common	Sources & Headers/Midnight Mansion.c
+_gCurConveyorBeltDirection	14c210	__common	Sources & Headers/Midnight Mansion.c
+_gCurMansionUsesWaterSound	14c212	__common	Sources & Headers/Midnight Mansion.c
+_gCurNumStatsSlots	14c214	__common	Sources & Headers/Midnight Mansion.c
+_gCurOpenMansionFileName	14c220	__common	Sources & Headers/Midnight Mansion.c
+_gCurOpenMansionFilePath	14c320	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentFPSValue	14c578	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentGameMode	14c57c	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentLevel	14c580	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentMansionNumber	14c582	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentMusicIndex	14c584	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentPlayerName	14c5a0	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentPlayerNameExists	14c6a0	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentRoomHasLava	14c6a1	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentRoomHasWind	14c6a2	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentSaveIndex	14c6a4	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentWindDelta	14c6a8	__common	Sources & Headers/Midnight Mansion.c
+_gCurrentlyInMansion	14c6ac	__common	Sources & Headers/Midnight Mansion.c
+_gCursorIsInWindow	14c6ad	__common	Sources & Headers/Midnight Mansion.c
+_gCursorShieldRect	14c6ae	__common	Sources & Headers/Midnight Mansion.c
+_gCustomCursorSpriteLayerP	14c6b8	__common	Sources & Headers/Midnight Mansion.c
+_gCustomDialogIsVisible	14c6bc	__common	Sources & Headers/Midnight Mansion.c
+_gCustomDialogSpriteLayerP	14c6c0	__common	Sources & Headers/Midnight Mansion.c
+_gCustomMansionFolderPath	14c6e0	__common	Sources & Headers/Midnight Mansion.c
+_gDeadHeroSpriteLayerP	14ca00	__common	Sources & Headers/Midnight Mansion.c
+_gDefaultHighScoreName	14ca20	__common	Sources & Headers/Midnight Mansion.c
+_gDelayUntilUpdatingFPSValue	14cb20	__common	Sources & Headers/Midnight Mansion.c
+_gDemoMode	14cb22	__common	Sources & Headers/Midnight Mansion.c
+_gDialogBoxIsOpen	14cb23	__common	Sources & Headers/Midnight Mansion.c
+_gDidCheat	14cb24	__common	Sources & Headers/Midnight Mansion.c
+_gDifficultyScreenSpriteArray	14cb28	__common	Sources & Headers/Midnight Mansion.c
+_gDifficultySetting	14cb3c	__common	Sources & Headers/Midnight Mansion.c
+_gDigitsStatsSpriteLayerP	14cb40	__common	Sources & Headers/Midnight Mansion.c
+_gDisableCoinGlows	14cb44	__common	Sources & Headers/Midnight Mansion.c
+_gDisableDynamicShadows	14cb45	__common	Sources & Headers/Midnight Mansion.c
+_gDisableKeyGlows	14cb46	__common	Sources & Headers/Midnight Mansion.c
+_gDisappearingBlockSpriteLayerP	14cb48	__common	Sources & Headers/Midnight Mansion.c
+_gDisappearingFloorAnimDelay	14cb4c	__common	Sources & Headers/Midnight Mansion.c
+_gDisappearingFloorMode	14cb4e	__common	Sources & Headers/Midnight Mansion.c
+_gDisappearingFloorWait	14cb50	__common	Sources & Headers/Midnight Mansion.c
+_gDisplayFPSAndLevelResID	14cb52	__common	Sources & Headers/Midnight Mansion.c
+_gDoFrameSkipping	14cb53	__common	Sources & Headers/Midnight Mansion.c
+_gDoorSpriteLayerP	14cb54	__common	Sources & Headers/Midnight Mansion.c
+_gDyingMedusaSpriteLayerP	14cb58	__common	Sources & Headers/Midnight Mansion.c
+_gEasyJumping	14cb5c	__common	Sources & Headers/Midnight Mansion.c
+_gEditorIsRunning	14cb5d	__common	Sources & Headers/Midnight Mansion.c
+_gEndGame	14cb5e	__common	Sources & Headers/Midnight Mansion.c
+_gEnemySpriteLayerP	14cb60	__common	Sources & Headers/Midnight Mansion.c
+_gEpisode1IsUnlocked	14cb64	__common	Sources & Headers/Midnight Mansion.c
+_gEpisode2IsUnlocked	14cb65	__common	Sources & Headers/Midnight Mansion.c
+_gEscapeKey	14cb66	__common	Sources & Headers/Midnight Mansion.c
+_gExitSpriteLayerP	14cb68	__common	Sources & Headers/Midnight Mansion.c
+_gEyeballSpriteLayerP	14cb6c	__common	Sources & Headers/Midnight Mansion.c
+_gFPSDisplaySpriteLayerP	14cb70	__common	Sources & Headers/Midnight Mansion.c
+_gFadeToBlackSpriteLayerP	14cb74	__common	Sources & Headers/Midnight Mansion.c
+_gFallingPlatformSpriteLayerP	14cb78	__common	Sources & Headers/Midnight Mansion.c
+_gFamilyFriendly	14cb7c	__common	Sources & Headers/Midnight Mansion.c
+_gFasterInGameMap	14cb7d	__common	Sources & Headers/Midnight Mansion.c
+_gFlameSpriteLayerP	14cb80	__common	Sources & Headers/Midnight Mansion.c
+_gFloorCandleStandSpriteLayerP	14cb84	__common	Sources & Headers/Midnight Mansion.c
+_gForegroundSpriteLayerP	14cb88	__common	Sources & Headers/Midnight Mansion.c
+_gFrontLavaSplashSpriteLayerP	14cb8c	__common	Sources & Headers/Midnight Mansion.c
+_gFullScreenWindow	14cb90	__common	Sources & Headers/Midnight Mansion.c
+_gFullScreenWindowPrefs	14cb91	__common	Sources & Headers/Midnight Mansion.c
+_gGameIsPaused	14cb92	__common	Sources & Headers/Midnight Mansion.c
+_gGameOver	14cb93	__common	Sources & Headers/Midnight Mansion.c
+_gGameTimerIsPaused	14cb94	__common	Sources & Headers/Midnight Mansion.c
+_gGamepad	14cba0	__common	Sources & Headers/Midnight Mansion.c
+_gGhostSpriteLayerP	14cbac	__common	Sources & Headers/Midnight Mansion.c
+_gGlowSpriteLayerP	14cbb0	__common	Sources & Headers/Midnight Mansion.c
+_gGoldFloorIsActive	14cbb4	__common	Sources & Headers/Midnight Mansion.c
+_gGraphicsFile	14cbb6	__common	Sources & Headers/Midnight Mansion.c
+_gHaloSpriteLayerP	14cbb8	__common	Sources & Headers/Midnight Mansion.c
+_gHasShownOrganScreen	14cbbc	__common	Sources & Headers/Midnight Mansion.c
+_gHeroIsOnConveyorBelt	14cbbd	__common	Sources & Headers/Midnight Mansion.c
+_gHeroLandedThisFrame	14cbbe	__common	Sources & Headers/Midnight Mansion.c
+_gHeroOnPlatformSpriteLayerP	14cbc0	__common	Sources & Headers/Midnight Mansion.c
+_gHeroSpriteLayerP	14cbc4	__common	Sources & Headers/Midnight Mansion.c
+_gHiddenTriggerItemsSpriteLayerP	14cbc8	__common	Sources & Headers/Midnight Mansion.c
+_gHiddenTriggerSpriteLayerP	14cbcc	__common	Sources & Headers/Midnight Mansion.c
+_gHighScores	14cbe0	__common	Sources & Headers/Midnight Mansion.c
+_gHorizMovingPlatformSpriteLayerP	151e64	__common	Sources & Headers/Midnight Mansion.c
+_gHorizontalBoost	151e68	__common	Sources & Headers/Midnight Mansion.c
+_gJumpChange	151e6c	__common	Sources & Headers/Midnight Mansion.c
+_gJumpSpeed	151e70	__common	Sources & Headers/Midnight Mansion.c
+_gKeyGlowSpriteLayerP	151e74	__common	Sources & Headers/Midnight Mansion.c
+_gKeyIsHiddenInRoom	151e78	__common	Sources & Headers/Midnight Mansion.c
+_gKeyPrefs	151e80	__common	Sources & Headers/Midnight Mansion.c
+_gKeys	152090	__common	Sources & Headers/Midnight Mansion.c
+_gLEVLStruct	1520a0	__common	Sources & Headers/Midnight Mansion.c
+_gLadybugSpriteLayerP	1520cc	__common	Sources & Headers/Midnight Mansion.c
+_gLanternGlowSpriteLayerP	1520d0	__common	Sources & Headers/Midnight Mansion.c
+_gLastLevelExited	1520d4	__common	Sources & Headers/Midnight Mansion.c
+_gLastLevelPositionWasSaved	1520d6	__common	Sources & Headers/Midnight Mansion.c
+_gLastMusicIndex	1520d8	__common	Sources & Headers/Midnight Mansion.c
+_gLastOpenDialog	1520da	__common	Sources & Headers/Midnight Mansion.c
+_gLastSaveFilename	1520e0	__common	Sources & Headers/Midnight Mansion.c
+_gLastSavePedestalObjectID	152270	__common	Sources & Headers/Midnight Mansion.c
+_gLavaGlowSpriteLayerP	152274	__common	Sources & Headers/Midnight Mansion.c
+_gLavaSnd	152278	__common	Sources & Headers/Midnight Mansion.c
+_gLayersArePausedForSaveAnim	15227a	__common	Sources & Headers/Midnight Mansion.c
+_gLeverSpriteLayerP	15227c	__common	Sources & Headers/Midnight Mansion.c
+_gLightSaberCurTranslucencyOffset	152280	__common	Sources & Headers/Midnight Mansion.c
+_gLightSaberFloorAnimDelay	152282	__common	Sources & Headers/Midnight Mansion.c
+_gLightSaberFloorCurTranslucency	152284	__common	Sources & Headers/Midnight Mansion.c
+_gLightSaberFloorMode	152288	__common	Sources & Headers/Midnight Mansion.c
+_gLightSaberFloorWait	15228a	__common	Sources & Headers/Midnight Mansion.c
+_gLimitFullscreenResolution	15228c	__common	Sources & Headers/Midnight Mansion.c
+_gLowerTileFringeSpriteLayerP	152290	__common	Sources & Headers/Midnight Mansion.c
+_gMMIsActive	152294	__common	Sources & Headers/Midnight Mansion.c
+_gMainSpritesAreLoaded	152295	__common	Sources & Headers/Midnight Mansion.c
+_gMansionFilename	1522a0	__common	Sources & Headers/Midnight Mansion.c
+_gMansionIsCustomMansion	15239f	__common	Sources & Headers/Midnight Mansion.c
+_gMansionName	1523a0	__common	Sources & Headers/Midnight Mansion.c
+_gMapScreenSpriteArray	1524a0	__common	Sources & Headers/Midnight Mansion.c
+_gMaxWindDelta	1524e0	__common	Sources & Headers/Midnight Mansion.c
+_gMedusaSpriteLayerP	1524e4	__common	Sources & Headers/Midnight Mansion.c
+_gMenuBarIsVisible	1524e8	__common	Sources & Headers/Midnight Mansion.c
+_gMinWindDelta	1524ec	__common	Sources & Headers/Midnight Mansion.c
+_gMiscTriggerSpriteLayerP	1524f0	__common	Sources & Headers/Midnight Mansion.c
+_gModifiers	1524f8	__common	Sources & Headers/Midnight Mansion.c
+_gMovingPlatformBlockerSpriteLayerP	152500	__common	Sources & Headers/Midnight Mansion.c
+_gMusicIsOn	152504	__common	Sources & Headers/Midnight Mansion.c
+_gMyOldNumFrames	152508	__common	Sources & Headers/Midnight Mansion.c
+_gMyOldTicks	15250c	__common	Sources & Headers/Midnight Mansion.c
+_gNextWindChange	152510	__common	Sources & Headers/Midnight Mansion.c
+_gNumFrames	152514	__common	Sources & Headers/Midnight Mansion.c
+_gNumFramesSinceEnteringRoom	152518	__common	Sources & Headers/Midnight Mansion.c
+_gNumItemsBeingCarried	15251c	__common	Sources & Headers/Midnight Mansion.c
+_gNumLivesLeft	15251e	__common	Sources & Headers/Midnight Mansion.c
+_gNumSecretsFound	152520	__common	Sources & Headers/Midnight Mansion.c
+_gNumWeatherSpritesOnGround	152524	__common	Sources & Headers/Midnight Mansion.c
+_gObjectSpriteLayerP	152528	__common	Sources & Headers/Midnight Mansion.c
+_gObjects	15252c	__common	Sources & Headers/Midnight Mansion.c
+_gOldBackgroundPictResID	15253c	__common	Sources & Headers/Midnight Mansion.c
+_gOldConveyorBeltDirection	15253e	__common	Sources & Headers/Midnight Mansion.c
+_gOldScore	152540	__common	Sources & Headers/Midnight Mansion.c
+_gOpenTrapDoorSpriteLayerP	152544	__common	Sources & Headers/Midnight Mansion.c
+_gOpenedDoorSpriteLayerP	152548	__common	Sources & Headers/Midnight Mansion.c
+_gOpeningMusicRefNum	15254c	__common	Sources & Headers/Midnight Mansion.c
+_gOptionsDialogPane1LayerP	152550	__common	Sources & Headers/Midnight Mansion.c
+_gOptionsDialogPane2LayerP	152554	__common	Sources & Headers/Midnight Mansion.c
+_gOrganScreenSpriteArray	152558	__common	Sources & Headers/Midnight Mansion.c
+_gOrganScreenWasDismissed	152564	__common	Sources & Headers/Midnight Mansion.c
+_gOrigTileIDs	152580	__common	Sources & Headers/Midnight Mansion.c
+_gPausedSpriteLayerP	154474	__common	Sources & Headers/Midnight Mansion.c
+_gPheliosDistribution	154478	__common	Sources & Headers/Midnight Mansion.c
+_gPlayTutorialMansion	154479	__common	Sources & Headers/Midnight Mansion.c
+_gPlayingGame	15447a	__common	Sources & Headers/Midnight Mansion.c
+_gPlayingGameMovie	15447b	__common	Sources & Headers/Midnight Mansion.c
+_gPrevWindowHeight	15447c	__common	Sources & Headers/Midnight Mansion.c
+_gPrevWindowWidth	15447e	__common	Sources & Headers/Midnight Mansion.c
+_gPuffOfSmokeSpriteLayerP	154480	__common	Sources & Headers/Midnight Mansion.c
+_gQuestionMarkSpriteLayerP	154484	__common	Sources & Headers/Midnight Mansion.c
+_gQuitGame	154488	__common	Sources & Headers/Midnight Mansion.c
+_gRGBBlackColor	15448a	__common	Sources & Headers/Midnight Mansion.c
+_gRGBWhiteColor	154490	__common	Sources & Headers/Midnight Mansion.c
+_gRainSnowSpriteLayerP	154498	__common	Sources & Headers/Midnight Mansion.c
+_gReadingSignWasDismissed	15449c	__common	Sources & Headers/Midnight Mansion.c
+_gRearBackgroundPictureSpriteLayerP	1544a0	__common	Sources & Headers/Midnight Mansion.c
+_gRecordMovies	1544a4	__common	Sources & Headers/Midnight Mansion.c
+_gRemovedGlowsAndShadows	1544a5	__common	Sources & Headers/Midnight Mansion.c
+_gRestartLevel	1544a6	__common	Sources & Headers/Midnight Mansion.c
+_gRezPrefs	1544c0	__common	Sources & Headers/Midnight Mansion.c
+_gRoomIsDark	1544e0	__common	Sources & Headers/Midnight Mansion.c
+_gRoomMoveBoundsRect	1544e2	__common	Sources & Headers/Midnight Mansion.c
+_gRoomWasDark	1544ea	__common	Sources & Headers/Midnight Mansion.c
+_gRunningFrameCount	1544ec	__common	Sources & Headers/Midnight Mansion.c
+_gSaveCurrentGameMode	1544f0	__common	Sources & Headers/Midnight Mansion.c
+_gSaveCustomCursorIsVisible	1544f4	__common	Sources & Headers/Midnight Mansion.c
+_gSavePedestalSpriteLayerP	1544f8	__common	Sources & Headers/Midnight Mansion.c
+_gSaveSystemCursorIsShielded	1544fc	__common	Sources & Headers/Midnight Mansion.c
+_gSaveSystemCursorIsVisible	1544fd	__common	Sources & Headers/Midnight Mansion.c
+_gSaveTileChangeProc	154500	__common	Sources & Headers/Midnight Mansion.c
+_gScore	154504	__common	Sources & Headers/Midnight Mansion.c
+_gSecretIndicatorSpriteLayerP	154508	__common	Sources & Headers/Midnight Mansion.c
+_gShadowSpriteLayerP	15450c	__common	Sources & Headers/Midnight Mansion.c
+_gShowSecrets	154510	__common	Sources & Headers/Midnight Mansion.c
+_gSignContentsSpriteLayerP	154514	__common	Sources & Headers/Midnight Mansion.c
+_gSignSpriteLayerP	154518	__common	Sources & Headers/Midnight Mansion.c
+_gSilverFloorIsActive	15451c	__common	Sources & Headers/Midnight Mansion.c
+_gSkeletonBonesSpriteLayerP	154520	__common	Sources & Headers/Midnight Mansion.c
+_gSnakeSpriteLayerP	154524	__common	Sources & Headers/Midnight Mansion.c
+_gSofterMusic	154528	__common	Sources & Headers/Midnight Mansion.c
+_gSoundIsTurnedOn	154529	__common	Sources & Headers/Midnight Mansion.c
+_gSoundVolume	15452a	__common	Sources & Headers/Midnight Mansion.c
+_gSoundsFile	15452c	__common	Sources & Headers/Midnight Mansion.c
+_gSpriteArray	154540	__common	Sources & Headers/Midnight Mansion.c
+_gSpriteDrawProc	1548cc	__common	Sources & Headers/Midnight Mansion.c
+_gSpriteWorldIsValid	1548d0	__common	Sources & Headers/Midnight Mansion.c
+_gSpriteWorldP	1548d4	__common	Sources & Headers/Midnight Mansion.c
+_gSpritesFile	1548d8	__common	Sources & Headers/Midnight Mansion.c
+_gSpyVsSpySpriteLayerP	1548dc	__common	Sources & Headers/Midnight Mansion.c
+_gStartRecordingMovie	1548e0	__common	Sources & Headers/Midnight Mansion.c
+_gStartingCol	1548e2	__common	Sources & Headers/Midnight Mansion.c
+_gStartingFacingRight	1548e4	__common	Sources & Headers/Midnight Mansion.c
+_gStartingRow	1548e6	__common	Sources & Headers/Midnight Mansion.c
+_gStartingSpriteState	1548e8	__common	Sources & Headers/Midnight Mansion.c
+_gStartingVineTileLayer	1548ea	__common	Sources & Headers/Midnight Mansion.c
+_gStatsBackgroundSpriteLayerP	1548ec	__common	Sources & Headers/Midnight Mansion.c
+_gStatsFadeSpriteLayerP	1548f0	__common	Sources & Headers/Midnight Mansion.c
+_gStatsHeight	1548f4	__common	Sources & Headers/Midnight Mansion.c
+_gStatsItemArray	1548f6	__common	Sources & Headers/Midnight Mansion.c
+_gStatsItemSpriteArray	154920	__common	Sources & Headers/Midnight Mansion.c
+_gStatsMapTextSpriteLayerP	154954	__common	Sources & Headers/Midnight Mansion.c
+_gStatsSpriteArray	154958	__common	Sources & Headers/Midnight Mansion.c
+_gStatsSpriteLayerP	154960	__common	Sources & Headers/Midnight Mansion.c
+_gStatsSpriteWorldP	154964	__common	Sources & Headers/Midnight Mansion.c
+_gStatueSpriteLayerP	154968	__common	Sources & Headers/Midnight Mansion.c
+_gStatuesAreDoneFading	15496c	__common	Sources & Headers/Midnight Mansion.c
+_gStoryScreenWasDismissed	15496d	__common	Sources & Headers/Midnight Mansion.c
+_gStretchToFit	15496e	__common	Sources & Headers/Midnight Mansion.c
+_gSuspendedGameExists	15496f	__common	Sources & Headers/Midnight Mansion.c
+_gSuspendedGameFilenameHFSUni	154980	__common	Sources & Headers/Midnight Mansion.c
+_gTargetWindDelta	154b80	__common	Sources & Headers/Midnight Mansion.c
+_gTextSpriteLayerP	154b84	__common	Sources & Headers/Midnight Mansion.c
+_gTimeSpentInMansion	154b88	__common	Sources & Headers/Midnight Mansion.c
+_gTipContentsSpriteLayerP	154b8c	__common	Sources & Headers/Midnight Mansion.c
+_gTitleMusicVolume	154b90	__common	Sources & Headers/Midnight Mansion.c
+_gTitleScreenSpriteArray	154ba0	__common	Sources & Headers/Midnight Mansion.c
+_gTopCircleOfLightSpriteLayerP	154bd8	__common	Sources & Headers/Midnight Mansion.c
+_gTopSpriteLayerP	154bdc	__common	Sources & Headers/Midnight Mansion.c
+_gTorchSpriteLayerP	154be0	__common	Sources & Headers/Midnight Mansion.c
+_gTotalSecretsInMansion	154be4	__common	Sources & Headers/Midnight Mansion.c
+_gTranslucentMaskDrawProc	154be8	__common	Sources & Headers/Midnight Mansion.c
+_gTrapDoorSpriteLayerP	154bec	__common	Sources & Headers/Midnight Mansion.c
+_gTriggerPresentInRoom	154bf0	__common	Sources & Headers/Midnight Mansion.c
+_gUseCustomCursor	154bf1	__common	Sources & Headers/Midnight Mansion.c
+_gUseGamePad	154bf2	__common	Sources & Headers/Midnight Mansion.c
+_gUseHaloSprite	154bf3	__common	Sources & Headers/Midnight Mansion.c
+_gUseOutputFile	154bf4	__common	Sources & Headers/Midnight Mansion.c
+_gUsingEditor	154bf5	__common	Sources & Headers/Midnight Mansion.c
+_gVertMovingPlatformSpriteLayerP	154bf8	__common	Sources & Headers/Midnight Mansion.c
+_gWasFullscreenWhenMinimized	154bfc	__common	Sources & Headers/Midnight Mansion.c
+_gWebTrappedSpriteLayerP	154c00	__common	Sources & Headers/Midnight Mansion.c
+_gWereAnyTilesReplaced	154c04	__common	Sources & Headers/Midnight Mansion.c
+_gWindDeltaChange	154c08	__common	Sources & Headers/Midnight Mansion.c
+_gWindowColor	154c0c	__common	Sources & Headers/Midnight Mansion.c
+_gWindowIsMinimized	154c12	__common	Sources & Headers/Midnight Mansion.c
+_gWindowedResolutionX	154c14	__common	Sources & Headers/Midnight Mansion.c
+_gWindowedResolutionY	154c16	__common	Sources & Headers/Midnight Mansion.c
+_gZapperBeamSpriteLayerP	154c18	__common	Sources & Headers/Midnight Mansion.c
+_gZapperGlowSpriteLayerP	154c1c	__common	Sources & Headers/Midnight Mansion.c
+_gZapperNodeSpriteLayerP	154c20	__common	Sources & Headers/Midnight Mansion.c
+_layersWerePausedForSaveAnim	154c24	__common	Sources & Headers/Midnight Mansion.c
+_oldGlobalMouseLoc	154c26	__common	Sources & Headers/Midnight Mansion.c
+_oldMouseLoc	154c2a	__common	Sources & Headers/Midnight Mansion.c
+_tileFlags	154c40	__common	Sources & Headers/Midnight Mansion.c
+_skippedFPSValue.90940	1c2b88	__bss	Sources & Headers/Midnight Mansion.c
+_prevMillisec.90939	1c2b8c	__bss	Sources & Headers/Midnight Mansion.c
+_lavaFlowDelay.91333	1c2b90	__bss	Sources & Headers/Midnight Mansion.c
+_lavaAnimDelay.91332	1c2b92	__bss	Sources & Headers/Midnight Mansion.c
+_conveyorDelay.91331	1c2b94	__bss	Sources & Headers/Midnight Mansion.c
+__ZTS13FTBitmapGlyph	119d63	__cstring	FTGL/src/FTBitmapGlyph.cpp
+__ZTI13FTBitmapGlyph	144020	__const	FTGL/src/FTBitmapGlyph.cpp
+__ZTV13FTBitmapGlyph	144030	__const	FTGL/src/FTBitmapGlyph.cpp
+__ZTS9FTCharmap	119d73	__cstring	FTGL/src/FTCharmap.cpp
+__ZTS21FTCharToGlyphIndexMap	120880	__const	FTGL/src/FTCharmap.cpp
+__ZTI9FTCharmap	144048	__const	FTGL/src/FTCharmap.cpp
+__ZTV9FTCharmap	144050	__const	FTGL/src/FTCharmap.cpp
+__ZTV21FTCharToGlyphIndexMap	144060	__const	FTGL/src/FTCharmap.cpp
+__ZTI21FTCharToGlyphIndexMap	144070	__const	FTGL/src/FTCharmap.cpp
+__ZTS8FTVectorI7FTPointE	120898	__const	FTGL/src/FTContour.cpp
+_BEZIER_STEP_SIZE	1208ac	__const	FTGL/src/FTContour.cpp
+__ZTV8FTVectorI7FTPointE	144078	__const	FTGL/src/FTContour.cpp
+__ZTI8FTVectorI7FTPointE	144088	__const	FTGL/src/FTContour.cpp
+__ZTS12FTExtrdGlyph	119d7e	__cstring	FTGL/src/FTExtrdGlyph.cpp
+__ZTI12FTExtrdGlyph	144090	__const	FTGL/src/FTExtrdGlyph.cpp
+__ZTV12FTExtrdGlyph	1440a0	__const	FTGL/src/FTExtrdGlyph.cpp
+__ZSt8__ioinit	1c2b96	__bss	FTGL/src/FTExtrdGlyph.cpp
+__ZTS6FTFace	119d8d	__cstring	FTGL/src/FTFace.cpp
+__ZTI6FTFace	1440b8	__const	FTGL/src/FTFace.cpp
+__ZTV6FTFace	1440c0	__const	FTGL/src/FTFace.cpp
+__ZTS6FTFont	119d95	__cstring	FTGL/src/FTFont.cpp
+__ZTI6FTFont	1440e0	__const	FTGL/src/FTFont.cpp
+__ZTV6FTFont	144100	__const	FTGL/src/FTFont.cpp
+__ZTS14FTGLBitmapFont	119d9d	__cstring	FTGL/src/FTGLBitmapFont.cpp
+__ZTI14FTGLBitmapFont	144140	__const	FTGL/src/FTGLBitmapFont.cpp
+__ZTV14FTGLBitmapFont	144160	__const	FTGL/src/FTGLBitmapFont.cpp
+__ZTS13FTGLExtrdFont	119dae	__cstring	FTGL/src/FTGLExtrdFont.cpp
+__ZTI13FTGLExtrdFont	1441a0	__const	FTGL/src/FTGLExtrdFont.cpp
+__ZTV13FTGLExtrdFont	1441c0	__const	FTGL/src/FTGLExtrdFont.cpp
+__ZTS15FTGLOutlineFont	119dbe	__cstring	FTGL/src/FTGLOutlineFont.cpp
+__ZTI15FTGLOutlineFont	144200	__const	FTGL/src/FTGLOutlineFont.cpp
+__ZTV15FTGLOutlineFont	144220	__const	FTGL/src/FTGLOutlineFont.cpp
+__ZTS14FTGLPixmapFont	119dd0	__cstring	FTGL/src/FTGLPixmapFont.cpp
+__ZTI14FTGLPixmapFont	144260	__const	FTGL/src/FTGLPixmapFont.cpp
+__ZTV14FTGLPixmapFont	144280	__const	FTGL/src/FTGLPixmapFont.cpp
+__ZTS15FTGLPolygonFont	119de1	__cstring	FTGL/src/FTGLPolygonFont.cpp
+__ZTI15FTGLPolygonFont	1442c0	__const	FTGL/src/FTGLPolygonFont.cpp
+__ZTV15FTGLPolygonFont	1442e0	__const	FTGL/src/FTGLPolygonFont.cpp
+__ZTS15FTGLTextureFont	119df4	__cstring	FTGL/src/FTGLTextureFont.cpp
+__ZTS8FTVectorImE	12091c	__const	FTGL/src/FTGLTextureFont.cpp
+__ZTI15FTGLTextureFont	144320	__const	FTGL/src/FTGLTextureFont.cpp
+__ZTV15FTGLTextureFont	144340	__const	FTGL/src/FTGLTextureFont.cpp
+__ZTV8FTVectorImE	144368	__const	FTGL/src/FTGLTextureFont.cpp
+__ZTI8FTVectorImE	144378	__const	FTGL/src/FTGLTextureFont.cpp
+__ZTS7FTGlyph	119e65	__cstring	FTGL/src/FTGlyph.cpp
+__ZTI7FTGlyph	144380	__const	FTGL/src/FTGlyph.cpp
+__ZTV7FTGlyph	144388	__const	FTGL/src/FTGlyph.cpp
+__ZTS8FTVectorIP7FTGlyphE	120929	__const	FTGL/src/FTGlyphContainer.cpp
+__ZTV8FTVectorIP7FTGlyphE	1443a0	__const	FTGL/src/FTGlyphContainer.cpp
+__ZTI8FTVectorIP7FTGlyphE	1443b0	__const	FTGL/src/FTGlyphContainer.cpp
+__ZGVZN9FTLibrary8InstanceEvE5ftlib	1c2b98	__bss	FTGL/src/FTLibrary.cpp
+__ZZN9FTLibrary8InstanceEvE5ftlib	1c2ba0	__bss	FTGL/src/FTLibrary.cpp
+__ZTS14FTOutlineGlyph	119e6e	__cstring	FTGL/src/FTOutlineGlyph.cpp
+__ZTI14FTOutlineGlyph	1443b8	__const	FTGL/src/FTOutlineGlyph.cpp
+__ZTV14FTOutlineGlyph	1443c8	__const	FTGL/src/FTOutlineGlyph.cpp
+__ZTS13FTPixmapGlyph	119e7f	__cstring	FTGL/src/FTPixmapGlyph.cpp
+__ZTI13FTPixmapGlyph	1443e0	__const	FTGL/src/FTPixmapGlyph.cpp
+__ZTV13FTPixmapGlyph	1443f0	__const	FTGL/src/FTPixmapGlyph.cpp
+__ZTS11FTPolyGlyph	119e8f	__cstring	FTGL/src/FTPolyGlyph.cpp
+__ZTI11FTPolyGlyph	144408	__const	FTGL/src/FTPolyGlyph.cpp
+__ZTV11FTPolyGlyph	144418	__const	FTGL/src/FTPolyGlyph.cpp
+__ZTS6FTSize	119e9d	__cstring	FTGL/src/FTSize.cpp
+__ZTI6FTSize	144430	__const	FTGL/src/FTSize.cpp
+__ZTV6FTSize	144438	__const	FTGL/src/FTSize.cpp
+__ZTS14FTTextureGlyph	119ea5	__cstring	FTGL/src/FTTextureGlyph.cpp
+__ZTI14FTTextureGlyph	144448	__const	FTGL/src/FTTextureGlyph.cpp
+__ZTV14FTTextureGlyph	144458	__const	FTGL/src/FTTextureGlyph.cpp
+__ZN14FTTextureGlyph15activeTextureIDE	1488d8	__data	FTGL/src/FTTextureGlyph.cpp
+__ZTS12FTVectoriser	119eb6	__cstring	FTGL/src/FTVectoriser.cpp
+__ZTS8FTVectorIP13FTTesselationE	120970	__const	FTGL/src/FTVectoriser.cpp
+__ZTI12FTVectoriser	144470	__const	FTGL/src/FTVectoriser.cpp
+__ZTV12FTVectoriser	144478	__const	FTGL/src/FTVectoriser.cpp
+__ZTV8FTVectorIP13FTTesselationE	144488	__const	FTGL/src/FTVectoriser.cpp
+__ZTI8FTVectorIP13FTTesselationE	144498	__const	FTGL/src/FTVectoriser.cpp
+___FUNCTION__.22522	119f18	__cstring	Sources - My Utils/TextSprite.c
+___FUNCTION__.22687	119f7c	__cstring	Sources - My Utils/TextSprite.c
+_gUseTextureFont	1488dc	__data	Sources - My Utils/TextSprite.c
+_gNumFTFontsLoaded	1488de	__data	Sources - My Utils/TextSprite.c
+_gFTFontNames	1557a0	__common	Sources - My Utils/TextSprite.c
+_gFTFonts	156b40	__common	Sources - My Utils/TextSprite.c
+_gMusicP	1488e0	__data	Sources - My Utils/MyMusicUtils.c
+_gCurrentMusicIsLooping	1488e4	__data	Sources - My Utils/MyMusicUtils.c
+_gCurMusicVolume	156cd0	__common	Sources - My Utils/MyMusicUtils.c
+_gMusicWasInitialized	156cd2	__common	Sources - My Utils/MyMusicUtils.c
+_gMouseButton	1488e8	__data	Sources & Headers/MMEvents.c
+_gTimeOfLastWindowResize	1488ec	__data	Sources & Headers/MMEvents.c
+_gTestSoundIndex	1488f0	__data	Sources & Headers/MMEvents.c
+_gMMEventCallback	1488f4	__data	Sources & Headers/MMEvents.c
+_gCurTileLayerToPrint	1488f8	__data	Sources & Headers/MMEvents.c
+_gMusicWasPlaying	1488fa	__data	Sources & Headers/MMEvents.c
+_gResetMusic	1488fb	__data	Sources & Headers/MMEvents.c
+_gMouseLocX	156cd4	__common	Sources & Headers/MMEvents.c
+_gMouseLocY	156cd8	__common	Sources & Headers/MMEvents.c
+_musicWasPlaying	156cdc	__common	Sources & Headers/MMEvents.c
+___FUNCTION__.27474	11a1dc	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.27516	11a240	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.27607	11a253	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.27641	11a272	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.27698	11a2b2	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.28165	11a2c8	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.28207	11a2de	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.28263	11a331	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.28746	11a62b	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.28879	11a77a	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.29009	11a7e0	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.29233	11a80f	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.29420	11a8a2	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.29515	11a8cc	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.29871	11aabc	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.29900	11aad4	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.29997	11ab2d	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.30045	11ab97	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.30088	11ac05	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.30238	11ad18	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.30269	11ad51	__cstring	Sources & Headers/GameScreens.c
+___FUNCTION__.30562	11ae39	__cstring	Sources & Headers/GameScreens.c
+_grayActionSoftSpriteP	148900	__data	Sources & Headers/GameScreens.c
+_colorActionSoftSpriteP	148904	__data	Sources & Headers/GameScreens.c
+_gLoadingTextSpriteP	148908	__data	Sources & Headers/GameScreens.c
+_gFirstTimeShowingTitleScreen	14890c	__data	Sources & Headers/GameScreens.c
+_gFirstTimeStartingGame	14890d	__data	Sources & Headers/GameScreens.c
+_gFinishedScrolling	14890e	__data	Sources & Headers/GameScreens.c
+_gMonsterArray	148920	__data	Sources & Headers/GameScreens.c
+_gObjectSpritesArray	148960	__data	Sources & Headers/GameScreens.c
+_gIllustrationSpriteP	148990	__data	Sources & Headers/GameScreens.c
+_gOrganPlayerSpriteP	148994	__data	Sources & Headers/GameScreens.c
+_gOrganLightningSpriteP	148998	__data	Sources & Headers/GameScreens.c
+_gMapSpriteLocleftSide	1489a0	__data	Sources & Headers/GameScreens.c
+_gMapSpriteLocRightSide	1489e0	__data	Sources & Headers/GameScreens.c
+_gNamesSpriteP	148a10	__data	Sources & Headers/GameScreens.c
+_gEpisode1TextSpriteP	148a14	__data	Sources & Headers/GameScreens.c
+_gEpisode2TextSpriteP	148a18	__data	Sources & Headers/GameScreens.c
+_gMapSpriteLocMM2	148a20	__data	Sources & Headers/GameScreens.c
+_gOldButtonIndex	148a40	__data	Sources & Headers/GameScreens.c
+_payNowButtonSpriteP	148a44	__data	Sources & Headers/GameScreens.c
+_payNowButtonCloneSpriteP	148a48	__data	Sources & Headers/GameScreens.c
+_notNowButtonSpriteP	148a4c	__data	Sources & Headers/GameScreens.c
+_notNowCloneSpriteP	148a50	__data	Sources & Headers/GameScreens.c
+_gameOverSpriteP	148a54	__data	Sources & Headers/GameScreens.c
+_rgbWhiteColor	148a58	__data	Sources & Headers/GameScreens.c
+_gBottomSpriteP	156ce0	__common	Sources & Headers/GameScreens.c
+_gCurTitleScrollSpeed	156ce4	__common	Sources & Headers/GameScreens.c
+_gCurrentEndingScreen	156ce8	__common	Sources & Headers/GameScreens.c
+_gCurrentHelpScreenIndex	156cea	__common	Sources & Headers/GameScreens.c
+_gDidChangeToSkeleton	156cec	__common	Sources & Headers/GameScreens.c
+_gFadeInButtonsDelay	156cf0	__common	Sources & Headers/GameScreens.c
+_gFadeOutTitleButtons	156cf4	__common	Sources & Headers/GameScreens.c
+_gIsFirstFlash	156cf5	__common	Sources & Headers/GameScreens.c
+_gMusicWasOn	156cf6	__common	Sources & Headers/GameScreens.c
+_gNextLightningFlash	156cf8	__common	Sources & Headers/GameScreens.c
+_gNumFlashes	156cfc	__common	Sources & Headers/GameScreens.c
+_gPoemTextSpriteArray	156d00	__common	Sources & Headers/GameScreens.c
+_gQuitWhenDoneTeaser	156d20	__common	Sources & Headers/GameScreens.c
+_gScrollMult	156d24	__common	Sources & Headers/GameScreens.c
+_gShowingLeftSide	156d28	__common	Sources & Headers/GameScreens.c
+_lightningCount	156d2a	__common	Sources & Headers/GameScreens.c
+_spriteHasStartedFadingIn	156d2c	__common	Sources & Headers/GameScreens.c
+___FUNCTION__.27945	11ae54	__cstring	Sources & Headers/SpriteFrameProcs.c
+___FUNCTION__.28039	11aec1	__cstring	Sources & Headers/SpriteFrameProcs.c
+___FUNCTION__.28108	11af17	__cstring	Sources & Headers/SpriteFrameProcs.c
+___FUNCTION__.28181	11af32	__cstring	Sources & Headers/SpriteFrameProcs.c
+___FUNCTION__.28205	11af48	__cstring	Sources & Headers/SpriteFrameProcs.c
+___FUNCTION__.27688	11af59	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.27751	11afc0	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.28360	11afda	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.28453	11aff3	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.28651	11b071	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.28681	11b086	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.28837	11b1d7	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.29106	11b1e5	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.29391	11b1f1	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.29721	11b1fe	__cstring	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.30381	11b219	__cstring	Sources & Headers/MoveProcSupport.c
+_tempPlatformLayerP	148a60	__data	Sources & Headers/MoveProcSupport.c
+_gLadderArray	156d40	__common	Sources & Headers/MoveProcSupport.c
+___FUNCTION__.28231	11b27d	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.28257	11b2e4	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.28371	11b2fe	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.28852	11b317	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.29416	11b334	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.29983	11b34b	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.30633	11b361	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31162	11b373	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31203	11b390	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31327	11b3ab	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31379	11b3bd	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31400	11b3d0	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31431	11b3e4	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31486	11b401	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31575	11b417	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31597	11b426	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31620	11b437	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.31981	11b449	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.32010	11b465	__cstring	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.32073	11b478	__cstring	Sources & Headers/SpriteMoveProcs.c
+_ladderOffsetArray	148a64	__data	Sources & Headers/SpriteMoveProcs.c
+___FUNCTION__.27445	11b49f	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.27532	11b50b	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.27632	11b63f	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.27657	11b657	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.27677	11b67e	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.27704	11b692	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.27805	11b749	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.28070	11b75c	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.28093	11b78e	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.28138	11b79d	__cstring	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.28186	11b7ea	__cstring	Sources & Headers/SpriteCollideProcs.c
+_gOrigSignHeight	157884	__common	Sources & Headers/SpriteCollideProcs.c
+_gOrigSignWidth	157886	__common	Sources & Headers/SpriteCollideProcs.c
+_gSaveGameModeAtSign	157888	__common	Sources & Headers/SpriteCollideProcs.c
+_gSignScaledSize	15788c	__common	Sources & Headers/SpriteCollideProcs.c
+___FUNCTION__.27452	11b890	__cstring	Sources & Headers/GameArrays.c
+___FUNCTION__.27635	11b8ef	__cstring	Sources & Headers/GameArrays.c
+___FUNCTION__.27734	11b903	__cstring	Sources & Headers/GameArrays.c
+___FUNCTION__.27760	11b916	__cstring	Sources & Headers/GameArrays.c
+___FUNCTION__.27806	11b928	__cstring	Sources & Headers/GameArrays.c
+___FUNCTION__.27931	11b96a	__cstring	Sources & Headers/GameArrays.c
+_gArraysWereSaved	15788e	__common	Sources & Headers/GameArrays.c
+_gCompletedMansionsArray	1578a0	__common	Sources & Headers/GameArrays.c
+_gDoOnceArray	1579e0	__common	Sources & Headers/GameArrays.c
+_gLitRoomArray	161640	__common	Sources & Headers/GameArrays.c
+_gMapArray	166480	__common	Sources & Headers/GameArrays.c
+_gNextCompletedMansionIndex	16b2a2	__common	Sources & Headers/GameArrays.c
+_gNextDoOnceIndex	16b2a8	__common	Sources & Headers/GameArrays.c
+_gNextFreeObjectIndex	16b2ac	__common	Sources & Headers/GameArrays.c
+_gNextLitRoomArrayIndex	16b2b0	__common	Sources & Headers/GameArrays.c
+_gNextMapArrayIndex	16b2b2	__common	Sources & Headers/GameArrays.c
+_gNextRoomArrayIndex	16b2b4	__common	Sources & Headers/GameArrays.c
+_gObjectArray	16b2c0	__common	Sources & Headers/GameArrays.c
+_gRoomArray	1887a0	__common	Sources & Headers/GameArrays.c
+_gSaveDoOnceArray	18d5e0	__common	Sources & Headers/GameArrays.c
+_gSaveNextDoOnceIndex	197224	__common	Sources & Headers/GameArrays.c
+_gSaveNextFreeObjectIndex	197228	__common	Sources & Headers/GameArrays.c
+_gSaveNextRoomArrayIndex	19722c	__common	Sources & Headers/GameArrays.c
+_gSaveObjectArray	197240	__common	Sources & Headers/GameArrays.c
+_gSaveRoomArray	1b4720	__common	Sources & Headers/GameArrays.c
+___FUNCTION__.20913	11b980	__cstring	Sources & Headers/GameEditorCarbonSafe.c
+___FUNCTION__.20939	11b9e5	__cstring	Sources & Headers/GameEditorCarbonSafe.c
+___FUNCTION__.27562	11ba00	__cstring	Sources & Headers/ZapperStuff.c
+___FUNCTION__.27646	11ba68	__cstring	Sources & Headers/ZapperStuff.c
+___FUNCTION__.27833	11ba83	__cstring	Sources & Headers/ZapperStuff.c
+___FUNCTION__.27861	11ba9c	__cstring	Sources & Headers/ZapperStuff.c
+___FUNCTION__.27973	11bab6	__cstring	Sources & Headers/ZapperStuff.c
+___FUNCTION__.27422	11bacc	__cstring	Sources & Headers/Levers.c
+___FUNCTION__.27608	11bb27	__cstring	Sources & Headers/Levers.c
+___FUNCTION__.27684	11bb3f	__cstring	Sources & Headers/Levers.c
+___FUNCTION__.27779	11bb5c	__cstring	Sources & Headers/Levers.c
+___FUNCTION__.28550	11bb7b	__cstring	Sources & Headers/Levers.c
+___FUNCTION__.28740	11bb96	__cstring	Sources & Headers/Levers.c
+___FUNCTION__.27422	11bba5	__cstring	Sources & Headers/Level.c
+___FUNCTION__.27848	11bc3c	__cstring	Sources & Headers/Level.c
+___FUNCTION__.28464	11bc50	__cstring	Sources & Headers/Level.c
+___FUNCTION__.28618	11bc72	__cstring	Sources & Headers/Level.c
+___FUNCTION__.29146	11bd75	__cstring	Sources & Headers/Level.c
+___FUNCTION__.29358	11be13	__cstring	Sources & Headers/Level.c
+___FUNCTION__.29726	11be25	__cstring	Sources & Headers/Level.c
+___FUNCTION__.29772	11be38	__cstring	Sources & Headers/Level.c
+___FUNCTION__.29840	11be49	__cstring	Sources & Headers/Level.c
+___FUNCTION__.30111	11be57	__cstring	Sources & Headers/Level.c
+_TMAPResType	148a70	__data	Sources & Headers/Level.c
+_saveCurTileArray	1b9560	__common	Sources & Headers/Level.c
+_saveTileMaps	1ba0a4	__common	Sources & Headers/Level.c
+___FUNCTION__.27417	11be64	__cstring	Sources & Headers/Stats.c
+___FUNCTION__.27506	11beba	__cstring	Sources & Headers/Stats.c
+___FUNCTION__.27608	11bed0	__cstring	Sources & Headers/Stats.c
+___FUNCTION__.27742	11c12c	__cstring	Sources & Headers/GameSupport.c
+___FUNCTION__.27880	11c244	__cstring	Sources & Headers/GameSupport.c
+___FUNCTION__.28459	11c34f	__cstring	Sources & Headers/GameSupport.c
+___FUNCTION__.28608	11c388	__cstring	Sources & Headers/GameSupport.c
+___FUNCTION__.29047	11c801	__cstring	Sources & Headers/GameSupport.c
+_gNextFreeCheatCodeElement	148a80	__data	Sources & Headers/GameSupport.c
+_gCheatCodeArray	148aa0	__data	Sources & Headers/GameSupport.c
+_gMovieFileIsOpen	148aec	__data	Sources & Headers/GameSupport.c
+_gProfileWasSaved	148aed	__data	Sources & Headers/GameSupport.c
+_gCurOptionsDialogPane	148aee	__data	Sources & Headers/GameSupport.c
+_gRegisteredStateWasSet	148af0	__data	Sources & Headers/GameSupport.c
+_gIsRegistered	148af1	__data	Sources & Headers/GameSupport.c
+_didReadDateFromFile	148af2	__data	Sources & Headers/GameSupport.c
+_gCheatCodeCache	1ba0c0	__common	Sources & Headers/GameSupport.c
+_gControlsTabSpriteP	1ba0f4	__common	Sources & Headers/GameSupport.c
+_gEscKeyIsDown	1ba0f8	__common	Sources & Headers/GameSupport.c
+_gGamepadCheckboxSpriteP	1ba0fc	__common	Sources & Headers/GameSupport.c
+_gMovieFileRef	1ba100	__common	Sources & Headers/GameSupport.c
+_gNextFrame	1ba104	__common	Sources & Headers/GameSupport.c
+_gNextFrameIsInitialized	1ba108	__common	Sources & Headers/GameSupport.c
+_gOptionsTabSpriteP	1ba10c	__common	Sources & Headers/GameSupport.c
+_gReturnKeyIsDown	1ba110	__common	Sources & Headers/GameSupport.c
+_gSaveCurrentPlayerName	1ba120	__common	Sources & Headers/GameSupport.c
+_gSaveCurrentPlayerNameExists	1ba220	__common	Sources & Headers/GameSupport.c
+_savedDay	1ba222	__common	Sources & Headers/GameSupport.c
+_savedMonth	1ba224	__common	Sources & Headers/GameSupport.c
+_savedPiracyValue	1ba226	__common	Sources & Headers/GameSupport.c
+_savedYear	1ba228	__common	Sources & Headers/GameSupport.c
+_wasFullscreen	1ba22a	__common	Sources & Headers/GameSupport.c
+___FUNCTION__.27425	11ca85	__cstring	Sources & Headers/High Scores.c
+___FUNCTION__.27573	11cb63	__cstring	Sources & Headers/High Scores.c
+___FUNCTION__.27718	11cb7c	__cstring	Sources & Headers/High Scores.c
+___FUNCTION__.27931	11cbd2	__cstring	Sources & Headers/High Scores.c
+_defaultNameArray	148b00	__data	Sources & Headers/High Scores.c
+_exitToMapScreen	1ba22b	__common	Sources & Headers/High Scores.c
+_gCurrentHighScoresScreenIndex	1ba22c	__common	Sources & Headers/High Scores.c
+_gFirstHighScoresIndex	1ba22e	__common	Sources & Headers/High Scores.c
+_gLastHighScoresIndex	1ba230	__common	Sources & Headers/High Scores.c
+_gLeftArrowButtonSpriteP	1ba234	__common	Sources & Headers/High Scores.c
+_gRightArrowButtonSpriteP	1ba238	__common	Sources & Headers/High Scores.c
+___FUNCTION__.20899	11cbec	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21010	11cc49	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21167	11cc56	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21256	11cc65	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21297	11cc76	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21423	11cc89	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21472	11cc9c	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21480	11ccc0	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21692	11cce3	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21709	11ccfa	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21721	11cd0c	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21828	11cd19	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21931	11cd35	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21953	11cd4f	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.21980	11ce01	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22009	11ce1b	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22065	11ce37	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22123	11ce45	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22155	11ce51	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22187	11ce5f	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22197	11ce6d	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22207	11ce7e	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22222	11ce96	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22228	11ceae	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22286	11cf01	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22332	11cf1c	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22561	11cf64	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22881	11cf74	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.22934	11cf97	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.23264	11d035	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.23529	11d15a	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.23690	11d172	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.23760	11d189	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.23877	11d19a	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.23915	11d1ac	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.24008	11d1c1	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.24093	11d1db	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.24119	11d1f4	__cstring	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.24210	11d20b	__cstring	../SpriteWorldX/Sources/Tiling.c
+_gIsDrawingTilesAboveSprite	148b30	__data	../SpriteWorldX/Sources/Tiling.c
+_gRotation	148b32	__data	../SpriteWorldX/Sources/Tiling.c
+_gEmptyTileTexCoords	1ba240	__common	../SpriteWorldX/Sources/Tiling.c
+_gEmptyTileVertices	1ba270	__common	../SpriteWorldX/Sources/Tiling.c
+___FUNCTION__.27456	11d224	__cstring	Sources & Headers/GameMap.c
+___FUNCTION__.28339	11d29d	__cstring	Sources & Headers/GameMap.c
+___FUNCTION__.28386	11d2b6	__cstring	Sources & Headers/GameMap.c
+___FUNCTION__.28413	11d2d3	__cstring	Sources & Headers/GameMap.c
+___FUNCTION__.28450	11d2e5	__cstring	Sources & Headers/GameMap.c
+_gNumRoomsPerCol	148b34	__data	Sources & Headers/GameMap.c
+_averageFrameRate	148b38	__data	Sources & Headers/GameMap.c
+_saveTileBackgroundP	148b3c	__data	Sources & Headers/GameMap.c
+_gBottomMostRoom	1ba288	__common	Sources & Headers/GameMap.c
+_gBottomPadding	1ba28a	__common	Sources & Headers/GameMap.c
+_gCurMapZoom	1ba28c	__common	Sources & Headers/GameMap.c
+_gCurrentScrollSpeed	1ba290	__common	Sources & Headers/GameMap.c
+_gDoTrackTimeThisFrame	1ba292	__common	Sources & Headers/GameMap.c
+_gIsEnteringMapScreen	1ba293	__common	Sources & Headers/GameMap.c
+_gJacksHeadTranslucency	1ba294	__common	Sources & Headers/GameMap.c
+_gKeysCopy	1ba2a0	__common	Sources & Headers/GameMap.c
+_gLastMouseLocX	1ba2ac	__common	Sources & Headers/GameMap.c
+_gLastMouseLocY	1ba2ae	__common	Sources & Headers/GameMap.c
+_gLeftMostRoom	1ba2b0	__common	Sources & Headers/GameMap.c
+_gLeftPadding	1ba2b2	__common	Sources & Headers/GameMap.c
+_gMapFrameArray	1ba2c0	__common	Sources & Headers/GameMap.c
+_gMapLevelNumber	1ba5e0	__common	Sources & Headers/GameMap.c
+_gMapMouseButtonIsDown	1ba770	__common	Sources & Headers/GameMap.c
+_gMapScrollRect	1ba774	__common	Sources & Headers/GameMap.c
+_gRightMostRoom	1ba784	__common	Sources & Headers/GameMap.c
+_gRightPadding	1ba786	__common	Sources & Headers/GameMap.c
+_gSaveCurConveyorBeltDirection	1ba788	__common	Sources & Headers/GameMap.c
+_gSaveGoldFloorIsActive	1ba78a	__common	Sources & Headers/GameMap.c
+_gSaveHiddenTriggerItemsSpriteLayerP	1ba78c	__common	Sources & Headers/GameMap.c
+_gSaveOldBackgroundPictResID	1ba790	__common	Sources & Headers/GameMap.c
+_gSaveOldConveyorBeltDirection	1ba792	__common	Sources & Headers/GameMap.c
+_gSaveSilverFloorIsActive	1ba794	__common	Sources & Headers/GameMap.c
+_gSavedLevelNumber	1ba796	__common	Sources & Headers/GameMap.c
+_gScrollIncrease	1ba798	__common	Sources & Headers/GameMap.c
+_gTopMostRoom	1ba79c	__common	Sources & Headers/GameMap.c
+_gTopPadding	1ba79e	__common	Sources & Headers/GameMap.c
+_gUseOptimizedCaching	1ba7a0	__common	Sources & Headers/GameMap.c
+_lastLevelLoadedInAdvance	1ba7a2	__common	Sources & Headers/GameMap.c
+_millisecsLastFrame	1ba7a4	__common	Sources & Headers/GameMap.c
+_numRoomsCanAddThisFrame	1ba7a8	__common	Sources & Headers/GameMap.c
+_wasInited.27603	1c2ba8	__bss	Sources & Headers/GameMap.c
+___FUNCTION__.27781	11d2fc	__cstring	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.27799	11d35c	__cstring	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.27818	11d36a	__cstring	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.27836	11d378	__cstring	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.27860	11d38a	__cstring	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.27952	11d3a6	__cstring	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.28082	11d3b3	__cstring	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.28285	11d3c9	__cstring	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.28531	11d3e3	__cstring	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.28588	11d3fa	__cstring	Sources & Headers/GameEditorStuff.c
+_gShowedMustClickOnSpriteAlert	148b40	__data	Sources & Headers/GameEditorStuff.c
+_gDrawFringeInLayer6	148b41	__data	Sources & Headers/GameEditorStuff.c
+_gDrawBackgroundSprites	148b42	__data	Sources & Headers/GameEditorStuff.c
+_gForceTilePattern	148b43	__data	Sources & Headers/GameEditorStuff.c
+_gGEEmptyTileID	148b44	__data	Sources & Headers/GameEditorStuff.c
+_gGEFringeArray	1ba7c0	__common	Sources & Headers/GameEditorStuff.c
+_gGETileFamily	1bc6c0	__common	Sources & Headers/GameEditorStuff.c
+_gHighestFringeLayer	1be5b4	__common	Sources & Headers/GameEditorStuff.c
+_gLowestFringeLayer	1be5b6	__common	Sources & Headers/GameEditorStuff.c
+_gMiddleFringeLayer	1be5b8	__common	Sources & Headers/GameEditorStuff.c
+___FUNCTION__.90497	11d6b1	__cstring	Sources & Headers/MMDialogsMac.c
+___FUNCTION__.90580	11d7a5	__cstring	Sources & Headers/MMDialogsMac.c
+___FUNCTION__.90616	11d7c0	__cstring	Sources & Headers/MMDialogsMac.c
+___FUNCTION__.90824	11d978	__cstring	Sources & Headers/MMDialogsMac.c
+___FUNCTION__.90845	11d98f	__cstring	Sources & Headers/MMDialogsMac.c
+___FUNCTION__.90869	11d9a4	__cstring	Sources & Headers/MMDialogsMac.c
+___FUNCTION__.89833	11dac4	__cstring	Sources & Headers/MyFileUtilsMac.c
+___FUNCTION__.90327	11db4a	__cstring	Sources & Headers/MyFileUtilsMac.c
+_gMyNavDialog	148b48	__data	Sources & Headers/MyFileUtilsMac.c
+_gNavReply	1be5c0	__common	Sources & Headers/MyFileUtilsMac.c
+_gASWICInstance	1be6c0	__common	Sources - My Utils/ASWHighScores.c
+___FUNCTION__.27641	11dc0c	__cstring	Sources & Headers/Compatibility Layer.c
+_gCurBackgroundSprite	148b4c	__data	Sources & Headers/Compatibility Layer.c
+_didSetCWD	148b50	__data	Sources & Headers/Compatibility Layer.c
+_didFixCWD	148b51	__data	Sources & Headers/Compatibility Layer.c
+_gBackgroundSpriteCache	1be6e0	__common	Sources & Headers/Compatibility Layer.c
+_gBackgroundSpriteCacheWasInited	1be708	__common	Sources & Headers/Compatibility Layer.c
+_gCurrentWorkingDirectory	1be720	__common	Sources & Headers/Compatibility Layer.c
+_gDirPath	1beb20	__common	Sources & Headers/Compatibility Layer.c
+_gImageFilePath	1bef20	__common	Sources & Headers/Compatibility Layer.c
+_gLastValidLevelResIDIndex	1bf320	__common	Sources & Headers/Compatibility Layer.c
+_gMansionDataPath	1bf340	__common	Sources & Headers/Compatibility Layer.c
+_gMansionPath	1bf740	__common	Sources & Headers/Compatibility Layer.c
+_gReturnedFilename	1bfb40	__common	Sources & Headers/Compatibility Layer.c
+_gSavedGameFilePath	1bff40	__common	Sources & Headers/Compatibility Layer.c
+_gScannedResType	1c0340	__common	Sources & Headers/Compatibility Layer.c
+_gValidLevelResIDs	1c0360	__common	Sources & Headers/Compatibility Layer.c
+___FUNCTION__.20964	11e120	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21006	11e185	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21054	11e197	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21065	11e1ae	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21081	11e1ca	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21096	11e1e6	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21131	11e1fc	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21159	11e21d	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21184	11e238	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21215	11e24a	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21308	11e261	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+___FUNCTION__.21414	11e272	__cstring	../SpriteWorldX/Utils/SWTextSprite.c
+_gMenuController	148b54	__data	Sources & Headers/menubar.m
+_seed	148b60	__data	Sources & Headers/rngs.c
+_stream	1c2bb8	__bss	Sources & Headers/rngs.c
+_initialized	1c2bbc	__bss	Sources & Headers/rngs.c
+___PRETTY_FUNCTION__.94186	11eb1b	__cstring	../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m
+_kReceiptBundleIdentifier	148f60	__data	../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m
+_kReceiptBundleIdentifierData	148f64	__data	../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m
+_kReceiptVersion	148f68	__data	../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m
+_kReceiptOpaqueValue	148f6c	__data	../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m
+_kReceiptHash	148f70	__data	../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m
+_gTempStereoFadeDist	148f74	__data	Sources & Headers/MMSounds.c
+_regCodeConversionArrayEP1	148f80	__data	Sources & Headers/MMRegCodeGen.c
+_regCodeConversionArrayEP2	148f9b	__data	Sources & Headers/MMRegCodeGen.c
+_regCodeConversionArrayMM1	148fb6	__data	Sources & Headers/MMRegCodeGen.c
+_regCodeConversionArrayMM2	148fd1	__data	Sources & Headers/MMRegCodeGen.c
+_stageOneArray	149000	__data	Sources & Headers/MMRegCodeGen.c
+_defaultConversionArray	149044	__data	Sources & Headers/MMRegCodeGen.c
+_conversionArray	149060	__data	Sources & Headers/MMRegCodeGen.c
+_swapArray	149064	__data	Sources & Headers/MMRegCodeGen.c
+_finalSwapArray	149070	__data	Sources & Headers/MMRegCodeGen.c
+_stageTwoArray	149080	__data	Sources & Headers/MMRegCodeGen.c
+_stageThreeArray	1490c0	__data	Sources & Headers/MMRegCodeGen.c
+_daysInMonth	149100	__data	Sources & Headers/MMRegCodeMisc.c
+_gPiratedNames	149120	__data	Sources & Headers/MMRegCodeMisc.c
+_letterArray	149140	__data	Sources & Headers/MMRegCodeMisc.c
+_swapValues	149160	__data	Sources & Headers/MMRegCodeMisc.c
+_gAudioWasInitialized	14918c	__data	Sources & Headers/MMSounds SDL_Mixer.c
+_gNumChannels	14918e	__data	Sources & Headers/MMSounds SDL_Mixer.c
+_gNumSounds	149190	__data	Sources & Headers/MMSounds SDL_Mixer.c
+_gNumReservedChannels	149192	__data	Sources & Headers/MMSounds SDL_Mixer.c
+_gSounds	149194	__data	Sources & Headers/MMSounds SDL_Mixer.c
+_gFileIsOpen	1c2a70	__common	Sources & Headers/MMMMMMM.c
+_gOutputFileP	1c2a74	__common	Sources & Headers/MMMMMMM.c
+_mapping.4115	11ff4c	__cstring	/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c
+_ext.4303	1473c0	__const	/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c
+_errnolist	149200	__data	/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/err.c
+_errlist	1492a0	__data	/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/err.c
+_default_io	1473a0	__const	/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/plugin.c

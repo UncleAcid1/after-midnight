@@ -1,0 +1,1 @@
+Pull the lever to swap the gold and silver blocks.  Only one will be solid at a time.  Unlike most lever actions, this will affect ALL rooms at once.

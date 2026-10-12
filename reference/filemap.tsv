@@ -1,0 +1,2039 @@
+Sources & Headers/NewSprite.c	_LoadSprites	33ac	237
+Sources & Headers/NewSprite.c	_InitSpriteArray	3499	127
+Sources & Headers/NewSprite.c	_LoadPixelMaskPICTSprites	3518	15526
+Sources & Headers/NewSprite.c	_LoadNonPixelMaskSprites	71be	2207
+Sources & Headers/NewSprite.c	_MySetSpriteScaledFactor	7a5d	39
+Sources & Headers/NewSprite.c	_MySetSpriteScaledSize	7a84	67
+Sources & Headers/NewSprite.c	_MyLoadSpriteFromSinglePict	7ac7	357
+Sources & Headers/NewSprite.c	_MyLoadSpriteFromPictResource	7c2c	385
+Sources & Headers/NewSprite.c	_MyLoadSpriteFromSinglePictXY	7dad	541
+Sources & Headers/NewSprite.c	_CheckIfSpriteShouldBeLoaded	7fca	327
+Sources & Headers/NewSprite.c	_ScanDirectoryForPICTResIDs	8111	348
+Sources & Headers/NewSprite.c	_DoesCustomPICTResourceExist	826d	257
+Sources & Headers/NewSprite.c	_LoadStatsSprites	836e	436
+Sources & Headers/NewSprite.c	_LoadMapScreenSprites	8522	1245
+Sources & Headers/NewSprite.c	_LoadTitleScreenSprites	89ff	1923
+Sources & Headers/NewSprite.c	_LoadDifficultyScreenSprites	9182	615
+Sources & Headers/NewSprite.c	_LoadOrganScreenSprites	93e9	622
+Sources & Headers/NewSprite.c	_DisposeMapScreenSprites	9657	100
+Sources & Headers/NewSprite.c	_DisposeTitleScreenSprites	96bb	100
+Sources & Headers/NewSprite.c	_DisposeDifficultyScreenSprites	971f	100
+Sources & Headers/NewSprite.c	_DisposeOrganScreenSprites	9783	100
+Sources & Headers/NewSprite.c	_DisposeSprites	97e7	150
+Sources & Headers/NewSprite.c	_IncreaseProgressBar	987d	21
+Sources & Headers/NewSprite.c	_NewMapScreenSprite	9892	678
+Sources & Headers/NewSprite.c	_NewTitleScreenButtonSprite	9b38	163
+Sources & Headers/NewSprite.c	_NewTitleScreenSprite	9bdb	425
+Sources & Headers/NewSprite.c	_NewDifficultyScreenButtonSprite	9d84	156
+Sources & Headers/NewSprite.c	_NewDifficultyScreenSprite	9e20	350
+Sources & Headers/NewSprite.c	_NewOrganScreenSprite	9f7e	418
+Sources & Headers/NewSprite.c	_NewMainSprite	a120	1594
+Sources & Headers/NewSprite.c	_NewHaloSprite	a75a	286
+Sources & Headers/NewSprite.c	_NewSkullSpiderSprite	a878	544
+Sources & Headers/NewSprite.c	_NewScorpionSprite	aa98	532
+Sources & Headers/NewSprite.c	_NewEyeballSprite	acac	524
+Sources & Headers/NewSprite.c	_NewRavenSprite	aeb8	613
+Sources & Headers/NewSprite.c	_NewSnakeSprite	b11d	547
+Sources & Headers/NewSprite.c	_NewMedusasHeadSprite	b340	450
+Sources & Headers/NewSprite.c	_NewSpiderSprite	b502	718
+Sources & Headers/NewSprite.c	_NewSkeletonFishSprite	b7d0	334
+Sources & Headers/NewSprite.c	_NewWalkingSkeletonSprite	b91e	308
+Sources & Headers/NewSprite.c	_NewObjectSprite	ba52	904
+Sources & Headers/NewSprite.c	_NewZapperNodeSprite	bdda	437
+Sources & Headers/NewSprite.c	_NewZapperBeamSprite	bf8f	342
+Sources & Headers/NewSprite.c	_NewMovingPlatformSprite	c0e5	509
+Sources & Headers/NewSprite.c	_NewFallingPlatformSprite	c2e2	432
+Sources & Headers/NewSprite.c	_NewTrapDoorSprite	c492	432
+Sources & Headers/NewSprite.c	_NewDoorSprite	c642	452
+Sources & Headers/NewSprite.c	_InitializeDoorMovementVariables	c806	161
+Sources & Headers/NewSprite.c	_NewLeverSprite	c8a7	262
+Sources & Headers/NewSprite.c	_NewBrickSwitchSprite	c9ad	376
+Sources & Headers/NewSprite.c	_NewBackgroundSprite	cb25	643
+Sources & Headers/NewSprite.c	_NewPedestalOrStatueSprite	cda8	395
+Sources & Headers/NewSprite.c	_NewCandleHolderSprite	cf33	239
+Sources & Headers/NewSprite.c	_NewTorchSprite	d022	307
+Sources & Headers/NewSprite.c	_NewCandleSprite	d155	313
+Sources & Headers/NewSprite.c	_NewFlameSprite	d28e	292
+Sources & Headers/NewSprite.c	_NewPuffOfSmokeSprite	d3b2	308
+Sources & Headers/NewSprite.c	_NewLavaSplashSprite	d4e6	359
+Sources & Headers/NewSprite.c	_NewBloodOrGooDripSprite	d64d	329
+Sources & Headers/NewSprite.c	_NewBloodOrGooSplashSprite	d796	364
+Sources & Headers/NewSprite.c	_NewSlimeSprite	d902	369
+Sources & Headers/NewSprite.c	_NewStatueSprite	da73	282
+Sources & Headers/NewSprite.c	_NewWebTrappedSprite	db8d	419
+Sources & Headers/NewSprite.c	_NewCircleOfLightSprite	dd30	348
+Sources & Headers/NewSprite.c	_NewTreasureSprite	de8c	253
+Sources & Headers/NewSprite.c	_NewExitSprite	df89	231
+Sources & Headers/NewSprite.c	_NewGoldSparkleSprite	e070	296
+Sources & Headers/NewSprite.c	_NewGlowSprite	e198	344
+Sources & Headers/NewSprite.c	_NewMiscSprite	e2f0	302
+Sources & Headers/NewSprite.c	_NewBatPlatformArrowSprite	e41e	343
+Sources & Headers/NewSprite.c	_NewSecretIndicatorSprite	e575	286
+Sources & Headers/NewSprite.c	_CreateGlowOverSprite	e693	481
+Sources & Headers/NewSprite.c	_NewSmallDigitsSprite	e874	195
+Sources & Headers/NewSprite.c	_NewStatsDigitsSprite	e937	195
+Sources & Headers/NewSprite.c	_NewStatsItemSprite	e9fa	309
+Sources & Headers/NewSprite.c	_NewButtonSprite	eb2f	155
+Sources & Headers/NewSprite.c	_AddButtonToDialog	ebca	788
+Sources & Headers/NewSprite.c	_GetButtonHeight	eede	64
+Sources & Headers/NewSprite.c	_GetButtonWidth	ef1e	64
+Sources & Headers/NewSprite.c	_NewBitmapTextSprite	ef5e	247
+Sources & Headers/NewSprite.c	_NewCustomCheckbox	f055	458
+Sources & Headers/NewSprite.c	_NewKeyInputBox	f21f	545
+Sources - My Utils/MyButtonSprite.c	_LoadStandardButtonSprite	f440	229
+Sources - My Utils/MyButtonSprite.c	_LoadStandardButtonSpriteFromFile	f525	187
+Sources - My Utils/MyButtonSprite.c	_LoadStandardButtonSpriteMask	f5e0	236
+Sources - My Utils/MyButtonSprite.c	_LoadStandardDimmableButtonSprite	f6cc	214
+Sources - My Utils/MyButtonSprite.c	_LoadMiscButtonSprite	f7a2	232
+Sources - My Utils/MyButtonSprite.c	_LoadMiscButtonSpriteFromFile	f88a	177
+Sources - My Utils/MyButtonSprite.c	_CloneButtonSprite	f93b	461
+Sources - My Utils/MyButtonSprite.c	_SetButtonSpriteIndex	fb08	109
+Sources - My Utils/MyButtonSprite.c	_SetUpButtonSprite	fb75	186
+Sources - My Utils/MyButtonSprite.c	_SetUpCheckboxSprite	fc2f	241
+Sources - My Utils/MyButtonSprite.c	_SetUpKeyInputBox	fd20	142
+Sources - My Utils/MyButtonSprite.c	_SetKeyInputBoxKeysToIgnore	fdae	126
+Sources - My Utils/MyButtonSprite.c	_SetCheckboxChecked	fe2c	139
+Sources - My Utils/MyButtonSprite.c	_SetButtonSpriteText	feb7	236
+Sources - My Utils/MyButtonSprite.c	_LinkCheckboxWithData	ffa3	139
+Sources - My Utils/MyButtonSprite.c	_LinkKeyInputBoxWithData	1002e	438
+Sources - My Utils/MyButtonSprite.c	_UpdateDataFromControlsInLayers	101e4	287
+Sources - My Utils/MyButtonSprite.c	_HasControlChangedValues	10303	220
+Sources - My Utils/MyButtonSprite.c	_SetButtonColor	103df	252
+Sources - My Utils/MyButtonSprite.c	_SetButtonHighlightedColor	104db	161
+Sources - My Utils/MyButtonSprite.c	_SetButtonPushedColor	1057c	161
+Sources - My Utils/MyButtonSprite.c	_SetButtonDimmedMode	1061d	202
+Sources - My Utils/MyButtonSprite.c	_SetButtonClickRadius	106e7	109
+Sources - My Utils/MyButtonSprite.c	_GetButtonIndex	10754	99
+Sources - My Utils/MyButtonSprite.c	_InstallButtonProc	107b7	100
+Sources - My Utils/MyButtonSprite.c	_SetButtonPushedOffset	1081b	130
+Sources - My Utils/MyButtonSprite.c	_AdjustCollisionRectForOffset	1089d	173
+Sources - My Utils/MyButtonSprite.c	_ProcessButtonSprites	1094a	874
+Sources - My Utils/MyButtonSprite.c	_ProcessNormalButtonSprite	10cb4	1032
+Sources - My Utils/MyButtonSprite.c	_ProcessCheckBoxSprite	110bc	1026
+Sources - My Utils/MyButtonSprite.c	_UnhighlightAllOtherButtonSprites	114be	129
+Sources - My Utils/MyButtonSprite.c	_DeselectButton	1153f	341
+Sources - My Utils/MyButtonSprite.c	_ChangeButtonColor	11694	620
+Sources - My Utils/MyButtonSprite.c	_SetCorrectCheckboxFrame	11900	170
+Sources - My Utils/MyButtonSprite.c	_DisposeButtonSpritesMatchingIndex	119aa	193
+Sources - My Utils/MyButtonSprite.c	_ProcessKeyInputBoxSprite	11a6b	937
+Sources - My Utils/MyButtonSprite.c	_HandleEventInKeyInputBox	11e14	529
+Sources - My Utils/MyButtonSprite.c	_DoesEventExist	12025	79
+Sources - My Utils/MyButtonSprite.c	_GetCurrentlySelectedKeyInputBox	12074	198
+Sources - My Utils/MyButtonSprite.c	_ConvertKeyScanCode	1213a	95
+Sources - My Utils/MyButtonSprite.c	_ConvertKeyName	12199	284
+Sources - My Utils/MyButtonSprite.c	_SetKeyInputBoxSelected	122b5	167
+Sources - My Utils/MyButtonSprite.c	_CustomButtonDrawProc	1235c	1133
+Sources - My Utils/MyButtonSprite.c	_GetTextFromSDLKeyCode	127c9	217
+Sources - My Utils/MyUtils.c	_MyHideCursor	128a2	48
+Sources - My Utils/MyUtils.c	_MyInitCursor	128d2	48
+Sources - My Utils/MyUtils.c	_IsCursorVisible	12902	29
+Sources - My Utils/MyUtils.c	_SetPascalString	1291f	64
+Sources - My Utils/MyUtils.c	_GetPascalStringFromCString	1295f	92
+Sources - My Utils/MyUtils.c	_GetHFSUniFromCString	129bb	138
+Sources - My Utils/MyUtils.c	_GetCStringFromHFSUniStr	12a45	96
+Sources - My Utils/MyUtils.c	_GetPascalStringFromHFSUniStr	12aa5	99
+Sources - My Utils/MyUtils.c	_RemoveTrailingSpaces	12b08	78
+Sources - My Utils/MyUtils.c	_IsCharWhiteSpace	12b56	67
+Sources - My Utils/MyUtils.c	_RemoveLeadingSpaces	12b99	162
+Sources - My Utils/MyUtils.c	_RemoveLeadingInvisibleString	12c3b	172
+Sources - My Utils/MyUtils.c	_StripPrefixFromString	12ce7	105
+Sources - My Utils/MyUtils.c	_StripPrefixFromCString	12d50	107
+Sources - My Utils/MyUtils.c	_StripStringFromStartOfString	12dbb	152
+Sources - My Utils/MyUtils.c	_StripStringFromEndOfCString	12e53	206
+Sources - My Utils/MyUtils.c	_StripStringFromEndOfString	12f21	227
+Sources - My Utils/MyUtils.c	_RemoveNumberFromEndOfString	13004	83
+Sources - My Utils/MyUtils.c	_CompareCStrings	13057	102
+Sources - My Utils/MyUtils.c	_CompareCStringsForLength	130bd	81
+Sources - My Utils/MyUtils.c	_strstrIgnoreCase	1310e	213
+Sources - My Utils/MyUtils.c	_StripNDirectoriesFromEndOfPath	131e3	56
+Sources - My Utils/MyUtils.c	_StripEndingFromPath	1321b	48
+Sources - My Utils/MyUtils.c	_GetFilenameFromPath	1324b	33
+Sources - My Utils/MyUtils.c	_MyWriteDataToFile	1326c	160
+Sources - My Utils/MyUtils.c	_MyReadDataFromFile	1330c	150
+Sources - My Utils/MyUtils.c	_ClearFileStickyError	133a2	34
+Sources - My Utils/MyUtils.c	_GetFileStickyError	133c4	30
+Sources - My Utils/MyUtils.c	_SetFileStickyIfError	133e2	39
+Sources - My Utils/MyUtils.c	_WasASpecificKeyPressed	13409	26
+Sources - My Utils/MyUtils.c	_IsRectInRect	13423	175
+Sources - My Utils/MyUtils.c	_IsRectFullyInRect	134d2	175
+Sources - My Utils/MyUtils.c	_MoveRect	13581	190
+Sources - My Utils/MyUtils.c	_SwapVariables	1363f	46
+Sources - My Utils/MyUtils.c	_sign	1366d	47
+Sources - My Utils/MyUtils.c	_mAbs	1369c	41
+Sources - My Utils/MyUtils.c	_IsNumberEven	136c5	34
+Sources - My Utils/MyUtils.c	_IsNumberOdd	136e7	31
+Sources - My Utils/MyUtils.c	_GetAngleFromXandY	13706	269
+Sources - My Utils/MyUtils.c	_GetXFromAngleAndVelocity	13813	74
+Sources - My Utils/MyUtils.c	_GetYFromAngleAndVelocity	1385d	74
+Sources - My Utils/MyUtils.c	_MyCos	138a7	80
+Sources - My Utils/MyUtils.c	_MySin	138f7	80
+Sources - My Utils/MyUtils.c	_MyATan	13947	96
+Sources - My Utils/MyUtils.c	_AddBooleanToByte	139a7	50
+Sources - My Utils/MyUtils.c	_ReadBooleanFromByte	139d9	43
+Sources - My Utils/MyUtils.c	_GetCustomRandom	13a04	114
+Sources - My Utils/MyUtils.c	_GetCustomRandomFloat	13a76	86
+Sources - My Utils/MyUtils.c	_StartTicksTimer	13acc	14
+Sources - My Utils/MyUtils.c	_WaitTicks	13ada	14
+Sources - My Utils/MyUtils.c	_WaitTicksOrMouseClick	13ae8	14
+Sources - My Utils/MyUtils.c	_MyDelay	13af6	14
+Sources - My Utils/MyUtils.c	_MyWaitForKeyDelay	13b04	14
+Sources - My Utils/MyUtils.c	_StartMicrosecTimer	13b12	42
+Sources - My Utils/MyUtils.c	_WaitMicroseconds	13b3c	94
+Sources - My Utils/MyUtils.c	_GetElapsedSeconds	13b9a	38
+Sources - My Utils/MyUtils.c	_GetElapsedMillisecs	13bc0	48
+Sources - My Utils/MyUtils.c	_WaitMicrosecondsOrKeyPress	13bf0	100
+Sources - My Utils/MyUtils.c	_WaitMicrosecondsOrMouseClick	13c54	109
+Sources - My Utils/MyUtils.c	_OffsetRectForFrame	13cc1	104
+Sources - My Utils/MySWUtils.c	_SWBestMaskCollision	13d29	35
+Sources - My Utils/MySWUtils.c	_ProcessOneFrame	13d4c	91
+Sources - My Utils/MySWUtils.c	_AnimateOneFrame	13da7	102
+Sources - My Utils/MySWUtils.c	_SetSpriteWorldForCapturedDisplay	13e0d	14
+Sources - My Utils/MySWUtils.c	_SetSpriteWorldForUncapturedDisplay	13e1b	14
+Sources - My Utils/MySWUtils.c	_SWChangeTileImageFast	13e29	238
+Sources - My Utils/MySWUtils.c	_DoesLayerHaveTiles	13f17	222
+Sources - My Utils/MySWUtils.c	_MyUpdateTilesOnScreenFaster	13ff5	502
+Sources - My Utils/MySWUtils.c	_SaveAllSpritesToTempLayers	141eb	516
+Sources - My Utils/MySWUtils.c	_RestoreSpritesFromTempLayers	143ef	399
+Sources - My Utils/MySWUtils.c	_SWSaveTileMaps	1457e	145
+Sources - My Utils/MySWUtils.c	_SWRestoreTileMaps	1460f	129
+Sources - My Utils/MySWUtils.c	_InvalidateSpriteLayer	14690	109
+Sources - My Utils/MySWUtils.c	_OffsetSpritesInLayer	146fd	123
+Sources - My Utils/MySWUtils.c	_SortSpriteLayerBottomToTop	14778	282
+Sources - My Utils/MySWUtils.c	_SortSpriteLayerRightToLeft	14892	271
+Sources - My Utils/MySWUtils.c	_SWCheckSpriteWithSprites	149a1	1299
+Sources - My Utils/MySWUtils.c	_RoundOffSpriteVertLoc	14eb4	83
+Sources - My Utils/MySWUtils.c	_SWCollideSpriteWithLayer	14f07	938
+Sources - My Utils/MySWUtils.c	_GetSpriteCollidingWithSprite	152b1	633
+Sources - My Utils/MySWUtils.c	_IsSpriteCollidingWithLayer	1552a	661
+Sources - My Utils/MySWUtils.c	_MoveSpritesFromLayerToLayer	157bf	100
+Sources - My Utils/MySWUtils.c	_FindSpriteByRectInMultipleLayers	15823	415
+Sources - My Utils/MySWUtils.c	_SetAllSpriteLayersVisible	159c2	90
+Sources - My Utils/MySWUtils.c	_PauseAllSpriteLayers	15a1c	76
+Sources - My Utils/MySWUtils.c	_UnpauseAllSpriteLayers	15a68	76
+Sources - My Utils/MySWUtils.c	_RemoveAllSpritesInLayer	15ab4	148
+Sources - My Utils/MySWUtils.c	_SWSetSpritesInLayerVisible	15b48	75
+Sources - My Utils/MySWUtils.c	_SWCreateSolidColorSprite	15b93	96
+Sources - My Utils/MySWUtils.c	_SWTopVisibleSpriteFromPoint	15bf3	180
+Sources - My Utils/MySWUtils.c	_SWConvertCoordinates	15ca7	99
+Sources - My Utils/MySWUtils.c	_MySetSpriteFrameTime	15d0a	175
+Sources - My Utils/MySWUtils.c	_MyAdvanceSpriteFrame	15db9	239
+Sources - My Utils/MySWUtils.c	_SWResetSpriteMovementTimer	15ea8	32
+Sources - My Utils/MySWUtils.c	_SWSetSpriteHotSpot	15ec8	121
+Sources - My Utils/MySWUtils.c	_GetSpriteWorldFromSprite	15f41	103
+Sources - My Utils/MySWUtils.c	_SWGetSpriteMoveProc	15fa8	23
+Sources - My Utils/MySWUtils.c	_GetDistBetweenSprites	15fbf	449
+Sources - My Utils/MySWUtils.c	_GetDistBetweenSpritesHorizMid	16180	212
+Sources - My Utils/MySWUtils.c	_GetDistBetweenSpritesVertMid	16254	212
+Sources - My Utils/MySWUtils.c	_DelayMoveProcByValue	16328	68
+Sources - My Utils/MySWUtils.c	_FindSpriteByPixel	1636c	161
+Sources - My Utils/MySWUtils.c	_FindSpriteByRect	1640d	143
+Sources - My Utils/MySWUtils.c	_IsSpriteOldRectInRect	1649c	285
+Sources - My Utils/MySWUtils.c	_SWCenterSpriteOverSprite	165b9	269
+Sources - My Utils/MySWUtils.c	_SWCenterSpriteInRect	166c6	88
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKLoadSurface	1671e	252
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKLoadTGA_RW	1681a	1644
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKCreateSurface	16e86	294
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKCreateGLSurface	16fac	231
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKFlipHorizontal	17093	283
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKFlipVertical	171ae	281
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKInvertAlphaChannel	172c7	332
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKDitherAlphaChannel	17413	779
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKConvertColorKeyToAlphaChannel	1771e	681
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKConvertAlphaChannelToColorKey	179c7	632
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKAddColorKeyFromMask	17c3f	603
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKAddAlphaChannelFromMask	17e9a	691
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKCollideBoundingBox	1814d	116
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKTransparentPixel	181c1	205
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKCollidePixels	1828e	2495
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKPutPixel	18c4d	272
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKGetPixel	18d5d	289
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKDrawLine	18e7e	484
+../SpriteWorldX/BlitKernel/BlitKernelSDL.c	_BKDrawOval	19062	1220
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_power2	19526	39
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKCreateNewGLSurface	1954d	4242
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKCreateBlankGLSurface	1a5df	3044
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKCreateMasterSurfaceForTiles	1b1c3	614
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKAddTileToMasterSurface	1b429	1296
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKCreateGLSurfaceFromMaster	1b939	1687
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKGetTileRectForMasterSurface	1bfd0	216
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_DoesSurfaceNeedBlend	1c0a8	20
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKReloadGLSurface	1c0bc	894
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKCreatePartialGLSurface	1c43a	1106
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKFreeGLSurface	1c88c	336
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKGetSDLSurface	1c9dc	19
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_SetBKDebugDrawColor	1c9ef	85
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKBlitGLSurface	1ca44	736
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKSetupVBOsForGLSurface	1cd24	14
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKBlitGLSurfaceUsingVBO	1cd32	201
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKBlitClippedGLSurface	1cdfb	1213
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKBlitCustomGLSurface	1d2b8	1029
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKBlitTileFromMasterSurface	1d6bd	697
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKLoadGLfunctions	1d976	949
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKLoadGLcapabilities	1dd2b	1048
+../SpriteWorldX/BlitKernel/BlitKernelGL.c	_BKGetGLErrorMessage	1e143	175
+../SpriteWorldX/Sources/Sprite.c	_SWRemoveSpriteFromAnimation	1e1f2	278
+../SpriteWorldX/Sources/Sprite.c	_SWDisposeSprite	1e308	267
+../SpriteWorldX/Sources/Sprite.c	_SWLockSprite	1e413	123
+../SpriteWorldX/Sources/Sprite.c	_SWUnlockSprite	1e48e	123
+../SpriteWorldX/Sources/Sprite.c	_SWAddFrame	1e509	215
+../SpriteWorldX/Sources/Sprite.c	_SWInsertFrame	1e5e0	272
+../SpriteWorldX/Sources/Sprite.c	_SWRemoveFrame	1e6f0	211
+../SpriteWorldX/Sources/Sprite.c	_SWGetNextFrame	1e7c3	181
+../SpriteWorldX/Sources/Sprite.c	_SWDisposeSoftwareSurfaces	1e878	181
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteDrawProc	1e92d	33
+../SpriteWorldX/Sources/Sprite.c	_SWStdSpriteDrawProc	1e94e	1266
+../SpriteWorldX/Sources/Sprite.c	_SWSolidColorSpriteDrawProc	1ee40	728
+../SpriteWorldX/Sources/Sprite.c	_SWTempSpriteMoveProc	1f118	73
+../SpriteWorldX/Sources/Sprite.c	_SWSetCurrentFrame	1f161	201
+../SpriteWorldX/Sources/Sprite.c	_SWSetCurrentFrameIndex	1f22a	753
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteCollideProc	1f51b	84
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteFrameAdvance	1f56f	84
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteFrameAdvanceMode	1f5c3	84
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteFrameRange	1f617	203
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteFrameTime	1f6e2	167
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteFrameProc	1f789	84
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteLocation	1f7dd	305
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteMoveBounds	1f90e	95
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteMoveDelta	1f96d	102
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteMoveTime	1f9d3	84
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteMoveTime	1fa27	81
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteMoveProc	1fa78	117
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpritePseudoMoveTime	1faed	88
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteVisible	1fb45	151
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteTranslucency	1fbdc	32
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteTranslucencyLevel	1fbfc	129
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteColor	1fc7d	205
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteBlendMode	1fd4a	115
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteTemporaryClip	1fdbd	103
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteClip	1fe24	228
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteFlipX	1ff08	137
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteFlipY	1ff91	137
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteRotation	2001a	398
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteScaledSize	201a8	108
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteScaledWidth	20214	296
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteScaledHeight	2033c	296
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteScaledWidthFactor	20464	102
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteScaledHeightFactor	204ca	102
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteScaledFactor	20530	138
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteScalingMode	205ba	33
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteFastMovingCheck	205db	88
+../SpriteWorldX/Sources/Sprite.c	_SWInvalidateSprite	20633	21
+../SpriteWorldX/Sources/Sprite.c	_SWMountSprite	20648	140
+../SpriteWorldX/Sources/Sprite.c	_SWSetMountInheritsAttributes	206d4	135
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteMountOffset	2075b	32
+../SpriteWorldX/Sources/Sprite.c	_SWSetGlobalMountOffset	2077b	38
+../SpriteWorldX/Sources/Sprite.c	_SWSetDrawTilesOverSpriteInsetRect	207a1	190
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteAutoScaling	2085f	36
+../SpriteWorldX/Sources/Sprite.c	_SWSetSpriteNonScrolling	20883	36
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteFrameTime	208a7	81
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteVertLoc	208f8	100
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteHorizLoc	2095c	154
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteHorizMoveDelta	209f6	100
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteVertMoveDelta	20a5a	100
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteWidth	20abe	160
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteHeight	20b5e	160
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteTranslucencyLevel	20bfe	84
+../SpriteWorldX/Sources/Sprite.c	_SWGetSpriteVisible	20c52	82
+../SpriteWorldX/Sources/Sprite.c	_SWGetCurrentFrameIndex	20ca4	81
+../SpriteWorldX/Sources/Sprite.c	_SWMoveSprite	20cf5	295
+../SpriteWorldX/Sources/Sprite.c	_SWOffsetSprite	20e1c	219
+../SpriteWorldX/Sources/Sprite.c	_SWOffsetSpriteBasedOnTime	20ef7	293
+../SpriteWorldX/Sources/Sprite.c	_SWConvertOffsetBasedOnTime	2101c	150
+../SpriteWorldX/Sources/Sprite.c	_SWResetSpriteFrameTimer	210b2	32
+../SpriteWorldX/Sources/Sprite.c	_SWHasMoveProcFired	210d2	85
+../SpriteWorldX/Sources/Sprite.c	_SWBounceSprite	21127	666
+../SpriteWorldX/Sources/Sprite.c	_SWWrapSprite	213c1	67
+../SpriteWorldX/Sources/Sprite.c	_SWWrapSpriteHoriz	21404	407
+../SpriteWorldX/Sources/Sprite.c	_SWWrapSpriteVert	2159b	407
+../SpriteWorldX/Sources/Sprite.c	_SWStdSpriteMoveProc	21732	57
+../SpriteWorldX/Sources/Sprite.c	_SWWrapSpriteMoveProc	2176b	68
+../SpriteWorldX/Sources/Sprite.c	_SWWrapSpriteHorizMoveProc	217af	68
+../SpriteWorldX/Sources/Sprite.c	_SWWrapSpriteVertMoveProc	217f3	68
+../SpriteWorldX/Sources/Sprite.c	_SWInPixelMask	21837	191
+../SpriteWorldX/Sources/Sprite.c	_SWRadiusCollision	218f6	303
+../SpriteWorldX/Sources/Sprite.c	_SWPixelCollision	21a25	593
+../SpriteWorldX/Sources/Sprite.c	_SWIsSpriteInSprite	21c76	364
+../SpriteWorldX/Sources/Sprite.c	_SWIsSpriteInRect	21de2	234
+../SpriteWorldX/Sources/Sprite.c	_SWIsSpriteFullyInRect	21ecc	234
+../SpriteWorldX/Sources/Sprite.c	_SWIsPointInSprite	21fb6	243
+../SpriteWorldX/Sources/Sprite.c	_SWIsPointInSpriteMask	220a9	152
+../SpriteWorldX/Sources/SpriteCreation.c	_SWSetTransparentColor	22141	35
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCreateSprite	22164	836
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCreateDrawData	224a8	334
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCreateSpriteFromSingleFile	225f6	307
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCreateSpriteFromSingleFileXY	22729	130
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCreateSpriteFromVerticalFile	227ab	165
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCreateSpriteFromSurfaceXY	22850	690
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCreateSpriteFromFileSequence	22b02	382
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCreateSpriteFromFile	22c80	215
+../SpriteWorldX/Sources/SpriteCreation.c	_SWUpdateSpriteFromFile	22d57	62
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCreateSpriteFromWorkArea	22d95	502
+../SpriteWorldX/Sources/SpriteCreation.c	_SWCloneSprite	22f8b	660
+../SpriteWorldX/Sources/SpriteCreation.c	_SWDoSelfMaskingForSurface	2321f	217
+../SpriteWorldX/Sources/SpriteFrame.c	_SWCreateFrame	232f8	192
+../SpriteWorldX/Sources/SpriteFrame.c	_SWCreateFrameFromSurface	233b8	116
+../SpriteWorldX/Sources/SpriteFrame.c	_SWCreateFrameFromSurfaceAndRect	2342c	302
+../SpriteWorldX/Sources/SpriteFrame.c	_SWCreateBlankFrame	2355a	216
+../SpriteWorldX/Sources/SpriteFrame.c	_SWCreateBlankGLFrame	23632	188
+../SpriteWorldX/Sources/SpriteFrame.c	_SWCreateFrameFromFile	236ee	197
+../SpriteWorldX/Sources/SpriteFrame.c	_SWUpdateFrameFromFile	237b3	172
+../SpriteWorldX/Sources/SpriteFrame.c	_SWCreateFrameFromFileMask	2385f	544
+../SpriteWorldX/Sources/SpriteFrame.c	_SWCreateFrameFromWorkArea	23a7f	604
+../SpriteWorldX/Sources/SpriteFrame.c	_SWUpdateFrameFromWorkArea	23cdb	333
+../SpriteWorldX/Sources/SpriteFrame.c	_SWDisposeFrame	23e28	233
+../SpriteWorldX/Sources/SpriteFrame.c	_SWLockFrame	23f11	90
+../SpriteWorldX/Sources/SpriteFrame.c	_SWUnlockFrame	23f6b	90
+../SpriteWorldX/Sources/SpriteFrame.c	_SWUpdateFrame	23fc5	743
+../SpriteWorldX/Sources/SpriteFrame.c	_SWFreeGLTextureForFrame	242ac	48
+../SpriteWorldX/Sources/SpriteFrame.c	_SWSetFrameHotSpot	242dc	134
+../SpriteWorldX/Sources/SpriteFrame.c	_SWSetFrameCollisionInset	24362	190
+../SpriteWorldX/Sources/SpriteLayer.c	_SWCreateSpriteLayer	24420	163
+../SpriteWorldX/Sources/SpriteLayer.c	_SWDisposeSpriteLayer	244c3	48
+../SpriteWorldX/Sources/SpriteLayer.c	_SWAddSprite	244f3	294
+../SpriteWorldX/Sources/SpriteLayer.c	_SWRemoveSprite	24619	213
+../SpriteWorldX/Sources/SpriteLayer.c	_SWRemoveAllSpritesFromLayer	246ee	115
+../SpriteWorldX/Sources/SpriteLayer.c	_SWDisposeAllSpritesInLayer	24761	127
+../SpriteWorldX/Sources/SpriteLayer.c	_SWCountNumSpritesInLayer	247e0	113
+../SpriteWorldX/Sources/SpriteLayer.c	_SWSwapSprite	24851	615
+../SpriteWorldX/Sources/SpriteLayer.c	_SWInsertSpriteAfterSprite	24ab8	215
+../SpriteWorldX/Sources/SpriteLayer.c	_SWInsertSpriteBeforeSprite	24b8f	215
+../SpriteWorldX/Sources/SpriteLayer.c	_SWGetNextSprite	24c66	101
+../SpriteWorldX/Sources/SpriteLayer.c	_SWGetPreviousSprite	24ccb	101
+../SpriteWorldX/Sources/SpriteLayer.c	_SWLockSpriteLayer	24d30	109
+../SpriteWorldX/Sources/SpriteLayer.c	_SWUnlockSpriteLayer	24d9d	109
+../SpriteWorldX/Sources/SpriteLayer.c	_SWCollideSpriteLayer	24e0a	1056
+../SpriteWorldX/Sources/SpriteLayer.c	_SWSpriteCollidesWithLayer	2522a	283
+../SpriteWorldX/Sources/SpriteLayer.c	__compareSpriteBottom	25345	36
+../SpriteWorldX/Sources/SpriteLayer.c	_SWSortSpriteLayer	25369	48
+../SpriteWorldX/Sources/SpriteLayer.c	_SWCustomSortSpriteLayer	25399	390
+../SpriteWorldX/Sources/SpriteLayer.c	_SWPauseSpriteLayer	2551f	82
+../SpriteWorldX/Sources/SpriteLayer.c	_SWUnpauseSpriteLayer	25571	82
+../SpriteWorldX/Sources/SpriteLayer.c	_SWSetSpriteLayerVisible	255c3	88
+../SpriteWorldX/Sources/SpriteLayer.c	_SWGetSpriteLayerVisible	2561b	82
+../SpriteWorldX/Sources/SpriteLayer.c	_SWSetSpriteLayersVisible	2566d	117
+../SpriteWorldX/Sources/SpriteLayer.c	_SWSetAllSpriteLayersVisible	256e2	53
+../SpriteWorldX/Sources/SpriteLayer.c	_SWSetLayerAsNonScrolling	25717	81
+../SpriteWorldX/Sources/SpriteLayer.c	_SWFindSpriteByPoint	25768	54
+../SpriteWorldX/Sources/SpriteLayer.c	_SWTopSpriteFromPoint	2579e	161
+../SpriteWorldX/Sources/SpriteLayer.c	_SWMoveSpriteLayerToTail	2583f	203
+../SpriteWorldX/Sources/SpriteWorld.c	_SWEnterSpriteWorld	2590a	138
+../SpriteWorldX/Sources/SpriteWorld.c	_SWExitSpriteWorld	25994	45
+../SpriteWorldX/Sources/SpriteWorld.c	_SWCreateSpriteWorld	259c1	471
+../SpriteWorldX/Sources/SpriteWorld.c	__setupGL	25b98	286
+../SpriteWorldX/Sources/SpriteWorld.c	_SWResetGLSetup	25cb6	77
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetSpriteWorldZoom	25d03	38
+../SpriteWorldX/Sources/SpriteWorld.c	_SWCalculateViewport	25d29	881
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetSpriteWorldAutoScaling	2609a	41
+../SpriteWorldX/Sources/SpriteWorld.c	_SWAutoScaleRect	260c3	254
+../SpriteWorldX/Sources/SpriteWorld.c	_SWCreateSpriteWorldFromSDLWindow	261c1	722
+../SpriteWorldX/Sources/SpriteWorld.c	_SWCreateAdditionalSpriteWorld	26493	300
+../SpriteWorldX/Sources/SpriteWorld.c	_SWCreateSpriteWorldFromSWSurface	265bf	512
+../SpriteWorldX/Sources/SpriteWorld.c	_SWCreateSpriteWorldFromFrames	267bf	1105
+../SpriteWorldX/Sources/SpriteWorld.c	_SWDisposeSpriteWorld	26c10	264
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetDesignResolution	26d18	262
+../SpriteWorldX/Sources/SpriteWorld.c	_SWGetWindowScalingFactor	26e1e	94
+../SpriteWorldX/Sources/SpriteWorld.c	_SWChangeWindowSize	26e7c	130
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetSpriteWorldStretchToFit	26efe	99
+../SpriteWorldX/Sources/SpriteWorld.c	_SWUpdateWindowSize	26f61	307
+../SpriteWorldX/Sources/SpriteWorld.c	_SWChangeWorldRect	27094	502
+../SpriteWorldX/Sources/SpriteWorld.c	_SWRestoreWorldRect	2728a	265
+../SpriteWorldX/Sources/SpriteWorld.c	_SWEraseBackground	27393	260
+../SpriteWorldX/Sources/SpriteWorld.c	_SWAddSpriteLayer	27497	142
+../SpriteWorldX/Sources/SpriteWorld.c	_SWRemoveSpriteLayer	27525	158
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSwapSpriteLayer	275c3	582
+../SpriteWorldX/Sources/SpriteWorld.c	_SWGetNextSpriteLayer	27809	100
+../SpriteWorldX/Sources/SpriteWorld.c	_SWLockSpriteWorld	2786d	72
+../SpriteWorldX/Sources/SpriteWorld.c	_SWUnlockSpriteWorld	278b5	72
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetScrollingWorldMoveBounds	278fd	80
+../SpriteWorldX/Sources/SpriteWorld.c	_SWResizeVisScrollRect	2794d	462
+../SpriteWorldX/Sources/SpriteWorld.c	_SWMoveVisScrollRect	27b1b	432
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetPostEraseCallBack	27ccb	23
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetPostDrawCallBack	27ce2	23
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetSpriteWorldMaxFPS	27cf9	138
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetSpriteWorldPseudoFPS	27d83	98
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetMinimumFrameRate	27de5	73
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetBackgroundColor	27e2e	84
+../SpriteWorldX/Sources/SpriteWorld.c	_SWUpdateSpriteWorld	27e82	2100
+../SpriteWorldX/Sources/SpriteWorld.c	_SWProcessSpriteWorld	286b6	615
+../SpriteWorldX/Sources/SpriteWorld.c	_SWProcessSpriteWorldForOneLayer	2891d	568
+../SpriteWorldX/Sources/SpriteWorld.c	_SWProcessSpriteLayer	28b55	307
+../SpriteWorldX/Sources/SpriteWorld.c	_SWProcessSprite	28c88	1081
+../SpriteWorldX/Sources/SpriteWorld.c	_SWProcessNonScrollingLayers	290c1	91
+../SpriteWorldX/Sources/SpriteWorld.c	_SWAnimateSpriteWorld	2911c	3176
+../SpriteWorldX/Sources/SpriteWorld.c	_SWCollectIdleSpriteIntersectingRects	29d84	537
+../SpriteWorldX/Sources/SpriteWorld.c	_SWFindSpritesToBeRemoved	29f9d	197
+../SpriteWorldX/Sources/SpriteWorld.c	_SWFlagRectAsChanged	2a062	62
+../SpriteWorldX/Sources/SpriteWorld.c	_SWMergeUpdateRect	2a0a0	559
+../SpriteWorldX/Sources/SpriteWorld.c	_SWRemoveUpdateRectStruct	2a2cf	101
+../SpriteWorldX/Sources/SpriteWorld.c	_SWGetMilliseconds	2a334	19
+../SpriteWorldX/Sources/SpriteWorld.c	_SWResetElapsedMilliseconds	2a347	27
+../SpriteWorldX/Sources/SpriteWorld.c	_SWGetElapsedMilliseconds	2a362	23
+../SpriteWorldX/Sources/SpriteWorld.c	_SWResetMovementTimer	2a379	14
+../SpriteWorldX/Sources/SpriteWorld.c	_SWHasPseudoFrameFired	2a387	85
+../SpriteWorldX/Sources/SpriteWorld.c	_SWGetCurrentFPS	2a3dc	117
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetCleanUpSpriteWorld	2a451	33
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetCleanUpFunction	2a472	33
+../SpriteWorldX/Sources/SpriteWorld.c	_SWGetSpriteWorldVersion	2a493	19
+../SpriteWorldX/Sources/SpriteWorld.c	_SWGetSpriteWorldPixelDepth	2a4a6	85
+../SpriteWorldX/Sources/SpriteWorld.c	_SWPaintRectToSidesOfWorldRect	2a4fb	778
+../SpriteWorldX/Sources/SpriteWorld.c	_SWDrawRectangle	2a805	193
+../SpriteWorldX/Sources/SpriteWorld.c	_SWClearStickyError	2a8c6	34
+../SpriteWorldX/Sources/SpriteWorld.c	_SWStickyError	2a8e8	30
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetStickyIfError	2a906	39
+../SpriteWorldX/Sources/SpriteWorld.c	_SWSetAssertionFailureCallback	2a92d	33
+../SpriteWorldX/Sources/SpriteWorld.c	_SWAssertFail	2a94e	130
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWCenterRect	2a9d0	244
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWSetRect	2aac4	90
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWOffsetRect	2ab1e	106
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWInsetRect	2ab88	106
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWEqualRect	2abf2	111
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_Randomize	2ac61	34
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_GetRandom	2ac83	101
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_GetRandomFloat	2ace8	119
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWCopyPascalString	2ad5f	64
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWCopyCString	2ad9f	71
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWEqualString	2ade6	163
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWCopyCStringToPascalString	2ae89	91
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWCopyPascalStringToCString	2aee4	109
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWConcatPascalStrings	2af51	165
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWStringToNum	2aff6	59
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWNumToString	2b031	83
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWCos	2b084	80
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWSin	2b0d4	80
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_SWATan	2b124	96
+../SpriteWorldX/Sources/SpriteWorldUtils.c	_ReportError	2b184	91
+../SpriteWorldX/Utils/SWStats.c	_CreateStatsSpriteClone	2b1df	343
+../SpriteWorldX/Utils/SWStats.c	_SetUpStatsSprite	2b336	150
+../SpriteWorldX/Utils/SWStats.c	_SetStatsSpriteDrawProc	2b3cc	32
+../SpriteWorldX/Utils/SWStats.c	_SetStatsSpriteNumber	2b3ec	53
+../SpriteWorldX/Utils/SWStats.c	_GetStatsSpriteNumber	2b421	23
+../SpriteWorldX/Utils/SWStats.c	_StatsItemDrawProc	2b438	698
+../SpriteWorldX/Utils/SWStats.c	_GetNumberLength	2b6f2	183
+../SpriteWorldX/Utils/SWCompression.c	_SWCompressInit	2b7a9	79
+../SpriteWorldX/Utils/SWCompression.c	_SWCompressExit	2b7f8	48
+../SpriteWorldX/Utils/SWCompression.c	_SWDecompressInit	2b828	79
+../SpriteWorldX/Utils/SWCompression.c	_SWDecompressExit	2b877	48
+../SpriteWorldX/Utils/SWCompression.c	_SWCompress	2b8a7	195
+../SpriteWorldX/Utils/SWCompression.c	_SWDecompress	2b96a	195
+../SpriteWorldX/Utils/SWCompression.c	_InitTree	2ba2d	94
+../SpriteWorldX/Utils/SWCompression.c	_InsertNode	2ba8b	620
+../SpriteWorldX/Utils/SWCompression.c	_DeleteNode	2bcf7	497
+../SpriteWorldX/Utils/SWCompression.c	_SDL_getc	2bee8	78
+../SpriteWorldX/Utils/SWCompression.c	_SDL_putc	2bf36	84
+../SpriteWorldX/Utils/SWCompression.c	_SWCompress_RW	2bf8a	842
+../SpriteWorldX/Utils/SWCompression.c	_SWDecompress_RW	2c2d4	379
+../SpriteWorldX/Utils/SWProperties.c	_SWCreateProperties	2c44f	70
+../SpriteWorldX/Utils/SWProperties.c	_SWDisposeProperties	2c495	118
+../SpriteWorldX/Utils/SWProperties.c	_SWLoadProperties	2c50b	61
+../SpriteWorldX/Utils/SWProperties.c	_SWLoadProperties_RW	2c548	1118
+../SpriteWorldX/Utils/SWProperties.c	___istype	2c9a6	98
+../SpriteWorldX/Utils/SWProperties.c	_SWSaveProperties	2ca08	61
+../SpriteWorldX/Utils/SWProperties.c	_SWSaveProperties_RW	2ca45	487
+../SpriteWorldX/Utils/SWProperties.c	_SWGetPropertyString	2cc2c	96
+../SpriteWorldX/Utils/SWProperties.c	_SWGetPropertyInteger	2cc8c	90
+../SpriteWorldX/Utils/SWProperties.c	_SWGetPropertyFloat	2cce6	102
+../SpriteWorldX/Utils/SWProperties.c	_SWGetPropertyBoolean	2cd4c	110
+../SpriteWorldX/Utils/SWProperties.c	_SWSetPropertyString	2cdba	285
+../SpriteWorldX/Utils/SWProperties.c	_SWSetPropertyInteger	2ced7	86
+../SpriteWorldX/Utils/SWProperties.c	_SWSetPropertyFloat	2cf2d	102
+../SpriteWorldX/Utils/SWProperties.c	_SWSetPropertyBoolean	2cf93	88
+../SpriteWorldX/Utils/SWProperties.c	_local_strdup	2cfeb	85
+../SpriteWorldX/Utils/SWProperties.c	_SDL_RWgets	2d040	143
+Sources & Headers/Midnight Mansion.c	_main	2d0cf	166
+Sources & Headers/Midnight Mansion.c	_CheckForLicenseAndDataFiles	2d175	442
+Sources & Headers/Midnight Mansion.c	_CreateAppSupportDirectories	2d32f	274
+Sources & Headers/Midnight Mansion.c	_InitVariables	2d441	569
+Sources & Headers/Midnight Mansion.c	_CreateAndAddSpriteLayers	2d67a	7350
+Sources & Headers/Midnight Mansion.c	_CreateSpriteWorld	2f330	599
+Sources & Headers/Midnight Mansion.c	_ChangeWorldRectForGame	2f587	111
+Sources & Headers/Midnight Mansion.c	_IsStatsAreaVisible	2f5f6	34
+Sources & Headers/Midnight Mansion.c	_MyRestoreWorldRect	2f618	62
+Sources & Headers/Midnight Mansion.c	_SetUpTiling	2f656	348
+Sources & Headers/Midnight Mansion.c	_SetUpTileColorVariations	2f7b2	1467
+Sources & Headers/Midnight Mansion.c	_LoadTiles	2fd6d	4478
+Sources & Headers/Midnight Mansion.c	_MyLoadTilesFromPict	30eeb	638
+Sources & Headers/Midnight Mansion.c	_StartUpGameCarbon	31169	697
+Sources & Headers/Midnight Mansion.c	_IsGamepadInitialized	31422	34
+Sources & Headers/Midnight Mansion.c	_InitGamePad	31444	235
+Sources & Headers/Midnight Mansion.c	_RunMainLoop	3152f	464
+Sources & Headers/Midnight Mansion.c	_InitializePreferences	316ff	615
+Sources & Headers/Midnight Mansion.c	_LoadPreferences	31966	164
+Sources & Headers/Midnight Mansion.c	_WritePreferencesFile	31a0a	777
+Sources & Headers/Midnight Mansion.c	_ReadPreferencesFile	31d13	890
+Sources & Headers/Midnight Mansion.c	_CreateEpisodeDataFile	3208d	280
+Sources & Headers/Midnight Mansion.c	_ReadEpisodeDataFile	321a5	320
+Sources & Headers/Midnight Mansion.c	_MyOpenStandardMansion	322e5	534
+Sources & Headers/Midnight Mansion.c	_OpenMansionUsingFilePath	324fb	458
+Sources & Headers/Midnight Mansion.c	_MMOpenCustomMansionUsingPathAndName	326c5	214
+Sources & Headers/Midnight Mansion.c	_SetCurMansionAsCustomMansion	3279b	91
+Sources & Headers/Midnight Mansion.c	_StartTutorialMansion	327f6	80
+Sources & Headers/Midnight Mansion.c	_StartGameNoEditor	32846	158
+Sources & Headers/Midnight Mansion.c	_StartGame	328e4	587
+Sources & Headers/Midnight Mansion.c	_SetUpNewGame	32b2f	724
+Sources & Headers/Midnight Mansion.c	_RunAnimation	32e03	163
+Sources & Headers/Midnight Mansion.c	_RunAnimationCore	32ea6	2609
+Sources & Headers/Midnight Mansion.c	_MyPostEraseCallback	338d7	164
+Sources & Headers/Midnight Mansion.c	_MyTileLayer3Callback	3397b	27
+Sources & Headers/Midnight Mansion.c	_SetMovingPlatformOverlapBottomInset	33996	115
+Sources & Headers/Midnight Mansion.c	_CleanUpAfterGame	33a09	252
+Sources & Headers/Midnight Mansion.c	_CloseMansionFile	33b05	57
+Sources & Headers/Midnight Mansion.c	_ShutDown	33b3e	85
+Sources & Headers/Midnight Mansion.c	_MyCleanUpFunction	33b93	81
+Sources & Headers/Midnight Mansion.c	_IsPlayingGame	33be4	88
+Sources & Headers/Midnight Mansion.c	_SetStartingNumLives	33c3c	60
+Sources & Headers/Midnight Mansion.c	_GetStartingNumLives	33c78	66
+Sources & Headers/Midnight Mansion.c	_RestoreJacksLives	33cba	100
+Sources & Headers/Midnight Mansion.c	_MMStartGameTimer	33d1e	48
+Sources & Headers/Midnight Mansion.c	_MMUpdateTimeSpentInMansion	33d4e	141
+Sources & Headers/Midnight Mansion.c	_MMPauseGameTimer	33ddb	19
+Sources & Headers/Midnight Mansion.c	_MMResumeGameTimer	33dee	14
+Sources & Headers/Midnight Mansion.c	_MakeMedusaHeadsForHackers	33dfc	80
+Sources & Headers/Midnight Mansion.c	_MMDisposeAllSpritesInSpriteWorld	33e4c	87
+Sources & Headers/Midnight Mansion.c	_TileChangeProc	33ea3	3067
+Sources & Headers/Midnight Mansion.c	_MyDrawTile	34a9e	261
+Sources & Headers/Midnight Mansion.c	_ResetFloorTileAnimations	34ba3	288
+Sources & Headers/Midnight Mansion.c	_HideLightSaberFloorsIfOff	34cc3	129
+Sources & Headers/Midnight Mansion.c	_MyGetTile	34d44	228
+Sources & Headers/Midnight Mansion.c	_DrawNothingDrawProc	34e28	14
+Sources & Headers/Midnight Mansion.c	_DoorSpriteDrawProc	34e36	756
+Sources & Headers/Midnight Mansion.c	_BKBlitCustomDoorSurface	3512a	1916
+Sources & Headers/Midnight Mansion.c	_ClipMainSpriteDrawProc	358a6	234
+Sources & Headers/Midnight Mansion.c	_ClipSpriteWithLavaDrawProc	35990	385
+Sources & Headers/Midnight Mansion.c	_AddShadowDrawProc	35b11	46
+Sources & Headers/Midnight Mansion.c	_EnemyShadowDrawProc	35b3f	424
+Sources & Headers/Midnight Mansion.c	_DrawMasterTileTextureDrawProc	35ce7	976
+Sources & Headers/Midnight Mansion.c	_TogglePause	360b7	72
+Sources & Headers/Midnight Mansion.c	_PauseGame	360ff	1837
+Sources & Headers/Midnight Mansion.c	_ResumeGame	3682c	322
+Sources & Headers/Midnight Mansion.c	_PauseSpriteLayersForPause	3696e	79
+Sources & Headers/Midnight Mansion.c	_HandlePausedScreenCallback	369bd	323
+Sources & Headers/Midnight Mansion.c	_ExitPausedMode	36b00	165
+Sources & Headers/Midnight Mansion.c	_DoEndGame	36ba5	203
+Sources & Headers/Midnight Mansion.c	_DoQuitCommand	36c70	259
+Sources & Headers/Midnight Mansion.c	_DoGameFadeToBlack	36d73	119
+Sources & Headers/Midnight Mansion.c	_DoGameFadeToBlackFullAnim	36dea	119
+Sources & Headers/Midnight Mansion.c	_DoGameFadeToNormal	36e61	66
+Sources & Headers/Midnight Mansion.c	_DoGameFadeToNormalFullAnim	36ea3	66
+Sources & Headers/Midnight Mansion.c	_DoFadeToBlack	36ee5	459
+Sources & Headers/Midnight Mansion.c	_DoFadeToNormal	370b0	962
+Sources & Headers/Midnight Mansion.c	_FadeToBlackMoveProc	37472	146
+Sources & Headers/Midnight Mansion.c	_FadeToNormalMoveProc	37504	108
+Sources & Headers/Midnight Mansion.c	_IsCurrentlyFadingToBlack	37570	92
+Sources & Headers/Midnight Mansion.c	_NewFadeSprite	375cc	383
+Sources & Headers/Midnight Mansion.c	_MMSetCursorForGame	3774b	83
+Sources & Headers/Midnight Mansion.c	_MMSetCursorForSystem	3779e	24
+Sources & Headers/Midnight Mansion.c	_MMRemoveGameCursor	377b6	68
+Sources & Headers/Midnight Mansion.c	_MMSaveCursorState	377fa	131
+Sources & Headers/Midnight Mansion.c	_MMRestoreCursorState	3787d	140
+Sources & Headers/Midnight Mansion.c	_MMHideAllCursors	37909	73
+Sources & Headers/Midnight Mansion.c	_MMInitCursor	37952	41
+Sources & Headers/Midnight Mansion.c	_MMHideCursor	3797b	63
+Sources & Headers/Midnight Mansion.c	_MMShieldCursor	379ba	41
+Sources & Headers/Midnight Mansion.c	_IsCursorShielded	379e3	34
+Sources & Headers/Midnight Mansion.c	_MMHandleCursorMovement	37a05	160
+Sources & Headers/Midnight Mansion.c	_CurrentScreenHasCustomCursor	37aa5	118
+Sources & Headers/Midnight Mansion.c	_MyGameBeep	37b1b	42
+Sources & Headers/Midnight Mansion.c	_MMAssertFailCallback	37b45	229
+Sources & Headers/Midnight Mansion.c	_MMFatalErrorCallback	37c2a	236
+Sources & Headers/Midnight Mansion.c	_ErrorMessage	37d16	154
+FTGL/src/FTBitmapGlyph.cpp	__ZN13FTBitmapGlyphC2EP16FT_GlyphSlotRec_	37db0	554
+FTGL/src/FTBitmapGlyph.cpp	__ZN13FTBitmapGlyphC1EP16FT_GlyphSlotRec_	37fda	554
+FTGL/src/FTBitmapGlyph.cpp	__ZN13FTBitmapGlyphD2Ev	38204	96
+FTGL/src/FTBitmapGlyph.cpp	__ZN13FTBitmapGlyphD1Ev	38264	96
+FTGL/src/FTBitmapGlyph.cpp	__ZN13FTBitmapGlyphD0Ev	382c4	96
+FTGL/src/FTBitmapGlyph.cpp	__ZN13FTBitmapGlyph6RenderERK7FTPoint	38324	448
+FTGL/src/FTBitmapGlyph.cpp	__ZN7FTPointC1Ev	384e4	74
+FTGL/src/FTBitmapGlyph.cpp	__ZN7FTPointC1Eddd	3852e	88
+FTGL/src/FTBitmapGlyph.cpp	__ZNK7FTPoint1XEv	38586	30
+FTGL/src/FTBitmapGlyph.cpp	__ZNK7FTPoint1YEv	385a4	30
+FTGL/src/FTCharmap.cpp	__ZN9FTCharmapC2EP6FTFace	385c2	190
+FTGL/src/FTCharmap.cpp	__ZN9FTCharmapC1EP6FTFace	38680	190
+FTGL/src/FTCharmap.cpp	__ZN9FTCharmapD2Ev	3873e	90
+FTGL/src/FTCharmap.cpp	__ZN9FTCharmapD1Ev	38798	90
+FTGL/src/FTCharmap.cpp	__ZN9FTCharmapD0Ev	387f2	90
+FTGL/src/FTCharmap.cpp	__ZN9FTCharmap7CharMapE12FT_Encoding_	3884c	128
+FTGL/src/FTCharmap.cpp	__ZN9FTCharmap14GlyphListIndexEj	388cc	36
+FTGL/src/FTCharmap.cpp	__ZN9FTCharmap9FontIndexEj	388f0	36
+FTGL/src/FTCharmap.cpp	__ZN9FTCharmap11InsertIndexEjj	38914	42
+FTGL/src/FTCharmap.cpp	__ZNK6FTFace4FaceEv	3893e	20
+FTGL/src/FTCharmap.cpp	__ZN21FTCharToGlyphIndexMapC1Ev	38952	46
+FTGL/src/FTCharmap.cpp	__ZN21FTCharToGlyphIndexMap5clearEv	38980	136
+FTGL/src/FTCharmap.cpp	__ZN21FTCharToGlyphIndexMapD1Ev	38a08	116
+FTGL/src/FTCharmap.cpp	__ZN21FTCharToGlyphIndexMapD0Ev	38a7c	116
+FTGL/src/FTCharmap.cpp	__ZN21FTCharToGlyphIndexMap4findEm	38af0	148
+FTGL/src/FTCharmap.cpp	__ZN21FTCharToGlyphIndexMap6insertEml	38b84	250
+FTGL/src/FTContour.cpp	__ZN9FTContourC1EP10FT_Vector_Pcj	38c7e	1860
+FTGL/src/FTContour.cpp	__ZN9FTContourC2EP10FT_Vector_Pcj	393c2	1859
+FTGL/src/FTContour.cpp	__ZN7FTPointC1ERK10FT_Vector_	39b06	72
+FTGL/src/FTContour.cpp	__ZN7FTPointplERKS_	39b4e	106
+FTGL/src/FTContour.cpp	__ZN7FTPointmlEd	39bb8	98
+FTGL/src/FTContour.cpp	__ZNK8FTVectorI7FTPointE4sizeEv	39c1a	20
+FTGL/src/FTContour.cpp	__ZNK8FTVectorI7FTPointE5emptyEv	39c2e	34
+FTGL/src/FTContour.cpp	__ZN8FTVectorI7FTPointEC1Ev	39c50	68
+FTGL/src/FTContour.cpp	__ZN8FTVectorI7FTPointE5clearEv	39c94	80
+FTGL/src/FTContour.cpp	__ZN8FTVectorI7FTPointED0Ev	39ce4	72
+FTGL/src/FTContour.cpp	__ZN8FTVectorI7FTPointED1Ev	39d2c	72
+FTGL/src/FTContour.cpp	__ZN8FTVectorI7FTPointE5beginEv	39d74	20
+FTGL/src/FTContour.cpp	__ZN8FTVectorI7FTPointEixEm	39d88	42
+FTGL/src/FTContour.cpp	__ZNK8FTVectorI7FTPointE8capacityEv	39db2	20
+FTGL/src/FTContour.cpp	__ZN8FTVectorI7FTPointE3endEv	39dc6	58
+FTGL/src/FTContour.cpp	__ZN8FTVectorI7FTPointE6expandEm	39e00	302
+FTGL/src/FTContour.cpp	__ZN8FTVectorI7FTPointE9push_backERKS0_	39f2e	152
+FTGL/src/FTContour.cpp	__ZN9FTContour8AddPointE7FTPoint	39fc6	112
+FTGL/src/FTContour.cpp	__ZN9FTContour8AddPointEff	3a036	128
+FTGL/src/FTContour.cpp	__ZN9FTContour22evaluateQuadraticCurveEv	3a0b6	502
+FTGL/src/FTContour.cpp	__ZN9FTContour18evaluateCubicCurveEv	3a2ac	789
+FTGL/src/FTExtrdGlyph.cpp	__Z41__static_initialization_and_destruction_0ii	2ff2	98
+FTGL/src/FTExtrdGlyph.cpp	__GLOBAL__I__ZN12FTExtrdGlyphC2EP16FT_GlyphSlotRec_fb	3054	29
+FTGL/src/FTExtrdGlyph.cpp	__ZN12FTExtrdGlyphD2Ev	3a5c2	142
+FTGL/src/FTExtrdGlyph.cpp	__ZN12FTExtrdGlyphD1Ev	3a650	142
+FTGL/src/FTExtrdGlyph.cpp	__ZN12FTExtrdGlyphD0Ev	3a6de	142
+FTGL/src/FTExtrdGlyph.cpp	__ZN12FTExtrdGlyph6RenderERK7FTPoint	3a76c	132
+FTGL/src/FTExtrdGlyph.cpp	__ZN12FTExtrdGlyph9GetNormalERK7FTPointS2_	3a7f0	298
+FTGL/src/FTExtrdGlyph.cpp	__ZN12FTExtrdGlyphC1EP16FT_GlyphSlotRec_fb	3a91a	3506
+FTGL/src/FTExtrdGlyph.cpp	__ZN12FTExtrdGlyphC2EP16FT_GlyphSlotRec_fb	3b6cc	3506
+FTGL/src/FTExtrdGlyph.cpp	___tcf_0	3c47e	41
+FTGL/src/FTExtrdGlyph.cpp	__ZNK7FTPointcvPKdEv	3c4a8	18
+FTGL/src/FTExtrdGlyph.cpp	__ZN6FTBBox8SetDepthEf	3c4ba	36
+FTGL/src/FTExtrdGlyph.cpp	__ZNK9FTContour10PointCountEv	3c4de	26
+FTGL/src/FTExtrdGlyph.cpp	__ZNK13FTTesselation10PointCountEv	3c4f8	26
+FTGL/src/FTExtrdGlyph.cpp	__ZNK13FTTesselation11PolygonTypeEv	3c512	20
+FTGL/src/FTExtrdGlyph.cpp	__ZNK8FTVectorIP13FTTesselationE4sizeEv	3c526	20
+FTGL/src/FTExtrdGlyph.cpp	__ZNK6FTMesh16TesselationCountEv	3c53a	28
+FTGL/src/FTExtrdGlyph.cpp	__ZNK12FTVectoriser7GetMeshEv	3c556	20
+FTGL/src/FTExtrdGlyph.cpp	__ZNK12FTVectoriser12ContourCountEv	3c56a	22
+FTGL/src/FTExtrdGlyph.cpp	__ZNK12FTVectoriser11ContourFlagEv	3c580	20
+FTGL/src/FTExtrdGlyph.cpp	__ZNK8FTVectorI7FTPointE5beginEv	3c594	20
+FTGL/src/FTExtrdGlyph.cpp	__ZNK8FTVectorI7FTPointEixEm	3c5a8	42
+FTGL/src/FTExtrdGlyph.cpp	__ZNK13FTTesselation5PointEj	3c5d2	32
+FTGL/src/FTExtrdGlyph.cpp	__ZNK9FTContour5PointEj	3c5f2	32
+FTGL/src/FTFace.cpp	__ZN6FTFaceC2EPKc	3c612	290
+FTGL/src/FTFace.cpp	__ZN6FTFaceC1EPKc	3c734	290
+FTGL/src/FTFace.cpp	__ZN6FTFaceC2EPKhm	3c856	268
+FTGL/src/FTFace.cpp	__ZN6FTFaceC1EPKhm	3c962	268
+FTGL/src/FTFace.cpp	__ZN6FTFaceD2Ev	3ca6e	176
+FTGL/src/FTFace.cpp	__ZN6FTFaceD1Ev	3cb1e	176
+FTGL/src/FTFace.cpp	__ZN6FTFaceD0Ev	3cbce	176
+FTGL/src/FTFace.cpp	__ZN6FTFace6AttachEPKc	3cc7e	60
+FTGL/src/FTFace.cpp	__ZN6FTFace6AttachEPKhm	3ccba	78
+FTGL/src/FTFace.cpp	__ZN6FTFace4SizeEjj	3cd08	88
+FTGL/src/FTFace.cpp	__ZN6FTFace12CharMapCountEv	3cd60	26
+FTGL/src/FTFace.cpp	__ZN6FTFace11CharMapListEv	3cd7a	138
+FTGL/src/FTFace.cpp	__ZN6FTFace11KernAdvanceEjj	3ce04	272
+FTGL/src/FTFace.cpp	__ZN6FTFace5GlyphEji	3cf14	88
+FTGL/src/FTFace.cpp	__ZNK6FTSize5ErrorEv	3cf6c	20
+FTGL/src/FTFace.cpp	__ZNK9FTLibrary10GetLibraryEv	3cf80	19
+FTGL/src/FTFont.cpp	__ZN6FTFontC2EPKc	3cf94	274
+FTGL/src/FTFont.cpp	__ZN6FTFontC1EPKc	3d0a6	274
+FTGL/src/FTFont.cpp	__ZN6FTFontC2EPKhm	3d1b8	274
+FTGL/src/FTFont.cpp	__ZN6FTFontC1EPKhm	3d2ca	274
+FTGL/src/FTFont.cpp	__ZN6FTFontD2Ev	3d3dc	216
+FTGL/src/FTFont.cpp	__ZN6FTFontD1Ev	3d4b4	216
+FTGL/src/FTFont.cpp	__ZN6FTFontD0Ev	3d58c	216
+FTGL/src/FTFont.cpp	__ZN6FTFont6AttachEPKc	3d664	90
+FTGL/src/FTFont.cpp	__ZN6FTFont6AttachEPKhm	3d6be	98
+FTGL/src/FTFont.cpp	__ZN6FTFont8FaceSizeEjj	3d720	244
+FTGL/src/FTFont.cpp	__ZNK6FTFont8FaceSizeEv	3d814	28
+FTGL/src/FTFont.cpp	__ZN6FTFont7CharMapE12FT_Encoding_	3d830	64
+FTGL/src/FTFont.cpp	__ZN6FTFont12CharMapCountEv	3d870	28
+FTGL/src/FTFont.cpp	__ZN6FTFont11CharMapListEv	3d88c	28
+FTGL/src/FTFont.cpp	__ZN6FTFont14UseDisplayListEb	3d8a8	30
+FTGL/src/FTFont.cpp	__ZNK6FTFont8AscenderEv	3d8c6	60
+FTGL/src/FTFont.cpp	__ZNK6FTFont9DescenderEv	3d902	60
+FTGL/src/FTFont.cpp	__ZNK6FTFont10LineHeightEv	3d93e	60
+FTGL/src/FTFont.cpp	__ZN6FTFont6RenderEPKw	3d97a	292
+FTGL/src/FTFont.cpp	__ZN6FTFont6RenderEPKc	3da9e	298
+FTGL/src/FTFont.cpp	__ZN6FTFont7AdvanceEPKc	3dbc8	166
+FTGL/src/FTFont.cpp	__ZN6FTFont7AdvanceEPKw	3dc6e	160
+FTGL/src/FTFont.cpp	__ZN6FTFont4BBoxEPKwRfS2_S2_S2_S2_S2_	3dd0e	634
+FTGL/src/FTFont.cpp	__ZN6FTFont4BBoxEPKcRfS2_S2_S2_S2_S2_	3df88	650
+FTGL/src/FTFont.cpp	__ZN7FTPoint1XEd	3e212	38
+FTGL/src/FTFont.cpp	__ZN7FTPoint1YEd	3e238	40
+FTGL/src/FTFont.cpp	__ZNK7FTPoint1ZEv	3e260	30
+FTGL/src/FTFont.cpp	__ZNK6FTFace5ErrorEv	3e27e	20
+FTGL/src/FTFont.cpp	__ZN6FTFont5DepthEf	3e292	14
+FTGL/src/FTFont.cpp	__ZN6FTBBoxC1Ev	3e2a0	104
+FTGL/src/FTFont.cpp	__ZN6FTBBoxD1Ev	3e308	14
+FTGL/src/FTFont.cpp	__ZN6FTBBox4MoveE7FTPoint	3e316	334
+FTGL/src/FTFont.cpp	__ZN6FTBBoxpLERKS_	3e464	396
+FTGL/src/FTFont.cpp	__ZNK16FTGlyphContainer5ErrorEv	3e5f0	20
+FTGL/src/FTFont.cpp	__ZN6FTSizeaSERKS_	3e604	90
+FTGL/src/FTFont.cpp	__ZN6FTFont10CheckGlyphEj	3e65e	169
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFontC2EPKc	3e708	60
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFontC1EPKc	3e744	60
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFontC2EPKhm	3e780	66
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFontC1EPKhm	3e7c2	66
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFontD2Ev	3e804	72
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFontD1Ev	3e84c	72
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFontD0Ev	3e894	72
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFont6RenderEPKc	3e8dc	118
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFont6RenderEPKw	3e952	118
+FTGL/src/FTGLBitmapFont.cpp	__ZN14FTGLBitmapFont9MakeGlyphEj	3e9c8	167
+FTGL/src/FTGLExtrdFont.cpp	__ZN13FTGLExtrdFontC2EPKc	3ea70	74
+FTGL/src/FTGLExtrdFont.cpp	__ZN13FTGLExtrdFontC1EPKc	3eaba	74
+FTGL/src/FTGLExtrdFont.cpp	__ZN13FTGLExtrdFontC2EPKhm	3eb04	80
+FTGL/src/FTGLExtrdFont.cpp	__ZN13FTGLExtrdFontC1EPKhm	3eb54	80
+FTGL/src/FTGLExtrdFont.cpp	__ZN13FTGLExtrdFontD2Ev	3eba4	72
+FTGL/src/FTGLExtrdFont.cpp	__ZN13FTGLExtrdFontD1Ev	3ebec	72
+FTGL/src/FTGLExtrdFont.cpp	__ZN13FTGLExtrdFontD0Ev	3ec34	72
+FTGL/src/FTGLExtrdFont.cpp	__ZN13FTGLExtrdFont5DepthEf	3ec7c	24
+FTGL/src/FTGLExtrdFont.cpp	__ZN13FTGLExtrdFont9MakeGlyphEj	3ec94	191
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFontC2EPKc	3ed54	60
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFontC1EPKc	3ed90	60
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFontC2EPKhm	3edcc	66
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFontC1EPKhm	3ee0e	66
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFontD2Ev	3ee50	72
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFontD1Ev	3ee98	72
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFontD0Ev	3eee0	72
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFont6RenderEPKc	3ef28	126
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFont6RenderEPKw	3efa6	125
+FTGL/src/FTGLOutlineFont.cpp	__ZN15FTGLOutlineFont9MakeGlyphEj	3f024	181
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFontC2EPKc	3f0da	60
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFontC1EPKc	3f116	60
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFontC2EPKhm	3f152	66
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFontC1EPKhm	3f194	66
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFontD2Ev	3f1d6	72
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFontD1Ev	3f21e	72
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFontD0Ev	3f266	72
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFont6RenderEPKc	3f2ae	206
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFont6RenderEPKw	3f37c	205
+FTGL/src/FTGLPixmapFont.cpp	__ZN14FTGLPixmapFont9MakeGlyphEj	3f44a	167
+FTGL/src/FTGLPolygonFont.cpp	__ZN15FTGLPolygonFontC2EPKc	3f4f2	60
+FTGL/src/FTGLPolygonFont.cpp	__ZN15FTGLPolygonFontC1EPKc	3f52e	60
+FTGL/src/FTGLPolygonFont.cpp	__ZN15FTGLPolygonFontC2EPKhm	3f56a	66
+FTGL/src/FTGLPolygonFont.cpp	__ZN15FTGLPolygonFontC1EPKhm	3f5ac	66
+FTGL/src/FTGLPolygonFont.cpp	__ZN15FTGLPolygonFontD2Ev	3f5ee	72
+FTGL/src/FTGLPolygonFont.cpp	__ZN15FTGLPolygonFontD1Ev	3f636	72
+FTGL/src/FTGLPolygonFont.cpp	__ZN15FTGLPolygonFontD0Ev	3f67e	72
+FTGL/src/FTGLPolygonFont.cpp	__ZN15FTGLPolygonFont9MakeGlyphEj	3f6c6	181
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFontC1EPKhm	3f77c	224
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFontC2EPKhm	3f85c	224
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFontC1EPKc	3f93c	216
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFontC2EPKc	3fa14	216
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFont6RenderEPKc	3faec	86
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFont6RenderEPKw	3fb42	86
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFont8FaceSizeEjj	3fb98	184
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFontD0Ev	3fc50	224
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFontD1Ev	3fd30	224
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFontD2Ev	3fe10	223
+FTGL/src/FTGLTextureFont.cpp	__ZNK6FTFace10GlyphCountEv	3fef0	20
+FTGL/src/FTGLTextureFont.cpp	__ZNK7FTGlyph4BBoxEv	3ff04	20
+FTGL/src/FTGLTextureFont.cpp	__ZN14FTTextureGlyph18ResetActiveTextureEv	3ff18	34
+FTGL/src/FTGLTextureFont.cpp	__Z12NextPowerOf2m	3ff3a	66
+FTGL/src/FTGLTextureFont.cpp	__ZN8FTVectorImEC1Ev	3ff7c	68
+FTGL/src/FTGLTextureFont.cpp	__ZNK8FTVectorImE4sizeEv	3ffc0	20
+FTGL/src/FTGLTextureFont.cpp	__ZNK8FTVectorImE5emptyEv	3ffd4	34
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFont20CalculateTextureSizeEv	3fff6	384
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFont13CreateTextureEv	40176	336
+FTGL/src/FTGLTextureFont.cpp	__ZN8FTVectorImE5clearEv	402c6	80
+FTGL/src/FTGLTextureFont.cpp	__ZN8FTVectorImED1Ev	40316	72
+FTGL/src/FTGLTextureFont.cpp	__ZN8FTVectorImED0Ev	4035e	72
+FTGL/src/FTGLTextureFont.cpp	__ZN8FTVectorImE5beginEv	403a6	20
+FTGL/src/FTGLTextureFont.cpp	__ZN8FTVectorImEixEm	403ba	36
+FTGL/src/FTGLTextureFont.cpp	__ZNK8FTVectorImE8capacityEv	403de	20
+FTGL/src/FTGLTextureFont.cpp	__ZN8FTVectorImE3endEv	403f2	50
+FTGL/src/FTGLTextureFont.cpp	__ZN8FTVectorImE6expandEm	40424	216
+FTGL/src/FTGLTextureFont.cpp	__ZN8FTVectorImE9push_backERKm	404fc	120
+FTGL/src/FTGLTextureFont.cpp	__ZN15FTGLTextureFont9MakeGlyphEj	40574	753
+FTGL/src/FTGlyph.cpp	__ZN7FTGlyphC2EP16FT_GlyphSlotRec_b	40866	358
+FTGL/src/FTGlyph.cpp	__ZN7FTGlyphC1EP16FT_GlyphSlotRec_b	409cc	358
+FTGL/src/FTGlyph.cpp	__ZN7FTGlyphD2Ev	40b32	76
+FTGL/src/FTGlyph.cpp	__ZN7FTGlyphD1Ev	40b7e	76
+FTGL/src/FTGlyph.cpp	__ZN7FTGlyphD0Ev	40bca	75
+FTGL/src/FTGlyph.cpp	__ZN6FTBBoxC1EP16FT_GlyphSlotRec_	40c16	296
+FTGL/src/FTGlyphContainer.cpp	__ZN16FTGlyphContainer7CharMapE12FT_Encoding_	40d3e	64
+FTGL/src/FTGlyphContainer.cpp	__ZNK16FTGlyphContainer9FontIndexEj	40d7e	36
+FTGL/src/FTGlyphContainer.cpp	__ZN16FTGlyphContainerD1Ev	40da2	210
+FTGL/src/FTGlyphContainer.cpp	__ZN16FTGlyphContainerD2Ev	40e74	210
+FTGL/src/FTGlyphContainer.cpp	__ZN16FTGlyphContainer7AdvanceEjj	40f46	270
+FTGL/src/FTGlyphContainer.cpp	__ZN16FTGlyphContainer6RenderEjj7FTPoint	41054	316
+FTGL/src/FTGlyphContainer.cpp	__ZN16FTGlyphContainer3AddEP7FTGlyphj	41190	76
+FTGL/src/FTGlyphContainer.cpp	__ZN16FTGlyphContainerC1EP6FTFace	411dc	182
+FTGL/src/FTGlyphContainer.cpp	__ZN16FTGlyphContainerC2EP6FTFace	41292	182
+FTGL/src/FTGlyphContainer.cpp	__ZNK16FTGlyphContainer4BBoxEj	41348	114
+FTGL/src/FTGlyphContainer.cpp	__ZNK16FTGlyphContainer5GlyphEj	413ba	61
+FTGL/src/FTGlyphContainer.cpp	__ZN7FTPointpLERKS_	413f8	98
+FTGL/src/FTGlyphContainer.cpp	__ZNK7FTGlyph7AdvanceEv	4145a	20
+FTGL/src/FTGlyphContainer.cpp	__ZNK9FTCharmap5ErrorEv	4146e	20
+FTGL/src/FTGlyphContainer.cpp	__ZN8FTVectorIP7FTGlyphEC1Ev	41482	68
+FTGL/src/FTGlyphContainer.cpp	__ZN8FTVectorIP7FTGlyphE5beginEv	414c6	20
+FTGL/src/FTGlyphContainer.cpp	__ZN8FTVectorIP7FTGlyphE5clearEv	414da	80
+FTGL/src/FTGlyphContainer.cpp	__ZN8FTVectorIP7FTGlyphED1Ev	4152a	72
+FTGL/src/FTGlyphContainer.cpp	__ZNK8FTVectorIP7FTGlyphE4sizeEv	41572	20
+FTGL/src/FTGlyphContainer.cpp	__ZN8FTVectorIP7FTGlyphE3endEv	41586	50
+FTGL/src/FTGlyphContainer.cpp	__ZN8FTVectorIP7FTGlyphEixEm	415b8	36
+FTGL/src/FTGlyphContainer.cpp	__ZN8FTVectorIP7FTGlyphED0Ev	415dc	72
+FTGL/src/FTGlyphContainer.cpp	__ZNK8FTVectorIP7FTGlyphE8capacityEv	41624	20
+FTGL/src/FTGlyphContainer.cpp	__ZN8FTVectorIP7FTGlyphE6expandEm	41638	216
+FTGL/src/FTGlyphContainer.cpp	__ZN8FTVectorIP7FTGlyphE9push_backERKS1_	41710	120
+FTGL/src/FTGlyphContainer.cpp	__ZNK8FTVectorIP7FTGlyphE5beginEv	41788	20
+FTGL/src/FTGlyphContainer.cpp	__ZNK8FTVectorIP7FTGlyphEixEm	4179c	36
+FTGL/src/FTLibrary.cpp	__ZN9FTLibraryD1Ev	417c0	60
+FTGL/src/FTLibrary.cpp	___tcf_0	417fc	42
+FTGL/src/FTLibrary.cpp	__ZN9FTLibraryD2Ev	41826	60
+FTGL/src/FTLibrary.cpp	__ZN9FTLibrary10InitialiseEv	41862	124
+FTGL/src/FTLibrary.cpp	__ZN9FTLibraryC1Ev	418de	44
+FTGL/src/FTLibrary.cpp	__ZN9FTLibrary8InstanceEv	4190a	204
+FTGL/src/FTLibrary.cpp	__ZN9FTLibraryC2Ev	419d6	44
+FTGL/src/FTOutlineGlyph.cpp	__ZN14FTOutlineGlyphD2Ev	41a02	142
+FTGL/src/FTOutlineGlyph.cpp	__ZN14FTOutlineGlyphD1Ev	41a90	142
+FTGL/src/FTOutlineGlyph.cpp	__ZN14FTOutlineGlyphD0Ev	41b1e	142
+FTGL/src/FTOutlineGlyph.cpp	__ZN14FTOutlineGlyph6RenderERK7FTPoint	41bac	132
+FTGL/src/FTOutlineGlyph.cpp	__ZN14FTOutlineGlyphC1EP16FT_GlyphSlotRec_b	41c30	602
+FTGL/src/FTOutlineGlyph.cpp	__ZN14FTOutlineGlyphC2EP16FT_GlyphSlotRec_b	41e8a	602
+FTGL/src/FTPixmapGlyph.cpp	__ZN13FTPixmapGlyphC2EP16FT_GlyphSlotRec_	420e4	542
+FTGL/src/FTPixmapGlyph.cpp	__ZN13FTPixmapGlyphC1EP16FT_GlyphSlotRec_	42302	542
+FTGL/src/FTPixmapGlyph.cpp	__ZN13FTPixmapGlyphD2Ev	42520	96
+FTGL/src/FTPixmapGlyph.cpp	__ZN13FTPixmapGlyphD1Ev	42580	96
+FTGL/src/FTPixmapGlyph.cpp	__ZN13FTPixmapGlyphD0Ev	425e0	96
+FTGL/src/FTPixmapGlyph.cpp	__ZN13FTPixmapGlyph6RenderERK7FTPoint	42640	425
+FTGL/src/FTPoint.cpp	__ZeqRK7FTPointS1_	427ea	98
+FTGL/src/FTPoint.cpp	__ZneRK7FTPointS1_	4284c	100
+FTGL/src/FTPoint.cpp	__ZmldR7FTPoint	428b0	104
+FTGL/src/FTPolyGlyph.cpp	__ZN11FTPolyGlyphD2Ev	42918	142
+FTGL/src/FTPolyGlyph.cpp	__ZN11FTPolyGlyphD1Ev	429a6	142
+FTGL/src/FTPolyGlyph.cpp	__ZN11FTPolyGlyphD0Ev	42a34	142
+FTGL/src/FTPolyGlyph.cpp	__ZN11FTPolyGlyph6RenderERK7FTPoint	42ac2	132
+FTGL/src/FTPolyGlyph.cpp	__ZN11FTPolyGlyphC1EP16FT_GlyphSlotRec_b	42b46	978
+FTGL/src/FTPolyGlyph.cpp	__ZN11FTPolyGlyphC2EP16FT_GlyphSlotRec_b	42f18	978
+FTGL/src/FTSize.cpp	__ZN6FTSizeC2Ev	432ea	96
+FTGL/src/FTSize.cpp	__ZN6FTSizeC1Ev	4334a	96
+FTGL/src/FTSize.cpp	__ZN6FTSizeD2Ev	433aa	62
+FTGL/src/FTSize.cpp	__ZN6FTSizeD1Ev	433e8	62
+FTGL/src/FTSize.cpp	__ZN6FTSizeD0Ev	43426	62
+FTGL/src/FTSize.cpp	__ZN6FTSize8CharSizeEPP11FT_FaceRec_jjj	43464	246
+FTGL/src/FTSize.cpp	__ZNK6FTSize8CharSizeEv	4355a	20
+FTGL/src/FTSize.cpp	__ZNK6FTSize8AscenderEv	4356e	102
+FTGL/src/FTSize.cpp	__ZNK6FTSize9DescenderEv	435d4	102
+FTGL/src/FTSize.cpp	__ZNK6FTSize6HeightEv	4363a	268
+FTGL/src/FTSize.cpp	__ZNK6FTSize5WidthEv	43746	268
+FTGL/src/FTSize.cpp	__ZNK6FTSize9UnderlineEv	43852	44
+FTGL/src/FTTextureGlyph.cpp	__ZN14FTTextureGlyphC2EP16FT_GlyphSlotRec_iiill	4387e	764
+FTGL/src/FTTextureGlyph.cpp	__ZN14FTTextureGlyphC1EP16FT_GlyphSlotRec_iiill	43b7a	764
+FTGL/src/FTTextureGlyph.cpp	__ZN14FTTextureGlyphD2Ev	43e76	72
+FTGL/src/FTTextureGlyph.cpp	__ZN14FTTextureGlyphD1Ev	43ebe	72
+FTGL/src/FTTextureGlyph.cpp	__ZN14FTTextureGlyphD0Ev	43f06	72
+FTGL/src/FTTextureGlyph.cpp	__ZN14FTTextureGlyph6RenderERK7FTPoint	43f4e	933
+FTGL/src/FTVectoriser.cpp	__Z9ftglErrormP6FTMesh	442f4	32
+FTGL/src/FTVectoriser.cpp	__ZN12FTVectoriser15ProcessContoursEv	44314	288
+FTGL/src/FTVectoriser.cpp	__ZN12FTVectoriserC1EP16FT_GlyphSlotRec_	44434	170
+FTGL/src/FTVectoriser.cpp	__ZN12FTVectoriserC2EP16FT_GlyphSlotRec_	444de	170
+FTGL/src/FTVectoriser.cpp	__ZN12FTVectoriser10PointCountEv	44588	92
+FTGL/src/FTVectoriser.cpp	__ZNK12FTVectoriser7ContourEj	445e4	62
+FTGL/src/FTVectoriser.cpp	__ZN6FTMeshD1Ev	44622	148
+FTGL/src/FTVectoriser.cpp	__ZN12FTVectoriserD0Ev	446b6	206
+FTGL/src/FTVectoriser.cpp	__ZN12FTVectoriserD1Ev	44784	206
+FTGL/src/FTVectoriser.cpp	__ZN12FTVectoriserD2Ev	44852	206
+FTGL/src/FTVectoriser.cpp	__ZN6FTMeshD2Ev	44920	148
+FTGL/src/FTVectoriser.cpp	__ZN6FTMesh7CombineEddd	449b4	138
+FTGL/src/FTVectoriser.cpp	__Z11ftglCombinePdPPvPfS1_P6FTMesh	44a3e	84
+FTGL/src/FTVectoriser.cpp	__ZNK6FTMesh11TesselationEj	44a92	72
+FTGL/src/FTVectoriser.cpp	__ZN6FTMesh5BeginEm	44ada	94
+FTGL/src/FTVectoriser.cpp	__Z9ftglBeginmP6FTMesh	44b38	32
+FTGL/src/FTVectoriser.cpp	__ZN6FTMesh8AddPointEddd	44b58	96
+FTGL/src/FTVectoriser.cpp	__Z10ftglVertexPvP6FTMesh	44bb8	76
+FTGL/src/FTVectoriser.cpp	__ZN6FTMesh3EndEv	44c04	36
+FTGL/src/FTVectoriser.cpp	__Z7ftglEndP6FTMesh	44c28	26
+FTGL/src/FTVectoriser.cpp	__ZN6FTMeshC1Ev	44c42	150
+FTGL/src/FTVectoriser.cpp	__ZN12FTVectoriser8MakeMeshEd	44cd8	710
+FTGL/src/FTVectoriser.cpp	__ZN6FTMeshC2Ev	44f9e	149
+FTGL/src/FTVectoriser.cpp	__ZN6FTMesh5ErrorEm	45034	24
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationEC1Ev	4504c	68
+FTGL/src/FTVectoriser.cpp	__ZN6FTListI7FTPointED1Ev	45090	56
+FTGL/src/FTVectoriser.cpp	__ZNK6FTListI7FTPointE4backEv	450c8	24
+FTGL/src/FTVectoriser.cpp	__ZN9FTContourD1Ev	450e0	36
+FTGL/src/FTVectoriser.cpp	__ZN13FTTesselationD1Ev	45104	36
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationE5clearEv	45128	80
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationED1Ev	45178	72
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationED0Ev	451c0	72
+FTGL/src/FTVectoriser.cpp	__ZN6FTListI7FTPointE4NodeC1Ev	45208	38
+FTGL/src/FTVectoriser.cpp	__ZN6FTListI7FTPointEC1Ev	4522e	76
+FTGL/src/FTVectoriser.cpp	__ZNK8FTVectorIP13FTTesselationE8capacityEv	4527a	20
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationE5beginEv	4528e	20
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationEixEm	452a2	36
+FTGL/src/FTVectoriser.cpp	__ZN6FTListI7FTPointE4NodeC1ERKS0_	452c6	78
+FTGL/src/FTVectoriser.cpp	__ZN6FTListI7FTPointE9push_backERKS0_	45314	118
+FTGL/src/FTVectoriser.cpp	__ZNK8FTVectorIP13FTTesselationE5beginEv	4538a	20
+FTGL/src/FTVectoriser.cpp	__ZNK8FTVectorIP13FTTesselationEixEm	4539e	36
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorI7FTPointE7reserveEm	453c2	54
+FTGL/src/FTVectoriser.cpp	__ZN13FTTesselationC1Em	453f8	92
+FTGL/src/FTVectoriser.cpp	__ZN13FTTesselation8AddPointEddd	45454	112
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationE3endEv	454c4	50
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationE6expandEm	454f6	216
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationE9push_backERKS1_	455ce	120
+FTGL/src/FTVectoriser.cpp	__ZN8FTVectorIP13FTTesselationE7reserveEm	45646	53
+Sources - My Utils/FTGLInterface.cpp	_FTGLPixmapFont_new	4567c	88
+Sources - My Utils/FTGLInterface.cpp	_FTGLBitmapFont_new	456d4	88
+Sources - My Utils/FTGLInterface.cpp	_FTGLTextureFont_new	4572c	88
+Sources - My Utils/FTGLInterface.cpp	_FTFont_Error	45784	26
+Sources - My Utils/FTGLInterface.cpp	_FTFont_FaceSize	4579e	50
+Sources - My Utils/FTGLInterface.cpp	_FTFont_Render	457d0	40
+Sources - My Utils/FTGLInterface.cpp	_FTFont_GetRenderWidth	457f8	102
+Sources - My Utils/FTGLInterface.cpp	__ZNK6FTFont5ErrorEv	4585e	20
+Sources - My Utils/TextSprite.c	_LoadSystemFont	45872	86
+Sources - My Utils/TextSprite.c	_LoadFontUsingPath	458c8	660
+Sources - My Utils/TextSprite.c	_LoadFontSafe	45b5c	162
+Sources - My Utils/TextSprite.c	_FontExists	45bfe	67
+Sources - My Utils/TextSprite.c	_FindFTFont	45c41	114
+Sources - My Utils/TextSprite.c	_CompareStrings	45cb3	85
+Sources - My Utils/TextSprite.c	_SWCreateTextSprite	45d08	448
+Sources - My Utils/TextSprite.c	_SetTextSpriteText	45ec8	80
+Sources - My Utils/TextSprite.c	_SetTextSpriteRect	45f18	184
+Sources - My Utils/TextSprite.c	_SWTextSpriteDrawProc	45fd0	1421
+Sources - My Utils/TextSprite.c	_GetTextSpriteWidth	4655d	179
+Sources - My Utils/TextSprite.c	_GetTextSpriteRenderWidth	46610	102
+Sources - My Utils/MyMusicUtils.c	_InitMusic	46676	144
+Sources - My Utils/MyMusicUtils.c	_ExitMusic	46706	19
+Sources - My Utils/MyMusicUtils.c	_LoadMusic	46719	105
+Sources - My Utils/MyMusicUtils.c	_SetMusicLooping	46782	40
+Sources - My Utils/MyMusicUtils.c	_StartMusic	467aa	117
+Sources - My Utils/MyMusicUtils.c	_SetMusicVolume	4681f	147
+Sources - My Utils/MyMusicUtils.c	_GetMusicVolume	468b2	32
+Sources - My Utils/MyMusicUtils.c	_GetCurrentMusicReference	468d2	30
+Sources - My Utils/MyMusicUtils.c	_IsMusicDone	468f0	68
+Sources - My Utils/MyMusicUtils.c	_StopAndDisposeMusic	46934	77
+Sources - My Utils/MyMusicUtils.c	_PauseMusic	46981	45
+Sources - My Utils/MyMusicUtils.c	_ResumeMusic	469ae	124
+Sources - My Utils/MyMusicUtils.c	_IsMusicPlaying	46a2a	55
+Sources - My Utils/MyMusicUtils.c	_FadeMusicNow	46a61	39
+Sources - My Utils/MyMusicUtils.c	_FadeMusicNowNoAdjust	46a88	33
+Sources - My Utils/MyMusicUtils.c	_FadeMusicIn	46aa9	104
+Sources - My Utils/MyMusicUtils.c	_StartMusicByFadingIn	46b11	138
+Sources - My Utils/MyMusicUtils.c	_StartOpeningMusic	46b9b	224
+Sources - My Utils/MyMusicUtils.c	_PlayBackgroundMusic	46c7b	85
+Sources - My Utils/MyMusicUtils.c	_MyPlayMusic	46cd0	594
+Sources - My Utils/MyMusicUtils.c	_MyFadeMusicNow	46f22	89
+Sources & Headers/MMEvents.c	_ProcessSDLEvents	46f7c	42
+Sources & Headers/MMEvents.c	_MyHandleSDLEvent	46fa6	2222
+Sources & Headers/MMEvents.c	_printTileMap	47854	300
+Sources & Headers/MMEvents.c	_LoadRoomToSideOfCurRoom	47980	243
+Sources & Headers/MMEvents.c	_SetStretchToFit	47a73	216
+Sources & Headers/MMEvents.c	_SetMMEventCallback	47b4b	33
+Sources & Headers/MMEvents.c	_HandleWindowResizeEvent	47b6c	212
+Sources & Headers/MMEvents.c	_DoWindowResize	47c40	721
+Sources & Headers/MMEvents.c	_HandleKeyUpDownEvent	47f11	932
+Sources & Headers/MMEvents.c	_UpdateMovementKeys	482b5	569
+Sources & Headers/MMEvents.c	_HandleActivateEvent	484ee	325
+Sources & Headers/MMEvents.c	_HandleDeactivateEvent	48633	152
+Sources & Headers/MMEvents.c	_WasMouseClicked	486cb	154
+Sources & Headers/MMEvents.c	_WasAKeyPressed	48765	217
+Sources & Headers/MMEvents.c	_IsKeyModifier	4883e	109
+Sources & Headers/MMEvents.c	_WasGameQuit	488ab	346
+Sources & Headers/MMEvents.c	_MMFlushEvents	48a05	34
+Sources & Headers/MMEvents.c	_UpdateMyMouseLoc	48a27	62
+Sources & Headers/MMEvents.c	_ResetMyMouseLocAndButton	48a65	64
+Sources & Headers/MMEvents.c	_GetMyMouse	48aa5	154
+Sources & Headers/MMEvents.c	_MMGetMouse	48b3f	154
+Sources & Headers/MMEvents.c	_IsMouseDown	48bd9	38
+Sources & Headers/MMEvents.c	_ResetKeys	48bff	196
+Sources & Headers/MMEvents.c	_ToggleFullscreen	48cc3	435
+Sources & Headers/MMEvents.c	_ToggleMusic	48e76	165
+Sources & Headers/MMEvents.c	_ToggleStats	48f1b	106
+Sources & Headers/MMEvents.c	_GiveOSTime	48f85	26
+Sources & Headers/MMEvents.c	_KeepMusicPlaying	48f9f	26
+Sources & Headers/GameScreens.c	_SetUpActionSoftScreen	48fbc	757
+Sources & Headers/GameScreens.c	_DoActionSoftScreen	492b1	383
+Sources & Headers/GameScreens.c	_ActionSoftLogoFrameProc	49430	193
+Sources & Headers/GameScreens.c	_ActionSoftLogoFadeOutFrameProc	494f1	131
+Sources & Headers/GameScreens.c	_ActionSoftLogoGrayFrameProc	49574	118
+Sources & Headers/GameScreens.c	_DisplaySplashScreen	495ea	592
+Sources & Headers/GameScreens.c	_ChangeSplashScreenLoadingText	4983a	131
+Sources & Headers/GameScreens.c	_SetUpTitleScreen	498bd	245
+Sources & Headers/GameScreens.c	_SetUpTitleScreenMM1	499b2	4659
+Sources & Headers/GameScreens.c	_SetUpTitleScreenMM2	4abe5	14
+Sources & Headers/GameScreens.c	_PlayCricketSound	4abf3	111
+Sources & Headers/GameScreens.c	_ScrollAllSpriteLayers	4ac62	142
+Sources & Headers/GameScreens.c	_DoFadeToRedAndZoom	4acf0	1052
+Sources & Headers/GameScreens.c	_FadeInTitleTextFrameProc	4b10c	229
+Sources & Headers/GameScreens.c	_TabGlowPulseFrameProc	4b1f1	344
+Sources & Headers/GameScreens.c	_DrawTitleScreenBackground	4b349	25
+Sources & Headers/GameScreens.c	_DrawTitleScreenBackgroundMM1	4b362	855
+Sources & Headers/GameScreens.c	_MakeTitleScreenSpriteFadeIn	4b6b9	120
+Sources & Headers/GameScreens.c	_DrawTitleScreenBackgroundMM2	4b731	788
+Sources & Headers/GameScreens.c	_HandleTitleScreenCallback	4ba45	2693
+Sources & Headers/GameScreens.c	_ExitTitleScreen	4c4ca	102
+Sources & Headers/GameScreens.c	_SetUpHelpScreen	4c530	956
+Sources & Headers/GameScreens.c	_HandleHelpScreenCallback	4c8ec	512
+Sources & Headers/GameScreens.c	_DrawContentsForHelpScreenIndex	4caec	489
+Sources & Headers/GameScreens.c	_AddMonsterSpritesToHelpScreen	4ccd5	414
+Sources & Headers/GameScreens.c	_AddObjectSpritesToHelpScreen	4ce73	308
+Sources & Headers/GameScreens.c	_ExitHelpScreen	4cfa7	73
+Sources & Headers/GameScreens.c	_SetUpDifficultyScreen	4cff0	678
+Sources & Headers/GameScreens.c	_HandleDifficultyScreenCallback	4d296	435
+Sources & Headers/GameScreens.c	_HandleOpenMansionButton	4d449	257
+Sources & Headers/GameScreens.c	_StartCustomMansion	4d54a	96
+Sources & Headers/GameScreens.c	_SetEasyJumpingMode	4d5aa	185
+Sources & Headers/GameScreens.c	_ExitDifficultyScreen	4d663	97
+Sources & Headers/GameScreens.c	_CreateAnimatedMoonBackground	4d6c4	1318
+Sources & Headers/GameScreens.c	_DoOrganScreen	4dbea	1370
+Sources & Headers/GameScreens.c	_HandleOrganScreenCallback	4e144	775
+Sources & Headers/GameScreens.c	_PoemSpriteMoveProc	4e44b	442
+Sources & Headers/GameScreens.c	_SetUpSelectMansionScreen	4e605	401
+Sources & Headers/GameScreens.c	_SetUpSelectMansionScreenMM1	4e796	1984
+Sources & Headers/GameScreens.c	_AddArrowButtonToMM1MansionScreen	4ef56	456
+Sources & Headers/GameScreens.c	_SetUpSelectMansionScreenMM2	4f11e	1217
+Sources & Headers/GameScreens.c	_HandleSelectMansionScreenCallback	4f5df	1083
+Sources & Headers/GameScreens.c	_ScrollSelectAMansionScreen	4fa1a	287
+Sources & Headers/GameScreens.c	_SelectMansionScreenButtonProc	4fb39	1114
+Sources & Headers/GameScreens.c	_GetMansionNameFromIndex	4ff93	240
+Sources & Headers/GameScreens.c	_IsMansionLocked	50083	134
+Sources & Headers/GameScreens.c	_IsMansionDemoMansion	50109	58
+Sources & Headers/GameScreens.c	_CheckForEndOfDemoLimit	50143	246
+Sources & Headers/GameScreens.c	_CanPlayFinalMansion	50239	102
+Sources & Headers/GameScreens.c	_AreAnyMansionsBeaten	5029f	99
+Sources & Headers/GameScreens.c	_AreAnyMansionsBeatenOnAnyDifficulty	50302	99
+Sources & Headers/GameScreens.c	_AreAllEpisode1MansionsBeaten	50365	99
+Sources & Headers/GameScreens.c	_ExitSelectMansionScreen	503c8	97
+Sources & Headers/GameScreens.c	_DoAboutScreen	50429	215
+Sources & Headers/GameScreens.c	_HandleAboutScreenCallback	50500	96
+Sources & Headers/GameScreens.c	_DoTeaserScreen	50560	1136
+Sources & Headers/GameScreens.c	_HandleTeaserScreenCallback	509d0	364
+Sources & Headers/GameScreens.c	_DoGameOverScreen	50b3c	947
+Sources & Headers/GameScreens.c	_HandleGameOverScreenCallback	50eef	295
+Sources & Headers/GameScreens.c	_DoBeatTheMansionScreen	51016	2086
+Sources & Headers/GameScreens.c	_DrawTextUsingSprite	5183c	328
+Sources & Headers/GameScreens.c	_HandleBeatTheMansionScreenCallback	51984	88
+Sources & Headers/GameScreens.c	_GetPercentSecrets	519dc	87
+Sources & Headers/GameScreens.c	_DoBeatTheGameSlideshow	51a33	444
+Sources & Headers/GameScreens.c	_HandleBeatTheGameCallback	51bef	1343
+Sources & Headers/GameScreens.c	_DoRegisterNowDialog	5212e	133
+Sources & Headers/GameScreens.c	_FinishGameOverOrBeatMansionScreen	521b3	433
+Sources & Headers/GameScreens.c	_AddBackButtonToScreen	52364	280
+Sources & Headers/GameScreens.c	_AddCustomCursorToScreen	5247c	343
+Sources & Headers/GameScreens.c	_MMStandardButtonProc	525d3	335
+Sources & Headers/GameScreens.c	_MMTitleScreenButtonProc	52722	440
+Sources & Headers/GameScreens.c	_MMTabButtonProc	528da	474
+Sources & Headers/GameScreens.c	_DifficultyScreenButtonProc	52ab4	482
+Sources & Headers/GameScreens.c	_MakeButtonBounceWhenSelected	52c96	338
+Sources & Headers/GameScreens.c	_MMBounceButtonMoveProc	52de8	492
+Sources & Headers/SpriteFrameProcs.c	_HeroMiscFrameProc	52fd4	96
+Sources & Headers/SpriteFrameProcs.c	_IdleHeroFrameProc	53034	1550
+Sources & Headers/SpriteFrameProcs.c	_SkeletonCollapseFrameProc1	53642	99
+Sources & Headers/SpriteFrameProcs.c	_SkeletonCollapseFrameProc2	536a5	258
+Sources & Headers/SpriteFrameProcs.c	_StoneCollapseFrameProc1	537a7	134
+Sources & Headers/SpriteFrameProcs.c	_StoneCollapseFrameProc2	5382d	127
+Sources & Headers/SpriteFrameProcs.c	_StoneCollapseFrameProc3	538ac	206
+Sources & Headers/SpriteFrameProcs.c	_ElectrocutionDeathFrameProc	5397a	535
+Sources & Headers/SpriteFrameProcs.c	_BlinkingSpriteFrameProc	53b91	44
+Sources & Headers/SpriteFrameProcs.c	_HeroLandedFrameProc	53bbd	166
+Sources & Headers/SpriteFrameProcs.c	_FellTooFarFrameProc	53c63	618
+Sources & Headers/SpriteFrameProcs.c	_FlinchOccasionallyFrameProc	53ecd	315
+Sources & Headers/SpriteFrameProcs.c	_RandomFlinchFrameProc	54008	57
+Sources & Headers/SpriteFrameProcs.c	_LightningFlashFrameProc	54041	265
+Sources & Headers/SpriteFrameProcs.c	_TitleScreenFlashFrameProc	5414a	391
+Sources & Headers/SpriteFrameProcs.c	_playThunderSound	542d1	296
+Sources & Headers/SpriteFrameProcs.c	_InGameLightningFrameProc	543f9	634
+Sources & Headers/SpriteFrameProcs.c	_BigWebFrameProc	54673	204
+Sources & Headers/SpriteFrameProcs.c	_RandomFlinchHeroFrameProc	5473f	227
+Sources & Headers/SpriteFrameProcs.c	_RandomFlinchEnemyFrameProc	54822	114
+Sources & Headers/SpriteFrameProcs.c	_PushupDelayFrameProc	54894	398
+Sources & Headers/SpriteFrameProcs.c	_DoPushupsFrameProc	54a22	371
+Sources & Headers/SpriteFrameProcs.c	_PauseThenFadeStatueFrameProc	54b95	979
+Sources & Headers/SpriteFrameProcs.c	_PauseThenUnfreezeFrameProc	54f68	419
+Sources & Headers/SpriteFrameProcs.c	_StatueFadeFrameProc	5510b	146
+Sources & Headers/SpriteFrameProcs.c	_ZzzzFadeFrameProc	5519d	379
+Sources & Headers/SpriteFrameProcs.c	_DeadBodyFadeFrameProc	55318	276
+Sources & Headers/SpriteFrameProcs.c	_FadeInFrameProc	5542c	256
+Sources & Headers/SpriteFrameProcs.c	_FadeOutFrameProc	5552c	126
+Sources & Headers/SpriteFrameProcs.c	_AnimatedPaintingFrameProc	555aa	290
+Sources & Headers/SpriteFrameProcs.c	_RandomFrameProc	556cc	70
+Sources & Headers/SpriteFrameProcs.c	_HaloFlickerFrameProc	55712	178
+Sources & Headers/SpriteFrameProcs.c	_ResetSpriteFrameProc	557c4	23
+Sources & Headers/SpriteFrameProcs.c	_PauseThenReappearFrameProc	557db	688
+Sources & Headers/SpriteFrameProcs.c	_PuffOfSmokeFrameProc	55a8b	42
+Sources & Headers/SpriteFrameProcs.c	_ShieldSpriteFrameProc	55ab5	104
+Sources & Headers/SpriteFrameProcs.c	_SkullSpiderFrameProc	55b1d	187
+Sources & Headers/SpriteFrameProcs.c	_ScorpionFrameProc	55bd8	88
+Sources & Headers/SpriteFrameProcs.c	_SnakeFrameProc	55c30	88
+Sources & Headers/SpriteFrameProcs.c	_BirdFrameProc	55c88	208
+Sources & Headers/SpriteFrameProcs.c	_MedusaFrameProc	55d58	96
+Sources & Headers/SpriteFrameProcs.c	_SpiderFrameProc	55db8	96
+Sources & Headers/SpriteFrameProcs.c	_SkeletonFishFrameProc	55e18	96
+Sources & Headers/SpriteFrameProcs.c	_FishTurnAroundFrameProc	55e78	240
+Sources & Headers/SpriteFrameProcs.c	_EyeballFrameProc	55f68	170
+Sources & Headers/SpriteFrameProcs.c	_EyeballBlinkFrameProc	56012	149
+Sources & Headers/SpriteFrameProcs.c	_SkeletonUncollapseFrameProc	560a7	249
+Sources & Headers/SpriteFrameProcs.c	_SkeletonPauseThenShakeFrameProc	561a0	482
+Sources & Headers/SpriteFrameProcs.c	_SkeletonShakeOffFrameProc	56382	301
+Sources & Headers/SpriteFrameProcs.c	_SkeletonPauseThenWalkFrameProc	564af	227
+Sources & Headers/SpriteFrameProcs.c	_WalkingSkeletonFrameProc	56592	96
+Sources & Headers/SpriteFrameProcs.c	_MiscSpriteFrameProc	565f2	96
+Sources & Headers/SpriteFrameProcs.c	_KeyGlowFrameProc	56652	385
+Sources & Headers/SpriteFrameProcs.c	_HintQuestionMarkFrameProc	567d3	419
+Sources & Headers/SpriteFrameProcs.c	_FlameFrameProc	56976	69
+Sources & Headers/SpriteFrameProcs.c	_CandleFrameProc	569bb	108
+Sources & Headers/SpriteFrameProcs.c	_LanternFrameProc	56a27	63
+Sources & Headers/SpriteFrameProcs.c	_TrapDoorFrameProc	56a66	71
+Sources & Headers/SpriteFrameProcs.c	_SkullFallingPlatformFrameProc	56aad	80
+Sources & Headers/MoveProcSupport.c	_RemoveSpriteIfOutsideRoom	56afd	33
+Sources & Headers/MoveProcSupport.c	_RemoveSpriteIfOutsideRoomByMargin	56b1e	169
+Sources & Headers/MoveProcSupport.c	_SetUpLadderArray	56bc7	365
+Sources & Headers/MoveProcSupport.c	_GetLadderValue	56d34	74
+Sources & Headers/MoveProcSupport.c	_ExitRoomIfAppropriate	56d7e	1188
+Sources & Headers/MoveProcSupport.c	_SaveStartingPositionIfAppropriate	57222	482
+Sources & Headers/MoveProcSupport.c	_SaveStartingPosition	57404	206
+Sources & Headers/MoveProcSupport.c	_GetSpriteState	574d2	176
+Sources & Headers/MoveProcSupport.c	_SaveHeroStartingLocation	57582	154
+Sources & Headers/MoveProcSupport.c	_MoveSpriteDownToFloor	5761c	199
+Sources & Headers/MoveProcSupport.c	_DoHeroLandedFromJumpFrame	576e3	236
+Sources & Headers/MoveProcSupport.c	_SetHeroGroundFrame	577cf	625
+Sources & Headers/MoveProcSupport.c	_SaveLastOnGroundPixelRow	57a40	51
+Sources & Headers/MoveProcSupport.c	_SetHeroJumpingFrame	57a73	202
+Sources & Headers/MoveProcSupport.c	_ProcessJumpIntention	57b3d	398
+Sources & Headers/MoveProcSupport.c	_StartJump	57ccb	610
+Sources & Headers/MoveProcSupport.c	_EndJump	57f2d	210
+Sources & Headers/MoveProcSupport.c	_getHeroFallingDeathDistance	57fff	30
+Sources & Headers/MoveProcSupport.c	_HandleHeroLanding	5801d	454
+Sources & Headers/MoveProcSupport.c	_HandleHeroQuestionMark	581e3	202
+Sources & Headers/MoveProcSupport.c	_UpdateHaloSpritePosition	582ad	708
+Sources & Headers/MoveProcSupport.c	_CenterSpriteOverSpriteSmoothly	58571	472
+Sources & Headers/MoveProcSupport.c	_IsCurRoomOutdoors	58749	41
+Sources & Headers/MoveProcSupport.c	_GetHeroSprite	58772	92
+Sources & Headers/MoveProcSupport.c	_LayWebForSpider	587ce	422
+Sources & Headers/MoveProcSupport.c	_EraseWebForSpider	58974	301
+Sources & Headers/MoveProcSupport.c	_LayWebUpToCeiling	58aa1	342
+Sources & Headers/MoveProcSupport.c	_DeleteWebForSmallSpider	58bf7	320
+Sources & Headers/MoveProcSupport.c	_MovePreyToSpiderLocation	58d37	131
+Sources & Headers/MoveProcSupport.c	_CheckBigSpiderWithSprite	58dba	158
+Sources & Headers/MoveProcSupport.c	_MakeSpriteDripBloodOrGoo	58e58	365
+Sources & Headers/MoveProcSupport.c	_MakeSkeletonDoUncollapse	58fc5	257
+Sources & Headers/MoveProcSupport.c	_MakeZzzzFromJacksHead	590c6	333
+Sources & Headers/MoveProcSupport.c	_DeleteZzzzSprites	59213	131
+Sources & Headers/MoveProcSupport.c	_GetMovieCompatibleRandomFloat	59296	54
+Sources & Headers/MoveProcSupport.c	_GetMovieCompatibleRandom	592cc	49
+Sources & Headers/MoveProcSupport.c	_OpenDoor	592fd	893
+Sources & Headers/MoveProcSupport.c	_MakeDoorOpen	5967a	156
+Sources & Headers/MoveProcSupport.c	_MakeDoorClose	59716	229
+Sources & Headers/MoveProcSupport.c	_OpenDoorCollideProc	597fb	125
+Sources & Headers/MoveProcSupport.c	_OpenDoorInstantlyCollideProc	59878	88
+Sources & Headers/MoveProcSupport.c	_OpenDoorInstantlyAndAddCollideProc	598d0	110
+Sources & Headers/MoveProcSupport.c	_CloseDoorInstantlyCollideProc	5993e	88
+Sources & Headers/MoveProcSupport.c	_OpenDoorButDontAddCollideProc	59996	114
+Sources & Headers/MoveProcSupport.c	_MakeTrapDoorOpen	59a08	114
+Sources & Headers/MoveProcSupport.c	_OpenTrapDoorCollideProc	59a7a	44
+Sources & Headers/MoveProcSupport.c	_OpenTrapDoorInstantlyCollideProc	59aa6	105
+Sources & Headers/MoveProcSupport.c	_SetDoorToOpenedState	59b0f	340
+Sources & Headers/MoveProcSupport.c	_SetDoorToClosedState	59c63	351
+Sources & Headers/MoveProcSupport.c	_SetTrapDoorToOpenedState	59dc2	135
+Sources & Headers/MoveProcSupport.c	_SaveHeroOnPedestal	59e49	435
+Sources & Headers/MoveProcSupport.c	_StopLoopingSounds	59ffc	98
+Sources & Headers/MoveProcSupport.c	_CreateColorAndGrayStatues	5a05e	571
+Sources & Headers/MoveProcSupport.c	_PauseSpriteLayersForSaveAnim	5a299	108
+Sources & Headers/MoveProcSupport.c	_GetLadderRect	5a305	1534
+Sources & Headers/MoveProcSupport.c	_GetLadderRectFromTile	5a903	185
+Sources & Headers/MoveProcSupport.c	_GetPoleRect	5a9bc	1167
+Sources & Headers/MoveProcSupport.c	_IsTileFloorTile	5ae4b	146
+Sources & Headers/MoveProcSupport.c	_IsTileFloorNotVineTile	5aedd	109
+Sources & Headers/MoveProcSupport.c	_IsTileHorizWall	5af4a	215
+Sources & Headers/MoveProcSupport.c	_IsTileThickHorizWall	5b021	192
+Sources & Headers/MoveProcSupport.c	_CheckForWall	5b0e1	843
+Sources & Headers/MoveProcSupport.c	_CheckForWallWithTiles	5b42c	1000
+Sources & Headers/MoveProcSupport.c	_CheckForWallWithSprites	5b814	1232
+Sources & Headers/MoveProcSupport.c	_MyCheckSpriteWithWallTiles	5bce4	4213
+Sources & Headers/MoveProcSupport.c	_GetTileID	5cd59	142
+Sources & Headers/MoveProcSupport.c	_ConvertTileID	5cde7	202
+Sources & Headers/SpriteMoveProcs.c	_MainSpriteMoveProc	5ceb1	6592
+Sources & Headers/SpriteMoveProcs.c	_DeadHeroMoveProc	5e871	1351
+Sources & Headers/SpriteMoveProcs.c	_LyingSkeletonMoveProc	5edb8	177
+Sources & Headers/SpriteMoveProcs.c	_MoveWhenNotTouchingZapperBeam	5ee69	81
+Sources & Headers/SpriteMoveProcs.c	_HeroSinksIntoLavaMoveProc	5eeba	528
+Sources & Headers/SpriteMoveProcs.c	_SpriteSinksIntoLavaMoveProc	5f0ca	450
+Sources & Headers/SpriteMoveProcs.c	_MoveAndCollideMainSprite	5f28c	1142
+Sources & Headers/SpriteMoveProcs.c	_ClimbingSpriteMoveProc	5f702	3040
+Sources & Headers/SpriteMoveProcs.c	_FinishClimbingLadderMoveProc	602e2	1262
+Sources & Headers/SpriteMoveProcs.c	_VineClimbingMoveProc	607d0	2214
+Sources & Headers/SpriteMoveProcs.c	_PoleSlidingMoveProc	61076	669
+Sources & Headers/SpriteMoveProcs.c	_BlinkingSpriteMoveProc	61313	478
+Sources & Headers/SpriteMoveProcs.c	_FixHeroPositionOnVine	614f1	422
+Sources & Headers/SpriteMoveProcs.c	_GetOnVineIfAppropriate	61697	787
+Sources & Headers/SpriteMoveProcs.c	_GetOnPoleIfAppropriate	619aa	733
+Sources & Headers/SpriteMoveProcs.c	_GetOnVine	61c87	297
+Sources & Headers/SpriteMoveProcs.c	_GetOnPole	61db0	274
+Sources & Headers/SpriteMoveProcs.c	_SkullSpiderMoveProc	61ec2	2314
+Sources & Headers/SpriteMoveProcs.c	_ScorpionMoveProc	627cc	1523
+Sources & Headers/SpriteMoveProcs.c	_EyeballMoveProc	62dbf	1342
+Sources & Headers/SpriteMoveProcs.c	_SquishEyeballMoveProc	632fd	1162
+Sources & Headers/SpriteMoveProcs.c	_BlueRavenMoveProc	63787	657
+Sources & Headers/SpriteMoveProcs.c	_RedRavenMoveProc	63a18	936
+Sources & Headers/SpriteMoveProcs.c	_SnakeMoveProc	63dc0	1152
+Sources & Headers/SpriteMoveProcs.c	_MedusasHeadMoveProc	64240	1293
+Sources & Headers/SpriteMoveProcs.c	_MedusaOnFireMoveProc	6474d	369
+Sources & Headers/SpriteMoveProcs.c	_SmallSpiderMoveProc	648be	1491
+Sources & Headers/SpriteMoveProcs.c	_BigSpiderMoveProc	64e91	1550
+Sources & Headers/SpriteMoveProcs.c	_SkeletonFishMoveProc	6549f	788
+Sources & Headers/SpriteMoveProcs.c	_SkeletonWaitingToUncollapseMoveProc	657b3	254
+Sources & Headers/SpriteMoveProcs.c	_WalkingSkeletonMoveProc	658b1	1546
+Sources & Headers/SpriteMoveProcs.c	_HandleSpriteWithMovingPlatforms	65ebb	289
+Sources & Headers/SpriteMoveProcs.c	_FallingObjectMoveProc	65fdc	1263
+Sources & Headers/SpriteMoveProcs.c	_ZzzzSpriteMoveProc	664cb	57
+Sources & Headers/SpriteMoveProcs.c	_SmallSpiderDragsHeroMoveProc	66504	525
+Sources & Headers/SpriteMoveProcs.c	_SmallSpiderEatJackMoveProc	66711	301
+Sources & Headers/SpriteMoveProcs.c	_BigSpiderEatsPreyMoveProc	6683e	186
+Sources & Headers/SpriteMoveProcs.c	_ShadowSpriteMoveProc	668f8	285
+Sources & Headers/SpriteMoveProcs.c	_floatAbs	66a15	82
+Sources & Headers/SpriteMoveProcs.c	_ArrowButtonColorMoveProc	66a67	281
+Sources & Headers/SpriteMoveProcs.c	_StartSkeletonFishJump	66b80	358
+Sources & Headers/SpriteMoveProcs.c	_BloodDripMoveProc	66ce6	565
+Sources & Headers/SpriteMoveProcs.c	_CaughtHeroMoveProc	66f1b	234
+Sources & Headers/SpriteMoveProcs.c	_ColorStatueMoveProc	67005	352
+Sources & Headers/SpriteMoveProcs.c	_CreateCirclesOfLightMoveProc	67165	662
+Sources & Headers/SpriteMoveProcs.c	_CircleOfLightMoveProc	673fb	524
+Sources & Headers/SpriteMoveProcs.c	_CreateSparklesMoveProc	67607	295
+Sources & Headers/SpriteMoveProcs.c	_BigWebMoveProc	6772e	344
+Sources & Headers/SpriteMoveProcs.c	_PedestalMoveProc	67886	255
+Sources & Headers/SpriteMoveProcs.c	_TipSpriteMoveProc	67985	1019
+Sources & Headers/SpriteMoveProcs.c	_StartHereBounceMoveProc	67d80	177
+Sources & Headers/SpriteMoveProcs.c	_MovingPlatformHorizMoveProc	67e31	850
+Sources & Headers/SpriteMoveProcs.c	_MovingPlatformVertMoveProc	68183	850
+Sources & Headers/SpriteMoveProcs.c	_FallingPlatformMoveProc	684d5	524
+Sources & Headers/SpriteMoveProcs.c	_MakeFallingPlatformReappearAfterDelay	686e1	160
+Sources & Headers/SpriteMoveProcs.c	_FallingPlatformWaitMoveProc	68781	501
+Sources & Headers/SpriteMoveProcs.c	_DoorSpriteMoveProc	68976	775
+Sources & Headers/SpriteMoveProcs.c	_CloseDoorSpriteMoveProc	68c7d	771
+Sources & Headers/SpriteMoveProcs.c	_SmallDigitsMoveProc	68f80	153
+Sources & Headers/SpriteMoveProcs.c	_CustomCursorMoveProc	69019	163
+Sources & Headers/SpriteMoveProcs.c	_StdSpriteMoveProc	690bc	57
+Sources & Headers/SpriteCollideProcs.c	_CheckHeroWithLavaTiles	690f8	617
+Sources & Headers/SpriteCollideProcs.c	_CheckSpriteWithLavaTiles	69361	958
+Sources & Headers/SpriteCollideProcs.c	_IsSpriteAMedusaHead	6971f	65
+Sources & Headers/SpriteCollideProcs.c	_CheckDeadHeroWithLavaTiles	69760	221
+Sources & Headers/SpriteCollideProcs.c	_MainSpriteCollideProc	6983d	848
+Sources & Headers/SpriteCollideProcs.c	_ObjectSpriteCollideProc	69b8d	236
+Sources & Headers/SpriteCollideProcs.c	_SecretSpriteCollideProc	69c79	245
+Sources & Headers/SpriteCollideProcs.c	_HeroExitCollideProc	69d6e	162
+Sources & Headers/SpriteCollideProcs.c	_HeroSignCollideProc	69e10	1208
+Sources & Headers/SpriteCollideProcs.c	_HeroTipCollideProc	6a2c8	659
+Sources & Headers/SpriteCollideProcs.c	_HandleReadingSignCallback	6a55b	81
+Sources & Headers/SpriteCollideProcs.c	_ExitSignReadingIfPossible	6a5ac	60
+Sources & Headers/SpriteCollideProcs.c	_CleanUpAfterSign	6a5e8	181
+Sources & Headers/SpriteCollideProcs.c	_SignScaleInFrameProc	6a69d	631
+Sources & Headers/SpriteCollideProcs.c	_SignScaleOutFrameProc	6a914	577
+Sources & Headers/SpriteCollideProcs.c	_MedusaCollideProc	6ab55	303
+Sources & Headers/SpriteCollideProcs.c	_BigSpiderCollideProc	6ac84	479
+Sources & Headers/SpriteCollideProcs.c	_ZapperBeamSpriteCollideProc	6ae63	151
+Sources & Headers/SpriteCollideProcs.c	_KillHero	6aefa	66
+Sources & Headers/SpriteCollideProcs.c	_KillHeroCommon	6af3c	239
+Sources & Headers/SpriteCollideProcs.c	_KillHeroAndDoSkeletonCollapse	6b02b	312
+Sources & Headers/SpriteCollideProcs.c	_KillHeroAndDoStoneCollapse	6b163	285
+Sources & Headers/SpriteCollideProcs.c	_KillHeroAndDoElectrocutionDeath	6b280	336
+Sources & Headers/SpriteCollideProcs.c	_KillHeroAndDoSmallSpiderDeath	6b3d0	468
+Sources & Headers/SpriteCollideProcs.c	_KillHeroOnBigSpider	6b5a4	136
+Sources & Headers/SpriteCollideProcs.c	_KillHeroForFallingTooFar	6b62c	307
+Sources & Headers/SpriteCollideProcs.c	_GetObject	6b75f	1424
+Sources & Headers/SpriteCollideProcs.c	_GetLantern	6bcef	420
+Sources & Headers/SpriteCollideProcs.c	_CreateSplashForSprite	6be93	281
+Sources & Headers/SpriteCollideProcs.c	_GetLavaPixelRowFromSprite	6bfac	237
+Sources & Headers/GameArrays.c	_InitObjectArray	6c099	86
+Sources & Headers/GameArrays.c	_AddSpriteToObjectArray	6c0ef	31
+Sources & Headers/GameArrays.c	_RemoveSpriteFromObjectArray	6c10e	31
+Sources & Headers/GameArrays.c	_AddObjectToArray	6c12d	166
+Sources & Headers/GameArrays.c	_RemoveObjectFromArray	6c1d3	194
+Sources & Headers/GameArrays.c	_IsSpriteInObjectArray	6c295	34
+Sources & Headers/GameArrays.c	_IsObjectInArray	6c2b7	87
+Sources & Headers/GameArrays.c	_InitDoOnceArray	6c30e	75
+Sources & Headers/GameArrays.c	_AddSpriteToDoOnceArray	6c359	31
+Sources & Headers/GameArrays.c	_RemoveSpriteFromDoOnceArray	6c378	31
+Sources & Headers/GameArrays.c	_AddObjectToDoOnceArray	6c397	108
+Sources & Headers/GameArrays.c	_RemoveObjectFromDoOnceArray	6c403	194
+Sources & Headers/GameArrays.c	_IsSpriteInDoOnceArray	6c4c5	34
+Sources & Headers/GameArrays.c	_IsObjectInDoOnceArray	6c4e7	87
+Sources & Headers/GameArrays.c	_InitRoomArray	6c53e	73
+Sources & Headers/GameArrays.c	_AddRoomToArray	6c587	124
+Sources & Headers/GameArrays.c	_IsRoomInArray	6c603	98
+Sources & Headers/GameArrays.c	_GetNumRoomsExplored	6c665	32
+Sources & Headers/GameArrays.c	_GetRoomArrayElement	6c685	98
+Sources & Headers/GameArrays.c	_InitLitRoomArray	6c6e7	73
+Sources & Headers/GameArrays.c	_AddRoomToLitRoomArray	6c730	124
+Sources & Headers/GameArrays.c	_IsRoomResIDInLitRoomArray	6c7ac	68
+Sources & Headers/GameArrays.c	_IsRoomInLitRoomArray	6c7f0	98
+Sources & Headers/GameArrays.c	_InitMapArray	6c852	73
+Sources & Headers/GameArrays.c	_AddRoomToMapArray	6c89b	124
+Sources & Headers/GameArrays.c	_IsRoomInMapArray	6c917	98
+Sources & Headers/GameArrays.c	_GetNumRoomsInMapArray	6c979	32
+Sources & Headers/GameArrays.c	_GetMapArrayElement	6c999	98
+Sources & Headers/GameArrays.c	_InitCompletedMansionsArray	6c9fb	105
+Sources & Headers/GameArrays.c	_AddMansionToArray	6ca64	404
+Sources & Headers/GameArrays.c	_IsMansionInArray	6cbf8	225
+Sources & Headers/GameArrays.c	_WriteMansionArrayToFile	6ccd9	87
+Sources & Headers/GameArrays.c	_ReadMansionArrayFromFile	6cd30	87
+Sources & Headers/GameArrays.c	_SaveAllGameArrays	6cd87	242
+Sources & Headers/GameArrays.c	_RestoreAllGameArrays	6ce79	242
+Sources & Headers/GameArrays.c	_WriteSaveDataToFile	6cf6b	1487
+Sources & Headers/GameArrays.c	_LoadSaveDataFromFile	6d53a	1779
+Sources & Headers/GameEditorCarbonSafe.c	_GEGetLevelResID	6dc2d	53
+Sources & Headers/GameEditorCarbonSafe.c	_GEGetLevelNumber	6dc62	60
+Sources & Headers/GameEditorCarbonSafe.c	_GEGetRoomResID	6dc9e	119
+Sources & Headers/GameEditorCarbonSafe.c	_GEGetRoomNumber	6dd15	63
+Sources & Headers/GameEditorCarbonSafe.c	_GEGetResIDFromLevelAndRoom	6dd54	185
+Sources & Headers/GameEditorCarbonSafe.c	_GEGetRowAndColFromLevelNumber	6de0d	89
+Sources & Headers/GameEditorCarbonSafe.c	_GEGetRowAndColFromResID	6de66	129
+Sources & Headers/GameEditorCarbonSafe.c	_GEGetLevelNumberFromRowAndCol	6dee7	50
+Sources & Headers/ZapperStuff.c	_ZapperNodeMoveProc	6df19	475
+Sources & Headers/ZapperStuff.c	_ZapperNodeFrameProc	6e0f4	209
+Sources & Headers/ZapperStuff.c	_ZapperBeamMoveProc	6e1c5	240
+Sources & Headers/ZapperStuff.c	_ZapperGlowMoveProc	6e2b5	96
+Sources & Headers/ZapperStuff.c	_ZapperCanShootThroughTile	6e315	33
+Sources & Headers/ZapperStuff.c	_DeleteZapperSpritesForNode	6e336	360
+Sources & Headers/ZapperStuff.c	_DeleteZapperBeam	6e49e	347
+Sources & Headers/ZapperStuff.c	_CreateZapperSpritesForNode	6e5f9	1128
+Sources & Headers/ZapperStuff.c	_CreateZapperGlowSprite	6ea61	801
+Sources & Headers/ZapperStuff.c	_CreateZapperBeamsForRoom	6ed82	192
+Sources & Headers/ZapperStuff.c	_ScanForOppositeZapperNode	6ee42	705
+Sources & Headers/ZapperStuff.c	_FindSpriteAtTileRowAndCol	6f103	218
+Sources & Headers/ZapperStuff.c	_CreateBeamsForNode	6f1dd	884
+Sources & Headers/Levers.c	_PullLeverIfPossible	6f551	1157
+Sources & Headers/Levers.c	_PullLeverFrameProc	6f9d6	707
+Sources & Headers/Levers.c	_TryToPullLeverFrameProc	6fc99	184
+Sources & Headers/Levers.c	_FinishPullingLever	6fd51	252
+Sources & Headers/Levers.c	_FindSpriteMatchingObjectID	6fe4d	188
+Sources & Headers/Levers.c	_SetLeversToCorrectState	6ff09	505
+Sources & Headers/Levers.c	_SetLeverToPulledState	70102	112
+Sources & Headers/Levers.c	_CheckForPressedBrickSwitches	70172	101
+Sources & Headers/Levers.c	_CheckBrickSwitchWithSprites	701d7	377
+Sources & Headers/Levers.c	_IsSpriteOnSwitch	70350	167
+Sources & Headers/Levers.c	_PushBrickSwitch	703f7	81
+Sources & Headers/Levers.c	_FinishPushingBrickSwitch	70448	136
+Sources & Headers/Levers.c	_SetBrickSwitchesToCorrectState	704d0	305
+Sources & Headers/Levers.c	_SetBrickSwitchToPulledState	70601	147
+Sources & Headers/Levers.c	_PerformLeverAction	70694	787
+Sources & Headers/Levers.c	_PerformBrickSwitchAction	709a7	946
+Sources & Headers/Levers.c	_PerformActionOnSprite	70d59	596
+Sources & Headers/Levers.c	_CanLeverAffectSprite	70fad	145
+Sources & Headers/Levers.c	_DoLeverChangeAllMovingPlatforms	7103e	199
+Sources & Headers/Levers.c	_DoLeverChangeOneMovingPlatform	71105	126
+Sources & Headers/Levers.c	_DoLeverChangeConveyorBeltDir	71183	220
+Sources & Headers/Levers.c	_DoLeverStartOrStopConveyorBelts	7125f	244
+Sources & Headers/Levers.c	_DoLeverStartStopAllMovingPlatforms	71353	97
+Sources & Headers/Levers.c	_DoLeverStartStopPlatformsInLayer	713b4	431
+Sources & Headers/Levers.c	_DoLeverToggleGoldSilverBlocks	71563	211
+Sources & Headers/Levers.c	_SetCorrectGoldSilverTileImages	71636	313
+Sources & Headers/Levers.c	_DoLeverOpenAllGrayDoors	7176f	265
+Sources & Headers/Levers.c	_DoLeverToggleDoor	71878	108
+Sources & Headers/Levers.c	_DoLeverOpenDoor	718e4	224
+Sources & Headers/Levers.c	_DoLeverCloseAllGrayDoors	719c4	265
+Sources & Headers/Levers.c	_DoLeverCloseDoor	71acd	254
+Sources & Headers/Levers.c	_DoLeverOpenAllTrapDoors	71bcb	205
+Sources & Headers/Levers.c	_DoLeverOpenTrapDoor	71c98	195
+Sources & Headers/Levers.c	_DoLeverStartStopAllZapperBeams	71d5b	138
+Sources & Headers/Levers.c	_DoLeverAffectOneZapperNode	71de5	472
+Sources & Headers/Levers.c	_DoLeverToggleAllTorches	71fbd	127
+Sources & Headers/Levers.c	_DoLeverLightAllTorches	7203c	114
+Sources & Headers/Levers.c	_DoLeverExtinguishAllTorches	720ae	114
+Sources & Headers/Levers.c	_DoLeverMoveTorchFlameForward	72120	188
+Sources & Headers/Levers.c	_DoLeverMoveTorchFlameBackward	721dc	188
+Sources & Headers/Levers.c	_DoLeverMakeAllSkeletonsComeAlive	72298	107
+Sources & Headers/Levers.c	_LightTorch	72303	284
+Sources & Headers/Levers.c	_UnlightTorch	7241f	228
+Sources & Headers/Levers.c	_ResetConveyorBeltDir	72503	46
+Sources & Headers/Levers.c	_CompareSpriteTop	72531	36
+Sources & Headers/Levers.c	_CompareSpriteBottom	72555	36
+Sources & Headers/Level.c	_LoadRoom	7257c	1159
+Sources & Headers/Level.c	_DrawTileShadowsCallback	72a03	1397
+Sources & Headers/Level.c	_FixCandleStandsInRoom	72f78	189
+Sources & Headers/Level.c	_SmallCandleCollideProc	73035	221
+Sources & Headers/Level.c	_RemoveAllSpriteGlowsAndShadows	73112	254
+Sources & Headers/Level.c	_AddSpriteShadows	73210	400
+Sources & Headers/Level.c	_AddShadowForSpritesInLayerRange	733a0	86
+Sources & Headers/Level.c	_AddShadowForSpritesInLayer	733f6	76
+Sources & Headers/Level.c	_AddShadowForSprite	73442	385
+Sources & Headers/Level.c	_AddGlowForKeysAndCoins	735c3	157
+Sources & Headers/Level.c	_AddGlowForKeyOrCoin	73660	1191
+Sources & Headers/Level.c	_ConvertTilesForCurRoom	73b07	96
+Sources & Headers/Level.c	_ConvertTilesForCurRoomLayer4	73b67	846
+Sources & Headers/Level.c	_ConvertTilesForCurRoomLayer6	73eb5	1138
+Sources & Headers/Level.c	_isBrickTile	74327	97
+Sources & Headers/Level.c	_UpgradeFringeForTile	74388	196
+Sources & Headers/Level.c	_UpdateFringeForTileLoc	7444c	288
+Sources & Headers/Level.c	_DrawBackgroundTextureForCurRoom	7456c	985
+Sources & Headers/Level.c	_HideDisappearingFloorTiles	74945	313
+Sources & Headers/Level.c	_RestoreDisappearingFloorTiles	74a7e	238
+Sources & Headers/Level.c	_CompareSpriteLeft	74b6c	36
+Sources & Headers/Level.c	_LoadSpritesInRoom	74b90	1697
+Sources & Headers/Level.c	_SDL_Swap16	75231	35
+Sources & Headers/Level.c	_SDL_Swap32	75254	25
+Sources & Headers/Level.c	_LoadLevelResIDFromGAMEResource	7526d	132
+Sources & Headers/Level.c	_LoadRestOfGAMEResource	752f1	165
+Sources & Headers/Level.c	_LoadMansionNameFromGAMEResource	75396	115
+Sources & Headers/Level.c	_LoadLEVLResource	75409	853
+Sources & Headers/Level.c	_IsRoomDark	7575e	170
+Sources & Headers/Level.c	_IsRoomASecretRoom	75808	171
+Sources & Headers/Level.c	_CreateMySprite	758b3	985
+Sources & Headers/Level.c	_MMLoadExtraBackFrameForRoom	75c8c	534
+Sources & Headers/Level.c	_SetUpSpriteFields	75ea2	3083
+Sources & Headers/Level.c	_SetUpSpriteFrameRange	76aad	179
+Sources & Headers/Level.c	_GetDefaultSpriteSpeed	76b60	232
+Sources & Headers/Level.c	_DisposeCurrentRoom	76c48	344
+Sources & Headers/Level.c	_MoveLavaToLayer6	76da0	358
+Sources & Headers/Level.c	_AddGlowToLava	76f06	715
+Sources & Headers/Level.c	_OpenDoorsThatWereOpenedByPlayer	771d1	222
+Sources & Headers/Level.c	_OpenDoorsThatAreOpenToStart	772af	258
+Sources & Headers/Level.c	_CreateGrayStatueOnSavePedestals	773b1	327
+Sources & Headers/Level.c	_MakeRoomDarkOrLight	774f8	589
+Sources & Headers/Level.c	_RestartLevel	77745	239
+Sources & Headers/Level.c	_LoadLevel	77834	485
+Sources & Headers/Level.c	_SetUpLevelForPlaying	77a19	344
+Sources & Headers/Level.c	_DrawLevel	77b71	56
+Sources & Headers/Stats.c	_CreateStatsArea	77ba9	788
+Sources & Headers/Stats.c	_ResetStatsArea	77ebd	257
+Sources & Headers/Stats.c	_RestoreStatsFromObjectsCarried	77fbe	406
+Sources & Headers/Stats.c	_LoadStatsBackFrame	78154	120
+Sources & Headers/Stats.c	_LoadAndInstallStatsBackgroundSprite	781cc	266
+Sources & Headers/Stats.c	_AddBackpackToStatsArea	782d6	68
+Sources & Headers/Stats.c	_LoadAppropriateStatsBackground	7831a	67
+Sources & Headers/Stats.c	_AddLanternToStatsArea	7835d	83
+Sources & Headers/Stats.c	_UpdateStatsItems	783b0	43
+Sources & Headers/Stats.c	_DrawStatsArea	783db	19
+Sources & Headers/Stats.c	_StatsDigitsMoveProc	783ee	95
+Sources & Headers/Stats.c	_AddItemToStats	7844d	324
+Sources & Headers/Stats.c	_RemoveItemFromStats	78591	440
+Sources & Headers/Stats.c	_RemoveAllStatsItems	78749	56
+Sources & Headers/Stats.c	_HideStatsSprites	78781	77
+Sources & Headers/Stats.c	_MakeStatsSpritesVisible	787ce	77
+Sources & Headers/Stats.c	_CreateFPSAndLevelResIDSprites	7881b	371
+Sources & Headers/GameSupport.c	_ClearCheatCodeCache	78990	44
+Sources & Headers/GameSupport.c	_AddKeyToCheatCodeCache	789bc	233
+Sources & Headers/GameSupport.c	_CheckCheatCodes	78aa5	175
+Sources & Headers/GameSupport.c	_DoCheatCode	78b54	1893
+Sources & Headers/GameSupport.c	_PlayMovieFile	792b9	2038
+Sources & Headers/GameSupport.c	_GetEventFromMovieFile	79aaf	442
+Sources & Headers/GameSupport.c	_GetDataFromMovieFile	79c69	358
+Sources & Headers/GameSupport.c	_GetKeyEventsFromMovie	79dcf	536
+Sources & Headers/GameSupport.c	_AddKeyToMovie	79fe7	593
+Sources & Headers/GameSupport.c	_OpenMovieFileForOutput	7a238	1284
+Sources & Headers/GameSupport.c	_WriteEventToMovieFile	7a73c	161
+Sources & Headers/GameSupport.c	_WriteDataToMovieFile	7a7dd	164
+Sources & Headers/GameSupport.c	_WriteCurrentKeysStateToMovie	7a881	312
+Sources & Headers/GameSupport.c	_StopGameMovie	7a9b9	31
+Sources & Headers/GameSupport.c	_IsMovieFileOpen	7a9d8	34
+Sources & Headers/GameSupport.c	_IsMoviePlaying	7a9fa	34
+Sources & Headers/GameSupport.c	_IsMovieFileOpenForRecording	7aa1c	73
+Sources & Headers/GameSupport.c	_CloseGameMovieFile	7aa65	164
+Sources & Headers/GameSupport.c	_OpenOutputFile	7ab09	239
+Sources & Headers/GameSupport.c	_MMGetCurrentDate	7abf8	90
+Sources & Headers/GameSupport.c	_WriteRoomInfoToFile	7ac52	140
+Sources & Headers/GameSupport.c	_WriteCarriageReturn	7acde	97
+Sources & Headers/GameSupport.c	_WriteNumberToFile	7ad3f	75
+Sources & Headers/GameSupport.c	_WriteCStringToFile	7ad8a	65
+Sources & Headers/GameSupport.c	_IsOutputFileOpen	7adcb	34
+Sources & Headers/GameSupport.c	_CloseOutputFile	7aded	81
+Sources & Headers/GameSupport.c	_SuspendGame	7ae3e	639
+Sources & Headers/GameSupport.c	_OpenSuspendedGame	7b0bd	987
+Sources & Headers/GameSupport.c	_GetHeroForSuspendGame	7b498	97
+Sources & Headers/GameSupport.c	_CanSuspendGame	7b4f9	220
+Sources & Headers/GameSupport.c	_DeleteSuspendedGame	7b5d5	55
+Sources & Headers/GameSupport.c	_CreateNewProfile	7b60c	171
+Sources & Headers/GameSupport.c	_CreateSubdirectoriesForProfile	7b6b7	118
+Sources & Headers/GameSupport.c	_WriteProfileToDisk	7b72d	381
+Sources & Headers/GameSupport.c	_LoadProfileFromDisk	7b8aa	569
+Sources & Headers/GameSupport.c	_DeleteProfile	7bae3	73
+Sources & Headers/GameSupport.c	_SaveCurrentProfile	7bb2c	85
+Sources & Headers/GameSupport.c	_RestoreCurrentProfile	7bb81	148
+Sources & Headers/GameSupport.c	_CountNumProfilesOnDisk	7bc15	42
+Sources & Headers/GameSupport.c	_DoesProfileAlreadyExist	7bc3f	145
+Sources & Headers/GameSupport.c	_MMRestoreFromSaveGameFile	7bcd0	518
+Sources & Headers/GameSupport.c	_HandleRestoreStuff	7bed6	1261
+Sources & Headers/GameSupport.c	_GetPathForAnyMansionFile	7c3c3	79
+Sources & Headers/GameSupport.c	_MMCreateSaveGameFile	7c412	285
+Sources & Headers/GameSupport.c	_DoSuspendGameDialog	7c52f	350
+Sources & Headers/GameSupport.c	_MMDoErrorMessage	7c68d	154
+Sources & Headers/GameSupport.c	_MMReportAdvancedError	7c727	209
+Sources & Headers/GameSupport.c	_HandleCustomDialogKeyEvent	7c7f8	68
+Sources & Headers/GameSupport.c	_MMDoCustomDialog	7c83c	2811
+Sources & Headers/GameSupport.c	_MMDoOptionsDialog	7d337	2082
+Sources & Headers/GameSupport.c	_AddStandardItemsToOptionsDialog	7db59	1015
+Sources & Headers/GameSupport.c	_AddOptionsItemsToOptionsDialog	7df50	1533
+Sources & Headers/GameSupport.c	_AddCheckboxToOptionsDialog	7e54d	148
+Sources & Headers/GameSupport.c	_AddControlsItemsToOptionsDialog	7e5e1	1979
+Sources & Headers/GameSupport.c	_AddKeyInputBoxToOptionsDialog	7ed9c	563
+Sources & Headers/GameSupport.c	_PrepareGameForDialogBox	7efcf	357
+Sources & Headers/GameSupport.c	_RestoreGameAfterDialogBox	7f134	276
+Sources & Headers/GameSupport.c	_IsMMRegistered	7f248	181
+Sources & Headers/GameSupport.c	_CheckForLicenseFilename	7f2fd	256
+Sources & Headers/GameSupport.c	_UpdateHiddenDateFile	7f3fd	395
+Sources & Headers/GameSupport.c	_GetDateFromHiddenFile	7f588	369
+Sources & Headers/GameSupport.c	_ChangeHiddenPiracyValue	7f6f9	344
+Sources & Headers/GameSupport.c	_IsComputerClockValid	7f851	166
+Sources & Headers/GameSupport.c	_SetMMRegistered	7f8f7	40
+Sources & Headers/GameSupport.c	_LaunchRegistrationWebsite	7f91f	59
+Sources & Headers/High Scores.c	_InitializeHighScores	7f95a	502
+Sources & Headers/High Scores.c	_LoadHighScores	7fb50	51
+Sources & Headers/High Scores.c	_WriteHighScoresToFile	7fb83	199
+Sources & Headers/High Scores.c	_LoadHighScoresFromFile	7fc4a	167
+Sources & Headers/High Scores.c	_SwapEndiansForHighScoreData	7fcf1	265
+Sources & Headers/High Scores.c	_SDL_Swap32	7fdfa	25
+Sources & Headers/High Scores.c	_SDL_Swap16	7fe13	35
+Sources & Headers/High Scores.c	_SetUpHighScoresScreen	7fe36	1231
+Sources & Headers/High Scores.c	_HandleHighScoresScreenCallback	80305	596
+Sources & Headers/High Scores.c	_DrawContentsForHighScoresScreen	80559	1717
+Sources & Headers/High Scores.c	_ExitHighScoresScreen	80c0e	73
+Sources & Headers/High Scores.c	_CheckForHighScore	80c57	809
+Sources & Headers/High Scores.c	_DeleteLicenseFileIfPirated	80f80	118
+Sources & Headers/High Scores.c	_ShiftScoresLowerInList	80ff6	335
+../SpriteWorldX/Sources/Tiling.c	_SWInitTiling	81145	918
+../SpriteWorldX/Sources/Tiling.c	_SWExitTiling	814db	252
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileResolution	815d7	56
+../SpriteWorldX/Sources/Tiling.c	_SWSetVBOForTiling	8160f	33
+../SpriteWorldX/Sources/Tiling.c	_SWCreateTileMap	81630	744
+../SpriteWorldX/Sources/Tiling.c	_SWCloneTileMap	81918	277
+../SpriteWorldX/Sources/Tiling.c	_SWResetTileMapForLayer	81a2d	50
+../SpriteWorldX/Sources/Tiling.c	_SWResetTileMap	81a5f	99
+../SpriteWorldX/Sources/Tiling.c	_SWDisposeTileMap	81ac2	371
+../SpriteWorldX/Sources/Tiling.c	_SWInstallTileMap	81c35	222
+../SpriteWorldX/Sources/Tiling.c	_SWLoadTileMap	81d13	272
+../SpriteWorldX/Sources/Tiling.c	_SWSaveTileMap	81e23	328
+../SpriteWorldX/Sources/Tiling.c	_SWResizeTileMap	81f6b	643
+../SpriteWorldX/Sources/Tiling.c	_SWInstallTileLayerBelowSpriteLayer	821ee	90
+../SpriteWorldX/Sources/Tiling.c	_SWInstallTileLayerAboveSpriteLayer	82248	90
+../SpriteWorldX/Sources/Tiling.c	_SWFillTileMapWithValue	822a2	147
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileMapVBOMethod	82335	30
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileMapZoom	82353	23
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileLayersVisible	8236a	113
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileLayerToDrawEveryFrame	823db	55
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileTranslucency	82412	131
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileTranslucencyForRange	82495	172
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileColor	82541	216
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileColorForRange	82619	320
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileLayerCallback	82759	99
+../SpriteWorldX/Sources/Tiling.c	_SWSetStdTileColor	827bc	181
+../SpriteWorldX/Sources/Tiling.c	_SWCloneTiles	82871	534
+../SpriteWorldX/Sources/Tiling.c	_SWLoadTilesFromSingleFileXY	82a87	720
+../SpriteWorldX/Sources/Tiling.c	_SWCreateMasterTileSurface	82d57	161
+../SpriteWorldX/Sources/Tiling.c	_SWAddTileToMasterSurface	82df8	301
+../SpriteWorldX/Sources/Tiling.c	_SWFinishMasterTileSurface	82f25	170
+../SpriteWorldX/Sources/Tiling.c	_SWLoadTilesFromFileSequence	82fcf	533
+../SpriteWorldX/Sources/Tiling.c	_SWDisposeTile	831e4	341
+../SpriteWorldX/Sources/Tiling.c	_SWLockTiles	83339	183
+../SpriteWorldX/Sources/Tiling.c	_SWUnlockTiles	833f0	183
+../SpriteWorldX/Sources/Tiling.c	_SWSetTilingOn	834a7	91
+../SpriteWorldX/Sources/Tiling.c	_SWChangeTileSize	83502	117
+../SpriteWorldX/Sources/Tiling.c	_SWSetCustomTileDrawProc	83577	84
+../SpriteWorldX/Sources/Tiling.c	_SWStdCustomTileDrawProc	835cb	97
+../SpriteWorldX/Sources/Tiling.c	_SWSetTileChangeProc	8362c	84
+../SpriteWorldX/Sources/Tiling.c	_SWValidateAllTileLayers	83680	63
+../SpriteWorldX/Sources/Tiling.c	_SWValidateTileLayer	836bf	229
+../SpriteWorldX/Sources/Tiling.c	_SWResetVBOForAllTileLayers	837a4	255
+../SpriteWorldX/Sources/Tiling.c	_SWDrawTile	838a3	1490
+../SpriteWorldX/Sources/Tiling.c	_SWDrawTileNoVBO	83e75	2060
+../SpriteWorldX/Sources/Tiling.c	_SWCreateBackgroundTextureFromTiles	84681	374
+../SpriteWorldX/Sources/Tiling.c	_SWDisposeBackgroundTileTexture	847f7	48
+../SpriteWorldX/Sources/Tiling.c	_SWDrawTileLayersInRect	84827	96
+../SpriteWorldX/Sources/Tiling.c	_SWDrawTileLayerInRect	84887	2177
+../SpriteWorldX/Sources/Tiling.c	_SWComputeVBOForTileLayer	85108	2099
+../SpriteWorldX/Sources/Tiling.c	_SWDrawTileLayerUsingVBO	8593b	986
+../SpriteWorldX/Sources/Tiling.c	_SWResetAllChangedTilesMaps	85d15	100
+../SpriteWorldX/Sources/Tiling.c	_SWResetChangedTilesMap	85d79	108
+../SpriteWorldX/Sources/Tiling.c	_SWDrawTilesAboveSprite	85de5	243
+../SpriteWorldX/Sources/Tiling.c	_SWMarkTilesToBeRedrawn	85ed8	462
+../SpriteWorldX/Sources/Tiling.c	_SWAddChangedRect	860a6	957
+../SpriteWorldX/Sources/Tiling.c	_SWChangeTileImage	86463	294
+../SpriteWorldX/Sources/Tiling.c	_SWUpdateTileOnScreen	86589	509
+../SpriteWorldX/Sources/Tiling.c	_SWUpdateTilesOnScreenFast	86786	538
+../SpriteWorldX/Sources/Tiling.c	_SWResetCurrentTileImages	869a0	154
+../SpriteWorldX/Sources/Tiling.c	_SWReturnTileUnderPixel	86a3a	387
+../SpriteWorldX/Sources/Tiling.c	_SWCheckSpriteWithTiles	86bbd	3077
+Sources & Headers/GameMap.c	_SetUpInGameMapScreen	877c2	1669
+Sources & Headers/GameMap.c	_ComputeMapRectForLevel	87e47	131
+Sources & Headers/GameMap.c	_SetMapZoom	87eca	126
+Sources & Headers/GameMap.c	_SetRectZoom	87f48	160
+Sources & Headers/GameMap.c	_InitMapCache	87fe8	105
+Sources & Headers/GameMap.c	_CalculateMapBounds	88051	637
+Sources & Headers/GameMap.c	_ChangeStatsAreaForMapScreen	882ce	318
+Sources & Headers/GameMap.c	_RunInGameMapScreen	8840c	1530
+Sources & Headers/GameMap.c	_MoveMapScrollRect	88a06	207
+Sources & Headers/GameMap.c	_HandleMapScreenMouseButton	88ad5	105
+Sources & Headers/GameMap.c	_HandleMapScreenMouseMoved	88b3e	299
+Sources & Headers/GameMap.c	_HandleMapScreenScrollWheelEvent	88c69	102
+Sources & Headers/GameMap.c	_DrawMapScreen	88ccf	292
+Sources & Headers/GameMap.c	_DrawMapScreenRooms	88df3	1390
+Sources & Headers/GameMap.c	_DrawMapRoomToScreen	89361	84
+Sources & Headers/GameMap.c	_AddMapRoomToCacheIfNecessary	893b5	478
+Sources & Headers/GameMap.c	_calculateNumRoomsInMapCache	89593	80
+Sources & Headers/GameMap.c	_FindRoomInMapCache	895e3	90
+Sources & Headers/GameMap.c	_FindEmptyMapCacheElement	8963d	83
+Sources & Headers/GameMap.c	_DeleteCachedRoomsOutsideCurrentView	89690	142
+Sources & Headers/GameMap.c	_getIndexOfMapCachedRoomOutsideCurView	8971e	149
+Sources & Headers/GameMap.c	_IsRoomInsideCurrentView	897b3	352
+Sources & Headers/GameMap.c	_UpdateCurRoomPreviewInMapCache	89913	507
+Sources & Headers/GameMap.c	_AddCurrentRoomToMapCache	89b0e	416
+Sources & Headers/GameMap.c	_UpdateExistingRoomInMapCache	89cae	281
+Sources & Headers/GameMap.c	_DrawCachedMapRoom	89dc7	304
+Sources & Headers/GameMap.c	_DrawMapInOffscreenAreas	89ef7	97
+Sources & Headers/GameMap.c	_DisposeRoomInMapCache	89f58	56
+Sources & Headers/GameMap.c	_DisposeMapCachedRoom	89f90	268
+Sources & Headers/GameMap.c	_DisposeAllMapCachedRooms	8a09c	78
+Sources & Headers/GameMap.c	_GetMapRoomWidth	8a0ea	67
+Sources & Headers/GameMap.c	_GetMapRoomHeight	8a12d	66
+Sources & Headers/GameMap.c	_RevealGridInMap	8a16f	352
+Sources & Headers/GameMap.c	_RevealEntireMap	8a2cf	334
+Sources & Headers/GameMap.c	_ResetKeySpriteFrames	8a41d	115
+Sources & Headers/GameMap.c	_RevealSecretRooms	8a490	338
+Sources & Headers/GameMap.c	_ExitInGameMapScreen	8a5e2	789
+Sources & Headers/GameMap.c	_DoZoomBackToGameEffect	8a8f7	964
+Sources & Headers/GameMap.c	_CenterLongRect	8acbb	206
+Sources & Headers/GameMap.c	_OffsetLongRect	8ad89	80
+Sources & Headers/GameMap.c	_CenterFloatRect	8add9	291
+Sources & Headers/GameMap.c	_MMPaintRect	8aefc	446
+Sources & Headers/GameMap.c	_MMPaintFloatRect	8b0ba	454
+Sources & Headers/GameMap.c	_CustomMapDrawProc	8b280	536
+Sources & Headers/GameEditorStuff.c	_SetUpFringeArray	8b498	2042
+Sources & Headers/GameEditorStuff.c	_SetUpTileFamilyArray	8bc92	691
+Sources & Headers/GameEditorStuff.c	_isRightBrick	8bf45	127
+Sources & Headers/GameEditorStuff.c	_isLeftBrick	8bfc4	121
+Sources & Headers/GameEditorStuff.c	_isNormalBrick	8c03d	80
+Sources & Headers/GameEditorStuff.c	_IsWallTile	8c08d	75
+Sources & Headers/GameEditorStuff.c	_isTileFringe	8c0d8	149
+Sources & Headers/GameEditorStuff.c	_GetTileFringe	8c16d	156
+Sources & Headers/GameEditorStuff.c	_GetTileFamily	8c209	156
+Sources & Headers/GameEditorStuff.c	_GetBaseTileFamily	8c2a5	127
+Sources & Headers/GameEditorStuff.c	_MMDrawTileAndFringeCallback	8c324	597
+Sources & Headers/GameEditorStuff.c	_MMDrawFringe	8c579	973
+Sources & Headers/GameEditorStuff.c	_DrawFringeForWallTile	8c946	1325
+Sources & Headers/GameEditorStuff.c	_DrawFringeForEyeCandyTile	8ce73	1654
+Sources & Headers/GameEditorStuff.c	_DrawFringeForFloorTile	8d4e9	402
+Sources & Headers/GameEditorStuff.c	_DrawFringeForLavaTile	8d67b	640
+Sources & Headers/GameEditorStuff.c	_DrawFloorTile	8d8fb	335
+Sources & Headers/GameEditorStuff.c	_GEIsTileFloorTile	8da4a	131
+Sources & Headers/GameEditorStuff.c	_GetCorrectTileForRowAndCol	8dacd	115
+Sources & Headers/GameEditorStuff.c	_GetEditorTileID	8db40	122
+Sources & Headers/GameEditorStuff.c	_GetEditorTileIDNoConvert	8dbba	113
+Sources & Headers/GameEditorStuff.c	_GetFringeForWallTile	8dc2b	132
+Sources & Headers/GameEditorStuff.c	_GetFringeForTile	8dcaf	87
+Sources & Headers/GameEditorStuff.c	_DrawTileIfReplacingFringe	8dd06	186
+Sources & Headers/MMDialogsMac.c	_OpenMacDialogResFile	8ddc0	303
+Sources & Headers/MMDialogsMac.c	_MMDoOpenGameDialog	8deef	248
+Sources & Headers/MMDialogsMac.c	_MMDoSaveGameDialog	8dfe7	984
+Sources & Headers/MMDialogsMac.c	_MMDoOpenMansionDialog	8e3bf	507
+Sources & Headers/MMDialogsMac.c	_MMDoOpenMovieDialog	8e5ba	276
+Sources & Headers/MMDialogsMac.c	_MyNavEventCallback	8e6ce	83
+Sources & Headers/MMDialogsMac.c	_DoChoosePlayerDialog	8e721	1182
+Sources & Headers/MMDialogsMac.c	_CreatePlayerListForDialog	8ebbf	905
+Sources & Headers/MMDialogsMac.c	_DoAreYouSureDeleteDialog	8ef48	222
+Sources & Headers/MMDialogsMac.c	_ChoosePlayerDialogFilter	8f026	316
+Sources & Headers/MMDialogsMac.c	_HandleEventInOpenDialog	8f162	686
+Sources & Headers/MMDialogsMac.c	_DoEnterNameForNewProfileDialog	8f410	1044
+Sources & Headers/MMDialogsMac.c	_HandleArrowKeyInList	8f824	280
+Sources & Headers/MMDialogsMac.c	_MMDoEnterNameDialog	8f93c	831
+Sources & Headers/MMDialogsMac.c	_EnterNameDialogFilter	8fc7b	140
+Sources & Headers/MMDialogsMac.c	_DoRegisterTitleScreenDialog	8fd07	629
+Sources & Headers/MMDialogsMac.c	_CreateLicenseFileForNameAndCode	8ff7c	608
+Sources & Headers/MMDialogsMac.c	_DoEditorUnregisteredDialog	901dc	341
+Sources & Headers/MMDialogsMac.c	_DoEnterRegistrationCodeDialog	90331	2630
+Sources & Headers/MMDialogsMac.c	_DoGetUpdatedCodeDialog	90d77	269
+Sources & Headers/MMDialogsMac.c	_DoValidateCodeDialog	90e84	295
+Sources & Headers/MMDialogsMac.c	_DoGetUpdateFailedDialog	90fab	269
+Sources & Headers/MMDialogsMac.c	_MyStdDialogFilter	910b8	141
+Sources & Headers/MMDialogsMac.c	_GetFSRefForSaveGameFolder	91145	68
+Sources & Headers/MMDialogsMac.c	_GetFSRefForPlayerProfilesFolder	91189	54
+Sources & Headers/MMDialogsMac.c	_MyGetDialogControl	911bf	71
+Sources & Headers/MMDialogsMac.c	_MySetDialogItemNumber	91206	119
+Sources & Headers/MMDialogsMac.c	_GetDialogItemNumber	9127d	68
+Sources & Headers/MMDialogsMac.c	_MySetDialogItemText	912c1	86
+Sources & Headers/MMDialogsMac.c	_MyGetDialogItemText	91317	86
+Sources & Headers/MMDialogsMac.c	_RedrawDialogItem	9136d	89
+Sources & Headers/MMDialogsMac.c	_SetCheckBoxValue	913c6	93
+Sources & Headers/MMDialogsMac.c	_EnableMyControl	91423	120
+Sources & Headers/MMDialogsMac.c	_ProcessCheckBoxClick	9149b	107
+Sources & Headers/MMDialogsMac.c	_GetCheckBoxValue	91506	96
+Sources & Headers/MMDialogsMac.c	_MyInvalDialog	91566	74
+Sources & Headers/MMDialogsMac.c	_DrawList	915b0	102
+Sources & Headers/MMDialogsMac.c	_DrawFrameAndFocusForList	91616	133
+Sources & Headers/MMDialogsMac.c	_GetPascalStringFromHFSUni255	9169b	90
+Sources & Headers/MMDialogsMac.c	_MMCantFindMacResource	916f5	84
+Sources & Headers/MMDialogsMac.c	_MacStopAlert	91749	108
+Sources & Headers/MyFileUtilsMac.c	_MyNavOpenDialog	917b5	755
+Sources & Headers/MyFileUtilsMac.c	_MyNavSaveDialog	91aa8	493
+Sources & Headers/MyFileUtilsMac.c	_MyFinishNavSave	91c95	111
+Sources & Headers/MyFileUtilsMac.c	_MyCreateNavTypeListHandle	91d04	188
+Sources & Headers/MyFileUtilsMac.c	_BlockMoveData	91dc0	45
+Sources & Headers/MyFileUtilsMac.c	_HandleNavEvent	91ded	238
+Sources & Headers/MyFileUtilsMac.c	_DefaultNavEventCallback	91edb	61
+Sources & Headers/MyFileUtilsMac.c	_MyCreateAndOpenFile	91f18	533
+Sources & Headers/MyFileUtilsMac.c	_BlockZero	9212d	38
+Sources & Headers/MyFileUtilsMac.c	_MyOpenFile	92153	120
+Sources & Headers/MyFileUtilsMac.c	_MyOpenResFileUsingFSRef	921cb	79
+Sources & Headers/MyFileUtilsMac.c	_MyCloseFile	9221a	33
+Sources & Headers/MyFileUtilsMac.c	_MyDeleteFile	9223b	184
+Sources & Headers/MyFileUtilsMac.c	_MyOffsetFileMarker	922f3	58
+Sources & Headers/MyFileUtilsMac.c	_MyCreateAndOpenResFile	9232d	560
+Sources & Headers/MyFileUtilsMac.c	_DuplicateResources	9255d	186
+Sources & Headers/MyFileUtilsMac.c	_ChangeAllResourceTypes	92617	258
+Sources & Headers/MyFileUtilsMac.c	_SetDialogItemNumber	92719	59
+Sources & Headers/MyFileUtilsMac.c	_CFStringToHFSUniStr	92754	142
+Sources & Headers/MyFileUtilsMac.c	_CStringToHFSUniStr	927e2	90
+Sources & Headers/MyFileUtilsMac.c	_PascalStringToHFSUniStr	9283c	90
+Sources & Headers/MyFileUtilsMac.c	_DeleteResource	92896	98
+Sources & Headers/MyFileUtilsMac.c	_CountNumSuccessiveResources	928f8	76
+Sources & Headers/MyFileUtilsMac.c	_CreateDirectory	92944	224
+Sources & Headers/MyFileUtilsMac.c	_DoesFileOrFolderExistInPath	92a24	139
+Sources & Headers/MyFileUtilsMac.c	_SetFileCreatorAndTypeForPath	92aaf	112
+Sources & Headers/MyFileUtilsMac.c	_SetFileCreatorAndType	92b1f	171
+Sources & Headers/MyFileUtilsMac.c	_SetFileInvisibleForPath	92bca	98
+Sources & Headers/MyFileUtilsMac.c	_SetFileInvisible	92c2c	173
+Sources & Headers/MyFileUtilsMac.c	_GetFSRefForUserFolder	92cd9	107
+Sources & Headers/MyFileUtilsMac.c	_CreateFolderAndGetFSRef	92d44	265
+Sources & Headers/MyFileUtilsMac.c	_AppendPathToFSRef	92e4d	105
+Sources & Headers/MyFileUtilsMac.c	_DoesFileOrFolderExist	92eb6	115
+Sources & Headers/MyFileUtilsMac.c	_DoesFileOrFolderExistHSFUni	92f29	85
+Sources & Headers/MyFileUtilsMac.c	_AppendUnicodePathToFSRef	92f7e	135
+Sources & Headers/MyFileUtilsMac.c	_PathToFSRef	93005	47
+Sources & Headers/MyFileUtilsMac.c	_FSRefToPath	93034	48
+Sources & Headers/MyFileUtilsMac.c	_GetDomainForPrefs	93064	19
+Sources & Headers/MyFileUtilsMac.c	_GetApplicationFSRef	93077	109
+Sources & Headers/MyFileUtilsMac.c	_GetFSSpecFromFSRef	930e4	71
+Sources & Headers/MyFileUtilsMac.c	_GetFilenameFromFSRef	9312b	71
+Sources & Headers/MyFileUtilsMac.c	_GetCFilenameFromFSRef	93172	128
+Sources & Headers/MyFileUtilsMac.c	_GetPascalStringFromCFString	931f2	76
+Sources & Headers/MyFileUtilsMac.c	_GetCStringFromCFString	9323e	76
+Sources & Headers/MyFileUtilsMac.c	_CreateCFStringFromHFSUniStr	9328a	73
+Sources & Headers/MyFileUtilsMac.c	_MyGetPascalStringFromHFSUni255	932d3	90
+Sources & Headers/MyFileUtilsMac.c	_SearchFolderForSubfile	9332d	637
+Sources & Headers/MyFileUtilsMac.c	_getProcessorSpeed	935aa	118
+Sources & Headers/MyFileUtilsMac.c	_GetCodeFromWebsite	93620	150
+Sources - My Utils/ASWHighScores.c	_ASWHighScoresInit	936b6	48
+Sources - My Utils/ASWHighScores.c	_ASWLaunchHighScore	936e6	418
+Sources - My Utils/ASWHighScores.c	_ASWLaunchURL	93888	126
+Sources - My Utils/ASWHighScores.c	_ASWEncodeString	93906	108
+Sources - My Utils/ASWHighScores.c	_ASWEncodeCharacter	93972	40
+Sources - My Utils/ASWHighScores.c	_ASWURLEncode	9399a	289
+Sources - My Utils/ASWHighScores.c	_ASWASCIIToHex	93abb	188
+Sources - My Utils/ASWHighScores.c	_ASWStrRev	93b77	114
+Sources - My Utils/ASWHighScores.c	_local_ValidateInput	93be9	178
+Sources - My Utils/ASWHighScores.c	_local_EncodeInput	93c9b	171
+Sources - My Utils/md5 edited.c	_md5	93d46	418
+Sources - My Utils/md5 edited.c	_md5NoFormatting	93ee8	77
+Sources - My Utils/md5 edited.c	_formatMD5	93f35	373
+Sources - My Utils/md5 edited.c	_byteReverse	940aa	104
+Sources - My Utils/md5 edited.c	_MD5Init	94112	73
+Sources - My Utils/md5 edited.c	_MD5Update	9415b	439
+Sources - My Utils/md5 edited.c	_MD5Final	94312	319
+Sources - My Utils/md5 edited.c	_MD5Transform	94451	3005
+Sources & Headers/Compatibility Layer.c	_LoadMidnightMansionTestSprites	9500e	70
+Sources & Headers/Compatibility Layer.c	_MyDrawText	95054	96
+Sources & Headers/Compatibility Layer.c	_MyDrawPascalTextJustified	950b4	73
+Sources & Headers/Compatibility Layer.c	_MyDrawCTextJustified	950fd	440
+Sources & Headers/Compatibility Layer.c	_MyDrawTextBox	952b5	1388
+Sources & Headers/Compatibility Layer.c	_MMRenderSceneForWorkAreaSprite	95821	298
+Sources & Headers/Compatibility Layer.c	_LoadAndInstallBackgroundSprite	9594b	498
+Sources & Headers/Compatibility Layer.c	_LoadSpriteFromScreensFolder	95b3d	98
+Sources & Headers/Compatibility Layer.c	_CreateSpriteFromSinglePict	95b9f	179
+Sources & Headers/Compatibility Layer.c	_CreateSpriteFromPictResource	95c52	333
+Sources & Headers/Compatibility Layer.c	_CreateSpriteFromSinglePictXY	95d9f	292
+Sources & Headers/Compatibility Layer.c	_MMCreateSpriteFromSingleFileXY	95ec3	169
+Sources & Headers/Compatibility Layer.c	_CreateSpriteFromVerticalPict	95f6c	172
+Sources & Headers/Compatibility Layer.c	_MMCreateSpriteFromVerticalFile	96018	118
+Sources & Headers/Compatibility Layer.c	_GetFileNameForResource	9608e	73
+Sources & Headers/Compatibility Layer.c	_AddFilenameToPath	960d7	73
+Sources & Headers/Compatibility Layer.c	_GetSpriteImagePath	96120	120
+Sources & Headers/Compatibility Layer.c	_GetScreensFolderPath	96198	68
+Sources & Headers/Compatibility Layer.c	_GetTitleScreenFolderPath	961dc	120
+Sources & Headers/Compatibility Layer.c	_GetMapScreenFolderPath	96254	120
+Sources & Headers/Compatibility Layer.c	_GetOrganScreenFolderPath	962cc	120
+Sources & Headers/Compatibility Layer.c	_GetSoundsFolderPath	96344	68
+Sources & Headers/Compatibility Layer.c	_GetMusicFolderPath	96388	68
+Sources & Headers/Compatibility Layer.c	_GetFontsFolderPath	963cc	120
+Sources & Headers/Compatibility Layer.c	_GetMansionFolderPath	96444	130
+Sources & Headers/Compatibility Layer.c	_GetMansionDataFolderPath	964c6	130
+Sources & Headers/Compatibility Layer.c	_GetCustomMansionsFolderPath	96548	113
+Sources & Headers/Compatibility Layer.c	_GetPrefsFilePath	965b9	25
+Sources & Headers/Compatibility Layer.c	_GetRealPrefsFilePath	965d2	133
+Sources & Headers/Compatibility Layer.c	_GetAppSupportPath	96657	170
+Sources & Headers/Compatibility Layer.c	_GetPlainAppSupportPath	96701	96
+Sources & Headers/Compatibility Layer.c	_GetSavedGamesFilePath	96761	584
+Sources & Headers/Compatibility Layer.c	_GetMoviesFilePath	969a9	344
+Sources & Headers/Compatibility Layer.c	_GetPlainSavedGamesFilePath	96b01	164
+Sources & Headers/Compatibility Layer.c	_GetPlayerProfilePath	96ba5	138
+Sources & Headers/Compatibility Layer.c	_GetSuspendedGameFilePath	96c2f	293
+Sources & Headers/Compatibility Layer.c	_GetPlainSuspendedGameFilePath	96d54	120
+Sources & Headers/Compatibility Layer.c	_GetUserMoviesPath	96dcc	138
+Sources & Headers/Compatibility Layer.c	_GetHomeDirectory	96e56	82
+Sources & Headers/Compatibility Layer.c	_GetGameDataPath	96ea8	145
+Sources & Headers/Compatibility Layer.c	_GetCurrentDirectory	96f39	118
+Sources & Headers/Compatibility Layer.c	_GetGameDirectory	96faf	94
+Sources & Headers/Compatibility Layer.c	_FixCurrentWorkingDirectory	9700d	327
+Sources & Headers/Compatibility Layer.c	_GetResourcesDirectory	97154	255
+Sources & Headers/Compatibility Layer.c	_ScanDirectoryForResIDs	97253	319
+Sources & Headers/Compatibility Layer.c	_ResourceExists	97392	43
+Sources & Headers/Compatibility Layer.c	_Resource1Exists	973bd	321
+Sources & Headers/Compatibility Layer.c	_DoesFileExist	974fe	83
+Sources & Headers/Compatibility Layer.c	_CountNumSuccessiveFiles	97551	140
+Sources & Headers/Compatibility Layer.c	_MMCountResources	975dd	78
+Sources & Headers/Compatibility Layer.c	_PrintFilesInFolder	9762b	177
+Sources & Headers/Compatibility Layer.c	_CountNumFilesInFolder	976dc	107
+Sources & Headers/Compatibility Layer.c	_MMGetResource	97747	70
+Sources & Headers/Compatibility Layer.c	_MMGetResourceUsingPath	9778d	214
+Sources & Headers/Compatibility Layer.c	_MMGetMansionVersion	97863	201
+Sources & Headers/Compatibility Layer.c	_SDL_Swap32	9792c	25
+Sources & Headers/Compatibility Layer.c	_MMGetCStringFromTEXTResource	97945	332
+Sources & Headers/Compatibility Layer.c	_GetSPRTResourceSize	97a91	212
+Sources & Headers/Compatibility Layer.c	_EnableRecordMovieMenuItem	97b65	20
+Sources & Headers/Compatibility Layer.c	_SetUpMenuBar	97b79	14
+Sources & Headers/Compatibility Layer.c	_OpenGameSupportFiles	97b87	14
+Sources & Headers/Compatibility Layer.c	_StartUpEditor	97b95	14
+Sources & Headers/Compatibility Layer.c	_ExitToEditor	97ba3	14
+../SpriteWorldX/Utils/SWTextSprite.c	_CreateBMTextSprite	97bb1	526
+../SpriteWorldX/Utils/SWTextSprite.c	_CloneBMTextSprite	97dbf	574
+../SpriteWorldX/Utils/SWTextSprite.c	_SetBMTextSpriteIndexes	97ffd	174
+../SpriteWorldX/Utils/SWTextSprite.c	_SetBMTextSpriteSpecialChars	980ab	210
+../SpriteWorldX/Utils/SWTextSprite.c	_SetBMTextSpriteUnicodeChars	9817d	210
+../SpriteWorldX/Utils/SWTextSprite.c	_SetBMTextSpriteText	9824f	173
+../SpriteWorldX/Utils/SWTextSprite.c	_SetBMTextSpriteVertOffsetForChars	982fc	101
+../SpriteWorldX/Utils/SWTextSprite.c	_SetBMTextSpriteVertOffsetForChar	98361	227
+../SpriteWorldX/Utils/SWTextSprite.c	_SetBMTextSpriteCharSpacing	98444	246
+../SpriteWorldX/Utils/SWTextSprite.c	_GetTextSpriteText	9853a	90
+../SpriteWorldX/Utils/SWTextSprite.c	_BMTextSpriteDrawProc	98594	1052
+../SpriteWorldX/Utils/SWTextSprite.c	_GetWidthOfBMText	989b0	646
+../SpriteWorldX/Utils/SWTextSprite.c	_DrawBMLineOfText	98c36	947
+../SpriteWorldX/Utils/SWTextSprite.c	_strchrUnicode	98fe9	147
+../SpriteWorldX/BlitKernel/SDL_rwops_zzip.c	__zzip_seek	9907c	60
+../SpriteWorldX/BlitKernel/SDL_rwops_zzip.c	_read	990b8	74
+../SpriteWorldX/BlitKernel/SDL_rwops_zzip.c	_write	99102	19
+../SpriteWorldX/BlitKernel/SDL_rwops_zzip.c	__zzip_close	99115	64
+../SpriteWorldX/BlitKernel/SDL_rwops_zzip.c	_SDL_RWFromZZIP	99155	228
+Sources & Headers/menubar.m	_initMMMenuBar	99239	1993
+Sources & Headers/menubar.m	_UpdateMenuBar	99a02	149
+MMMenuController.m	-[MMMenuController removeMenu	99a97	216
+MMMenuController.m	-[MMMenuController handlePreferences	99b6f	50
+MMMenuController.m	-[MMMenuController handleAbortGame	99ba1	67
+MMMenuController.m	-[MMMenuController handleStartRecordingReplay	99be4	75
+MMMenuController.m	-[MMMenuController handleOpenReplay	99c2f	45
+MMMenuController.m	-[MMMenuController handleMusicOn	99c5c	53
+MMMenuController.m	-[MMMenuController handleDisplayStats	99c91	53
+MMMenuController.m	-[MMMenuController handleFullscreen	99cc6	19
+MMMenuController.m	-[MMMenuController handleHideApp	99cd9	121
+MMMenuController.m	-[MMMenuController updateMenuBar]	99d52	778
+MMMenuController.m	-[MMMenuController handleQuit	9a05c	121
+Sources & Headers/MMChecksumStuff.c	_CreateChecksumsForZIPFilesInPath	9a0d5	403
+Sources & Headers/MMChecksumStuff.c	_CreateChecksumForMansionsInFolder	9a268	698
+Sources & Headers/MMChecksumStuff.c	_CreateChecksumForMansionFolder	9a522	666
+Sources & Headers/MMChecksumStuff.c	_GetChecksumForFileAtPath	9a7bc	320
+Sources & Headers/MMChecksumStuff.c	_CreateChecksumFile	9a8fc	199
+Sources & Headers/MMChecksumStuff.c	_GetChecksumFromFile	9a9c3	215
+Sources & Headers/MMChecksumStuff.c	_DoesMansionPassChecksum	9aa9a	586
+Sources & Headers/rngs.c	_CustomRandom	9ace4	259
+Sources & Headers/rngs.c	_PlantSeeds	9ade7	271
+Sources & Headers/rngs.c	_PutSeed	9aef6	296
+Sources & Headers/rngs.c	_GetSeed	9b01e	46
+Sources & Headers/rngs.c	_SelectStream	9b04c	79
+Sources & Headers/rngs.c	_TestRandom	9b09b	219
+MMCheckForValidReceipt.m	_MMCheckForValidReceipt	9b176	373
+../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m	_GLSetAttributes	9b2eb	710
+../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m	_CFCreateWindow	9b5b1	1676
+../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m	_SWCreateXMLSprite	9bc3d	406
+../roddi-ValidateStoreReceipt-4ccfe17/validatereceipt.m	_MMOpenFileAtPathUsingName	9bdd3	1448
+Sources & Headers/MMSounds.c	_MMSetTempStereoFadeDist	9c37b	42
+Sources & Headers/MMSounds.c	_MMPlaySound	9c3a5	118
+Sources & Headers/MMSounds.c	_MMPlayStereoSound	9c41b	117
+Sources & Headers/MMSounds.c	_MMPlayStereoSound2	9c490	304
+Sources & Headers/MMSounds.c	_MMPlaySoundDetailed	9c5c0	161
+Sources & Headers/MMSounds.c	_GetStereoPositionOfSprite	9c661	84
+Sources & Headers/MMSounds.c	_GetStereoPositionOfColumn	9c6b5	172
+Sources & Headers/MMSounds.c	_MMPlayStereoSoundAdjustedVol	9c761	309
+Sources & Headers/MMSounds.c	_MMUpdateChannelInfoForSpriteLayer	9c896	1005
+Sources & Headers/MMRegCodeGen.c	_DrawSpriteWorldInDialog	9cc83	370
+Sources & Headers/MMRegCodeGen.c	_GetPrefixFromLicenseCode	9cdf5	145
+Sources & Headers/MMRegCodeGen.c	_ValidateRegistrationCodeWithPrefix	9ce86	635
+Sources & Headers/MMRegCodeGen.c	_DisposeDialogUPPProc	9d101	518
+Sources & Headers/MMRegCodeGen.c	_ParsePixelsRLE16Bit	9d307	90
+Sources & Headers/MMRegCodeGen.c	_ConvertToUpperCase	9d361	101
+Sources & Headers/MMRegCodeGen.c	_ConvertToLetters	9d3c6	136
+Sources & Headers/MMRegCodeGen.c	_RemoveBadChars	9d44e	127
+Sources & Headers/MMRegCodeGen.c	_ConvertConfusingLetters	9d4cd	100
+Sources & Headers/MMRegCodeGen.c	_ConvertConfusingLettersToNumbers	9d531	100
+Sources & Headers/MMRegCodeGen.c	_ConvertNumbersBackToLetters	9d595	100
+Sources & Headers/MMRegCodeGen.c	_SetRegCodeConversionArray	9d5f9	33
+Sources & Headers/MMRegCodeGen.c	_DoLetterConversion	9d61a	137
+Sources & Headers/MMRegCodeGen.c	_DoFinalLetterConversion	9d6a3	137
+Sources & Headers/MMRegCodeGen.c	_UndoFinalLetterConversion	9d72c	136
+Sources & Headers/MMRegCodeGen.c	_FindValueInArray	9d7b4	115
+Sources & Headers/MMRegCodeGen.c	_LengthenCode	9d827	574
+Sources & Headers/MMRegCodeGen.c	_ShortenCode	9da65	173
+Sources & Headers/MMRegCodeGen.c	_SwapLetters	9db12	130
+Sources & Headers/MMRegCodeGen.c	_DoFinalLetterSwap	9db94	136
+Sources & Headers/MMRegCodeGen.c	_UndoFinalLetterSwap	9dc1c	157
+Sources & Headers/MMRegCodeGen.c	_DoStageOne	9dcb9	513
+Sources & Headers/MMRegCodeGen.c	_DoStageTwo	9deba	548
+Sources & Headers/MMRegCodeGen.c	_DoStageThree	9e0de	548
+Sources & Headers/MMRegCodeGen.c	_EmbedDate	9e302	866
+Sources & Headers/MMRegCodeGen.c	_ExtractDate	9e664	485
+Sources & Headers/MMRegCodeGen.c	_GetChecksumForDate	9e849	252
+Sources & Headers/MMRegCodeGen.c	_FixCharIfTooHigh	9e945	38
+Sources & Headers/MMRegCodeGen.c	_FixNumberIfTooLow	9e96b	38
+Sources & Headers/MMRegCodeGen.c	_GetStringLength	9e991	46
+Sources & Headers/MMRegCodeGen.c	_CopyCString	9e9bf	71
+Sources & Headers/MMRegCodeGen.c	_CompareCStringsByLength	9ea06	81
+Sources & Headers/MMRegCodeMisc.c	_GetUpdatedRegistrationCode	9ea57	423
+Sources & Headers/MMRegCodeMisc.c	_CheckIfRegCodeIsValid	9ebfe	430
+Sources & Headers/MMRegCodeMisc.c	_CheckIfRegCodeWasPirated	9edac	450
+Sources & Headers/MMRegCodeMisc.c	_StripAllWhiteSpace	9ef6e	200
+Sources & Headers/MMRegCodeMisc.c	_IsWhiteSpace	9f036	67
+Sources & Headers/MMRegCodeMisc.c	_ConvertSpacesToURLFormat	9f079	201
+Sources & Headers/MMRegCodeMisc.c	_GetNumDaysBeforeMonth	9f142	86
+Sources & Headers/MMRegCodeMisc.c	_MMCreateLicenseFile	9f198	458
+Sources & Headers/MMRegCodeMisc.c	_MMWriteLicenseFile	9f362	162
+Sources & Headers/MMRegCodeMisc.c	_MMReadLicenseFile	9f404	618
+Sources & Headers/MMRegCodeMisc.c	_IsNamePirated	9f66e	150
+Sources & Headers/MMRegCodeMisc.c	_stringToLowercase	9f704	82
+Sources & Headers/MMRegCodeMisc.c	___istype	9f756	98
+Sources & Headers/MMRegCodeMisc.c	_stringToUppercase	9f7b8	82
+Sources & Headers/MMRegCodeMisc.c	_MMDeleteLicenseFile	9f80a	39
+Sources & Headers/MMRegCodeMisc.c	_MMGetPathForLicenseFolder	9f831	25
+Sources & Headers/MMRegCodeMisc.c	_MMGetPathForLocalLicenseFolder	9f84a	25
+Sources & Headers/MMRegCodeMisc.c	_ConvertStringToUpperCase	9f863	109
+Sources & Headers/MMRegCodeMisc.c	_ChangeNumbersToLetters	9f8d0	90
+Sources & Headers/MMRegCodeMisc.c	_ChangeLettersToNumbers	9f92a	90
+Sources & Headers/MMRegCodeMisc.c	_ConvertStringLetters	9f984	88
+Sources & Headers/MMRegCodeMisc.c	_GetMatchingLetter	9f9dc	168
+Sources & Headers/MMRegCodeMisc.c	_SwapStringChars	9fa84	129
+Sources & Headers/MMRegCodeMisc.c	_GetRegNameFromClipboard	9fb05	144
+Sources & Headers/MMRegCodeMisc.c	_GetRegCodeAfterPrefixFromClipboard	9fb95	114
+Sources & Headers/MMRegCodeMisc.c	_GetRegCodeFromClipboard	9fc07	25
+Sources & Headers/MMSounds SDL_Mixer.c	_LoadAndSetupSounds	9fc20	885
+Sources & Headers/MMSounds SDL_Mixer.c	_PlaySoundDetailed	9ff95	350
+Sources & Headers/MMSounds SDL_Mixer.c	_CountSounds	a00f3	144
+Sources & Headers/MMSounds SDL_Mixer.c	_FindSound	a0183	151
+Sources & Headers/MMSounds SDL_Mixer.c	_StopMySound	a021a	96
+Sources & Headers/MMSounds SDL_Mixer.c	_GetChannelVolume	a027a	34
+Sources & Headers/MMSounds SDL_Mixer.c	_StopChannel	a029c	59
+Sources & Headers/MMSounds SDL_Mixer.c	_StopAllChannels	a02d7	52
+Sources & Headers/MMSounds SDL_Mixer.c	_IsChannelAvailable	a030b	74
+Sources & Headers/MMSounds SDL_Mixer.c	_FindEmptyChannel	a0355	90
+Sources & Headers/MMSounds SDL_Mixer.c	_SetVolumeAndStereoPosition	a03af	235
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_file_close	ea3c8	188
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_strrchr_basename	ea484	42
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_dirsep_basename	ea4ae	42
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_dirsep_strcasecmp	ea4d8	117
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_fclose	ea54d	76
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_close	ea599	9
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_tell	ea5a2	77
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_file_open	ea5ef	892
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_open_shared_io	ea96b	806
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_open_ext_io	eac91	55
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_freopen	eacc8	603
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_fopen	eaf23	34
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_open	eaf45	81
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_file_read	eaf96	434
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_read	eb148	109
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_fread	eb1b5	58
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_rewind	eb1ef	275
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_seek	eb302	726
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_seek32	eb5d8	118
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/file.c	_zzip_tell32	eb64e	132
+/var/tmp/gcc_40/gcc_40-5494~207/src/gcc/libgcc2.c	___eprintf	116b00	77
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	___zzip_fetch_disk_trailer	eb77b	831
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	___zzip_parse_root_directory	ebaba	643
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	_zzip_dir_free	ebd3d	114
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	_zzip_dir_close	ebdaf	22
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	_zzip_dir_read	ebdc5	107
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	_zzip_dir_alloc_ext_io	ebe30	98
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	_zzip_dir_fdopen_ext_io	ebe92	218
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	_zzip_dir_fdopen	ebf6c	42
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	_zzip_dir_alloc	ebf96	27
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	___zzip_try_open	ebfb1	189
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	_zzip_dir_open_ext_io	ec06e	173
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/zip.c	_zzip_dir_open	ec11b	42
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/err.c	_zzip_strerror	ea301	92
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/err.c	_zzip_strerror_of	ea35d	41
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/err.c	_zzip_errno	ea386	65
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/plugin.c	_zzip_filesize	eb6d2	50
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/plugin.c	_zzip_get_default_io	eb704	17
+/Users/vernjensen/zziplib-0.13.60/Darwin_10.6.0_i386.d/../zzip/plugin.c	_zzip_init_io	eb715	102

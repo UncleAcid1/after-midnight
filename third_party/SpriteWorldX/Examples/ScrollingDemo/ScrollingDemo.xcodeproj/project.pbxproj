@@ -1,0 +1,402 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A4915735083B793200A4399E /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4915734083B793200A4399E /* SDL_image.framework */; };
+		A491574D083B795A00A4399E /* SDL_image.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4915734083B793200A4399E /* SDL_image.framework */; };
+		A4915763083B7A0300A4399E /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4915762083B7A0300A4399E /* SDL.framework */; };
+		A4915764083B7A1400A4399E /* SDL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4915762083B7A0300A4399E /* SDL.framework */; };
+		A497946D083A1BDA00C75AF2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */; };
+		A4979471083A1BDA00C75AF2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20286C33FDCF999611CA2CEA /* Carbon.framework */; };
+		A4979475083A1BDA00C75AF2 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5BBA37B02CCB62301000102 /* OpenGL.framework */; };
+		A4979575083A1E9100C75AF2 /* SWCommonHeaders.h in Headers */ = {isa = PBXBuildFile; fileRef = A4979574083A1E9100C75AF2 /* SWCommonHeaders.h */; };
+		A4C1094B083CB610007F5FF9 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4C1094A083CB610007F5FF9 /* AGL.framework */; };
+		A4C10D26083D2D35007F5FF9 /* ScrollingDemo.c in Sources */ = {isa = PBXBuildFile; fileRef = A4C10D25083D2D35007F5FF9 /* ScrollingDemo.c */; };
+		A4C10D28083D2D3A007F5FF9 /* ScrollingDemo.h in Headers */ = {isa = PBXBuildFile; fileRef = A4C10D27083D2D3A007F5FF9 /* ScrollingDemo.h */; };
+		A4C1139708430D79007F5FF9 /* libSpriteWorldX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4C1139508430D79007F5FF9 /* libSpriteWorldX.a */; };
+		A4C1139F08430DB8007F5FF9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4C1139E08430DB8007F5FF9 /* Cocoa.framework */; };
+		A4C113CA08430E4D007F5FF9 /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = A4C113C508430E4D007F5FF9 /* ball.png */; };
+		A4C113CB08430E4D007F5FF9 /* meter.png in Resources */ = {isa = PBXBuildFile; fileRef = A4C113C608430E4D007F5FF9 /* meter.png */; };
+		A4C113CC08430E4D007F5FF9 /* numbers.png in Resources */ = {isa = PBXBuildFile; fileRef = A4C113C708430E4D007F5FF9 /* numbers.png */; };
+		A4C113CD08430E4D007F5FF9 /* tiles.png in Resources */ = {isa = PBXBuildFile; fileRef = A4C113C808430E4D007F5FF9 /* tiles.png */; };
+		A4C113CE08430E4D007F5FF9 /* tiles2.png in Resources */ = {isa = PBXBuildFile; fileRef = A4C113C908430E4D007F5FF9 /* tiles2.png */; };
+		A4C113E208430E86007F5FF9 /* ball.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4C113C508430E4D007F5FF9 /* ball.png */; };
+		A4C113E308430E86007F5FF9 /* meter.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4C113C608430E4D007F5FF9 /* meter.png */; };
+		A4C113E408430E86007F5FF9 /* numbers.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4C113C708430E4D007F5FF9 /* numbers.png */; };
+		A4C113E508430E86007F5FF9 /* tiles.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4C113C808430E4D007F5FF9 /* tiles.png */; };
+		A4C113E608430E86007F5FF9 /* tiles2.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4C113C908430E4D007F5FF9 /* tiles2.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A491574C083B794800A4399E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A4915764083B7A1400A4399E /* SDL.framework in CopyFiles */,
+				A491574D083B795A00A4399E /* SDL_image.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4C113DE08430E66007F5FF9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				A4C113E208430E86007F5FF9 /* ball.png in CopyFiles */,
+				A4C113E308430E86007F5FF9 /* meter.png in CopyFiles */,
+				A4C113E408430E86007F5FF9 /* numbers.png in CopyFiles */,
+				A4C113E508430E86007F5FF9 /* tiles.png in CopyFiles */,
+				A4C113E608430E86007F5FF9 /* tiles2.png in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0867D6ABFE840B52C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		20286C33FDCF999611CA2CEA /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		A4915734083B793200A4399E /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = /Library/Frameworks/SDL_image.framework; sourceTree = "<absolute>"; };
+		A4915762083B7A0300A4399E /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = /Library/Frameworks/SDL.framework; sourceTree = "<absolute>"; };
+		A4979479083A1BDA00C75AF2 /* Info-ScrollingDemo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ScrollingDemo.plist"; sourceTree = "<group>"; };
+		A497947A083A1BDB00C75AF2 /* ScrollingDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScrollingDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4979574083A1E9100C75AF2 /* SWCommonHeaders.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SWCommonHeaders.h; path = Headers/SWCommonHeaders.h; sourceTree = "<group>"; };
+		A4C1094A083CB610007F5FF9 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
+		A4C10D25083D2D35007F5FF9 /* ScrollingDemo.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = ScrollingDemo.c; sourceTree = "<group>"; };
+		A4C10D27083D2D3A007F5FF9 /* ScrollingDemo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ScrollingDemo.h; sourceTree = "<group>"; };
+		A4C1139508430D79007F5FF9 /* libSpriteWorldX.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSpriteWorldX.a; path = Libraries/libSpriteWorldX.a; sourceTree = "<group>"; };
+		A4C1139E08430DB8007F5FF9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		A4C113C508430E4D007F5FF9 /* ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball.png; sourceTree = "<group>"; };
+		A4C113C608430E4D007F5FF9 /* meter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = meter.png; sourceTree = "<group>"; };
+		A4C113C708430E4D007F5FF9 /* numbers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = numbers.png; sourceTree = "<group>"; };
+		A4C113C808430E4D007F5FF9 /* tiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tiles.png; sourceTree = "<group>"; };
+		A4C113C908430E4D007F5FF9 /* tiles2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tiles2.png; sourceTree = "<group>"; };
+		F5BBA37B02CCB62301000102 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A4979470083A1BDA00C75AF2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4979471083A1BDA00C75AF2 /* Carbon.framework in Frameworks */,
+				A4979475083A1BDA00C75AF2 /* OpenGL.framework in Frameworks */,
+				A4915735083B793200A4399E /* SDL_image.framework in Frameworks */,
+				A4915763083B7A0300A4399E /* SDL.framework in Frameworks */,
+				A4C1094B083CB610007F5FF9 /* AGL.framework in Frameworks */,
+				A4C1139708430D79007F5FF9 /* libSpriteWorldX.a in Frameworks */,
+				A4C1139F08430DB8007F5FF9 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		195DF8C9FE9D4F0611CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A497947A083A1BDB00C75AF2 /* ScrollingDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		20286C29FDCF999611CA2CEA /* ¬´PROJECTNAME¬ª */ = {
+			isa = PBXGroup;
+			children = (
+				20286C2AFDCF999611CA2CEA /* Sources */,
+				20286C2CFDCF999611CA2CEA /* Resources */,
+				F5BBA37502CCB49101000102 /* SpriteWorldX */,
+				20286C32FDCF999611CA2CEA /* Frameworks */,
+				195DF8C9FE9D4F0611CA2CBB /* Products */,
+				A4979479083A1BDA00C75AF2 /* Info-ScrollingDemo.plist */,
+			);
+			name = "¬´PROJECTNAME¬ª";
+			sourceTree = "<group>";
+		};
+		20286C2AFDCF999611CA2CEA /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A4C10D25083D2D35007F5FF9 /* ScrollingDemo.c */,
+				A4C10D27083D2D3A007F5FF9 /* ScrollingDemo.h */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		20286C2CFDCF999611CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */,
+				A4C113C508430E4D007F5FF9 /* ball.png */,
+				A4C113C608430E4D007F5FF9 /* meter.png */,
+				A4C113C708430E4D007F5FF9 /* numbers.png */,
+				A4C113C808430E4D007F5FF9 /* tiles.png */,
+				A4C113C908430E4D007F5FF9 /* tiles2.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		20286C32FDCF999611CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				20286C33FDCF999611CA2CEA /* Carbon.framework */,
+				A4C1139E08430DB8007F5FF9 /* Cocoa.framework */,
+				A4915762083B7A0300A4399E /* SDL.framework */,
+				F5BBA37B02CCB62301000102 /* OpenGL.framework */,
+				A4C1094A083CB610007F5FF9 /* AGL.framework */,
+				A4915734083B793200A4399E /* SDL_image.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F5BBA37502CCB49101000102 /* SpriteWorldX */ = {
+			isa = PBXGroup;
+			children = (
+				A4979574083A1E9100C75AF2 /* SWCommonHeaders.h */,
+				A4C1139508430D79007F5FF9 /* libSpriteWorldX.a */,
+			);
+			name = SpriteWorldX;
+			path = ../..;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A4979468083A1BDA00C75AF2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4979575083A1E9100C75AF2 /* SWCommonHeaders.h in Headers */,
+				A4C10D28083D2D3A007F5FF9 /* ScrollingDemo.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		A4979467083A1BDA00C75AF2 /* ScrollingDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A48D40840AC08E96008A7503 /* Build configuration list for PBXNativeTarget "ScrollingDemo" */;
+			buildPhases = (
+				A4979468083A1BDA00C75AF2 /* Headers */,
+				A497946C083A1BDA00C75AF2 /* Resources */,
+				A497946E083A1BDA00C75AF2 /* Sources */,
+				A4979470083A1BDA00C75AF2 /* Frameworks */,
+				A4979476083A1BDA00C75AF2 /* Rez */,
+				A491574C083B794800A4399E /* CopyFiles */,
+				A4C113DE08430E66007F5FF9 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScrollingDemo;
+			productInstallPath = "$(HOME)/Applications";
+			productName = "¬´PROJECTNAME¬ª";
+			productReference = A497947A083A1BDB00C75AF2 /* ScrollingDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		20286C28FDCF999611CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = A48D40880AC08E96008A7503 /* Build configuration list for PBXProject "ScrollingDemo" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 0;
+			mainGroup = 20286C29FDCF999611CA2CEA /* ¬´PROJECTNAME¬ª */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A4979467083A1BDA00C75AF2 /* ScrollingDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A497946C083A1BDA00C75AF2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A497946D083A1BDA00C75AF2 /* InfoPlist.strings in Resources */,
+				A4C113CA08430E4D007F5FF9 /* ball.png in Resources */,
+				A4C113CB08430E4D007F5FF9 /* meter.png in Resources */,
+				A4C113CC08430E4D007F5FF9 /* numbers.png in Resources */,
+				A4C113CD08430E4D007F5FF9 /* tiles.png in Resources */,
+				A4C113CE08430E4D007F5FF9 /* tiles2.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXRezBuildPhase section */
+		A4979476083A1BDA00C75AF2 /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXRezBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A497946E083A1BDA00C75AF2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4C10D26083D2D35007F5FF9 /* ScrollingDemo.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0867D6ABFE840B52C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A48D40850AC08E96008A7503 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					../../Headers,
+					../../Utils,
+				);
+				INFOPLIST_FILE = "Info-ScrollingDemo.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = ../../Libraries;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-lSDLmain";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ScrollingDemo;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		A48D40860AC08E96008A7503 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				HEADER_SEARCH_PATHS = (
+					../../Headers,
+					../../Utils,
+				);
+				INFOPLIST_FILE = "Info-ScrollingDemo.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = ../../Libraries;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-lSDLmain";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ScrollingDemo;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		A48D40870AC08E96008A7503 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\"";
+				HEADER_SEARCH_PATHS = (
+					../../Headers,
+					../../Utils,
+				);
+				INFOPLIST_FILE = "Info-ScrollingDemo.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = ../../Libraries;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-lSDLmain";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ScrollingDemo;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Default;
+		};
+		A48D40890AC08E96008A7503 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Development;
+		};
+		A48D408A0AC08E96008A7503 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Deployment;
+		};
+		A48D408B0AC08E96008A7503 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A48D40840AC08E96008A7503 /* Build configuration list for PBXNativeTarget "ScrollingDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A48D40850AC08E96008A7503 /* Development */,
+				A48D40860AC08E96008A7503 /* Deployment */,
+				A48D40870AC08E96008A7503 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		A48D40880AC08E96008A7503 /* Build configuration list for PBXProject "ScrollingDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A48D40890AC08E96008A7503 /* Development */,
+				A48D408A0AC08E96008A7503 /* Deployment */,
+				A48D408B0AC08E96008A7503 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 20286C28FDCF999611CA2CEA /* Project object */;
+}

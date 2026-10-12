@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>
+	<key>CFBundleIconFile</key>
+	<string>mm_icon.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.actionsoft.midnightmansionhd.sdl</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Midnight Mansion HD</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.1</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.1</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.arcade-games</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>11.0</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Midnight Mansion created by Vern Jensen. After Midnight - an UncleAcid1 project.</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>

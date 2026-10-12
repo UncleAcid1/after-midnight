@@ -1,0 +1,567 @@
+# Struct layouts as found in the original i386 binary (offsets in hex).
+# Read by ApplyTypes.java. See that file for the format.
+#
+# SpriteWorldX here is Vern Jensen's private fork used by the game, which differs from
+# the public trunk in third_party/SpriteWorldX. Offsets were recovered from the fork's
+# constructors (SWCreateSprite, SWCreateDrawData, SWCreateFrame, SWCreateSpriteLayer,
+# SWCreateSpriteWorldFromFrames) and accessors.
+
+struct SWRect 8
+0x0 short top
+0x2 short left
+0x4 short bottom
+0x6 short right
+
+struct SWPoint 4
+0x0 short v
+0x2 short h
+
+struct SDL_Color 4
+0x0 uchar r
+0x1 uchar g
+0x2 uchar b
+0x3 uchar unused
+
+struct SDL_Surface 0x3c
+0x0 uint flags
+0x4 void * format
+0x8 int w
+0xc int h
+0x10 int pitch
+0x14 void * pixels
+
+struct SpriteWorldRec 0x164
+struct SpriteLayerRec 0x28
+struct SpriteRec 0x200
+struct FrameRec 0x3c
+struct DrawDataRec 0x58
+struct TileMapStruct 0x34
+struct UpdateRectStruct 0xc
+
+typedef SpriteWorldPtr SpriteWorldRec *
+typedef SpriteLayerPtr SpriteLayerRec *
+typedef SpritePtr SpriteRec *
+typedef FramePtr FrameRec *
+typedef DrawDataPtr DrawDataRec *
+typedef TileMapStructPtr TileMapStruct *
+typedef SWRectPtr SWRect *
+typedef SWBoolean uchar
+typedef SWError int
+typedef SWMovementType float
+typedef SDL_bool int
+typedef SDL_WindowID void *
+typedef SDL_GLContext void *
+
+funcdef void FrameProcPtr(SpriteRec * srcSpriteP, FrameRec * curFrameP, int * frameIndex);
+funcdef void DrawProcPtr(SpriteRec * srcSpriteP, FrameRec * curFrameP, float horizLoc, float vertLoc);
+funcdef void MoveProcPtr(SpriteRec * srcSpriteP);
+funcdef void CollideProcPtr(SpriteRec * srcSpriteP, SpriteRec * dstSpriteP, SWRect * sectRect);
+funcdef void CallBackPtr(SpriteWorldRec * spriteWorldP);
+funcdef void WorldMoveProcPtr(SpriteWorldRec * spriteWorldP, SpriteRec * followSpriteP);
+funcdef short SpriteCompareProcPtr(SpriteRec * a, SpriteRec * b);
+
+struct UpdateRectStruct 0xc
+0x0 SWRect updateRect
+0x8 UpdateRectStruct * nextRectStructP
+
+struct SpriteWorldRec 0x164
+0x00 SpriteLayerRec * headSpriteLayerP
+0x04 SpriteLayerRec * tailSpriteLayerP
+0x08 SpriteLayerRec * deadSpriteLayerP
+0x0c UpdateRectStruct * headUpdateRectP
+0x10 uchar useUpdateRectOptimizations
+0x14 FrameRec * backFrameP
+0x18 FrameRec * screenFrameP
+0x1c SpriteRec * backgroundTileSpriteP
+0x20 short viewportX
+0x22 short viewportY
+0x24 short viewportWidth
+0x26 short viewportHeight
+0x28 short scaledWidth
+0x2a short scaledHeight
+0x2c short letterboxH
+0x2e short letterboxV
+0x30 short fullViewportX
+0x32 short fullViewportY
+0x34 short fullViewportWidth
+0x36 short fullViewportHeight
+0x38 short designWidth
+0x3a short designHeight
+0x3c float designScaleH
+0x40 float designScaleV
+0x44 float windowScaleH
+0x48 float windowScaleV
+0x4c uchar autoScaling
+0x4d uchar stretchToFit
+0x50 CallBackPtr_t postEraseCallBack
+0x54 CallBackPtr_t postDrawCallBack
+0x58 void * * tileLayerCallbacks
+0x5c SWRect screenRect
+0x64 SWRect backRect
+0x74 SWRect worldRect
+0x7c SWRect workAreaRect
+0x84 SWRect backgroundTileRect
+0x8c SWRect visScrollRect
+0x94 SWRect oldVisScrollRect
+0x9c short tileOffsetH
+0x9e short tileOffsetV
+0xa0 short horizScrollDelta
+0xa2 short vertScrollDelta
+0xa4 SWRect scrollRectMoveBounds
+0xac float spriteOffsetH
+0xb0 float spriteOffsetV
+0xb4 float zoomH
+0xb8 float zoomV
+0xc4 TileMapStruct * * tileLayerArray
+0xc8 uchar tilingIsInitialized
+0xc9 uchar tilingIsOn
+0xca short lastActiveTileLayer
+0xd4 FrameRec * * tileFrameArray
+0xd8 short * curTileImage
+0xdc short * tileSourceIndex
+0xe0 short maxNumTiles
+0xe2 short tileWidth
+0xe4 short tileHeight
+0xe6 short tileImageWidth
+0xe8 short tileImageHeight
+0xec int numTilesChanged
+0xf0 SWRect * changedTiles
+0xf8 void * tileChangeProc
+0xfc DrawProcPtr_t offscreenDrawProc
+0x100 DrawProcPtr_t screenDrawProc
+0x104 void * tileColorArray
+0x108 ushort stdTileRed
+0x10a ushort stdTileGreen
+0x10c ushort stdTileBlue
+0x10e ushort stdTileAlpha
+0x110 uchar useStdTileColor
+0x111 uchar useVBOForTiling
+0x114 void * masterTileSurface
+0x11a uchar pixelDepth
+0x11c short fpsTimeInterval
+0x120 double pseudoFPS
+0x128 uint runningTimeCount
+0x12c uint timeOfLastFrame
+0x130 uint minimumFrameRate
+0x134 uint millisecsSinceLastFrame
+0x138 double pseudoFrameAccum
+0x140 uchar pseudoFrameHasFired
+0x141 uchar frameHasOccurred
+0x142 uchar thereAreNonScrollingLayers
+0x143 uchar makeTranslucencyAdjustments
+0x144 uchar doFastMovingSpritesChecks
+0x145 uchar isAdditionalWorld
+0x146 SDL_Color backgroundColor
+0x14c int useOpenGL
+0x150 float globalMountOffsetH
+0x154 float globalMountOffsetV
+0x158 void * mainWindow
+0x15c void * glContext
+0x160 int userData
+
+struct SpriteLayerRec 0x28
+0x00 SpriteWorldRec * parentSpriteWorldP
+0x04 SpriteLayerRec * nextSpriteLayerP
+0x08 SpriteLayerRec * prevSpriteLayerP
+0x0c SpriteRec * headSpriteP
+0x10 SpriteRec * tailSpriteP
+0x14 int isPaused
+0x18 int layerIsNonScrolling
+0x1c uchar layerIsVisible
+0x1e short tileLayerBelow
+0x20 short tileLayerAbove
+0x22 short sanityValue
+0x24 int userData
+
+struct FrameRec 0x3c
+0x00 SDL_Surface * frameSurfaceP
+0x04 SDL_Surface * originalSurfaceP
+0x08 int isVideoSurface
+0x0c int sharesSurface
+0x10 uchar isFrameLocked
+0x14 int maskType
+0x18 SWRect frameRect
+0x20 int hotSpotH
+0x24 int hotSpotV
+0x28 uchar usesCollisionInset
+0x2a SWRect collisionInset
+0x32 ushort useCount
+0x34 void * glSurfaceP
+0x38 int userData
+
+struct DrawDataRec 0x58
+0x00 SpriteRec * parentSpriteP
+0x04 float horizLoc
+0x08 float vertLoc
+0x0c float horizMoveDelta
+0x10 float vertMoveDelta
+0x14 uint translucencyLevel
+0x18 float rotation
+0x1c float rotationOffsetHoriz
+0x20 float rotationOffsetVert
+0x24 float scaledWidth
+0x28 float scaledHeight
+0x2c float scaledWidthFactor
+0x30 float scaledHeightFactor
+0x34 short frameHotSpotH
+0x36 short frameHotSpotV
+0x38 uchar flippedHorizontal
+0x39 uchar flippedVertical
+0x3a uchar useClip
+0x3b uchar temporaryClip
+0x3c short clipLeft
+0x3e short clipTop
+0x40 short clipRight
+0x42 short clipBottom
+0x44 uint srcBlendMode
+0x48 uint dstBlendMode
+0x4c uchar useBlendMode
+0x4d uchar autoScaling
+0x4e uchar nonScrolling
+0x50 ushort colorRed
+0x52 ushort colorGreen
+0x54 ushort colorBlue
+
+struct SpriteRec 0x200
+0x00 SpriteLayerRec * parentSpriteLayerP
+0x04 SpriteRec * nextSpriteP
+0x08 SpriteRec * prevSpriteP
+0x0c SpriteRec * nextActiveSpriteP
+0x10 SpriteRec * nextIdleSpriteP
+0x14 int spriteRecSize
+0x18 SpriteRec * mountedSpriteP
+0x1c SpriteRec * mountParentP
+0x20 float mountOffsetH
+0x24 float mountOffsetV
+0x28 uchar unknown28
+0x29 uchar mountFlag1
+0x2a uchar mountFlag2
+0x2b uchar mountFlag3
+0x2c uchar inheritTranslucency
+0x2d uchar inheritAttr2
+0x2e uchar inheritAttr3
+0x2f uchar inheritFlip
+0x30 uchar inheritAttr5
+0x31 uchar inheritVisible
+0x32 uchar isVisible
+0x33 uchar needsToBeDrawn
+0x34 uchar needsToBeErased
+0x35 uchar doFastMovingCheck
+0x36 SWRect destFrameRect
+0x3e SWRect oldFrameRect
+0x46 SWRect deltaFrameRect
+0x50 float unscaledWidth
+0x54 float unscaledHeight
+0x58 DrawProcPtr_t frameDrawProc
+0x5c uchar destRectIsVisible
+0x5d uchar oldRectIsVisible
+0x5e SWRect clippedSourceRect
+0x66 SWRect destOffscreenRect
+0x6e uchar drawTilesOverSprite
+0x70 SWRect drawTilesInsetRect
+0x78 FrameRec * * frameArray
+0x7c FrameRec * curFrameP
+0x80 int numFrames
+0x84 int maxFrames
+0x88 int frameTimeInterval
+0x8c uint timeOfLastFrameChange
+0x90 int frameAdvance
+0x94 int curFrameIndex
+0x98 int firstFrameIndex
+0x9c int lastFrameIndex
+0xa0 FrameProcPtr_t frameChangeProc
+0xa4 int moveTimeInterval
+0xa8 uint timeOfLastMove
+0xac double pseudoMoveTimeInterval
+0xb4 double moveTimeAccum
+0xbc uchar moveProcHasFired
+0xbe SWRect moveBoundsRect
+0xc8 MoveProcPtr_t spriteMoveProc
+0xcc MoveProcPtr_t realSpriteMoveProc
+0xd0 CollideProcPtr_t spriteCollideProc
+0xd4 int frameAdvanceMode
+0xd8 int spriteRemoval
+0xdc SDL_Surface * sharedSurface
+0xe0 DrawDataRec * drawData
+0xe4 uchar scalingMode
+0xe8 int userData
+0xec int misc1
+0xf0 int misc2
+0xf4 float miscFloat
+0xf8 uchar f_0f8
+0xf9 uchar f_0f9
+0xfa uchar f_0fa
+0xfb uchar f_0fb
+0xfc uchar f_0fc
+0xfd uchar f_0fd
+0xfe uchar f_0fe
+0xff uchar f_0ff
+0x100 uchar f_100
+0x101 uchar f_101
+0x102 uchar f_102
+0x103 uchar f_103
+0x104 uchar f_104
+0x105 uchar f_105
+0x106 uchar f_106
+0x107 uchar f_107
+0x108 uchar f_108
+0x109 uchar f_109
+0x10a uchar f_10a
+0x10b uchar f_10b
+0x10c uchar f_10c
+0x10d uchar f_10d
+0x10e uchar f_10e
+0x10f uchar f_10f
+0x110 uchar f_110
+0x111 uchar f_111
+0x112 uchar f_112
+0x113 uchar f_113
+0x114 uchar f_114
+0x115 uchar f_115
+0x116 uchar f_116
+0x117 uchar f_117
+0x118 uchar f_118
+0x119 uchar f_119
+0x11a uchar f_11a
+0x11b uchar f_11b
+0x11c uchar f_11c
+0x11d uchar f_11d
+0x11e uchar f_11e
+0x11f uchar f_11f
+0x120 uchar f_120
+0x121 uchar f_121
+0x122 uchar f_122
+0x123 uchar f_123
+0x124 uchar f_124
+0x125 uchar f_125
+0x126 uchar f_126
+0x127 uchar f_127
+0x128 uchar f_128
+0x129 uchar f_129
+0x12a uchar f_12a
+0x12b uchar f_12b
+0x12c uchar f_12c
+0x12d uchar f_12d
+0x12e uchar f_12e
+0x12f uchar f_12f
+0x130 uchar f_130
+0x131 uchar f_131
+0x132 uchar f_132
+0x133 uchar f_133
+0x134 uchar f_134
+0x135 uchar f_135
+0x136 uchar f_136
+0x137 uchar f_137
+0x138 uchar f_138
+0x139 uchar f_139
+0x13a uchar f_13a
+0x13b uchar f_13b
+0x13c uchar f_13c
+0x13d uchar f_13d
+0x13e uchar f_13e
+0x13f uchar f_13f
+0x140 uchar f_140
+0x141 uchar f_141
+0x142 uchar f_142
+0x143 uchar f_143
+0x144 uchar f_144
+0x145 uchar f_145
+0x146 uchar f_146
+0x147 uchar f_147
+0x148 uchar f_148
+0x149 uchar f_149
+0x14a uchar f_14a
+0x14b uchar f_14b
+0x14c uchar f_14c
+0x14d uchar f_14d
+0x14e uchar f_14e
+0x14f uchar f_14f
+0x150 uchar f_150
+0x151 uchar f_151
+0x152 uchar f_152
+0x153 uchar f_153
+0x154 uchar f_154
+0x155 uchar f_155
+0x156 uchar f_156
+0x157 uchar f_157
+0x158 uchar f_158
+0x159 uchar f_159
+0x15a uchar f_15a
+0x15b uchar f_15b
+0x15c uchar f_15c
+0x15d uchar f_15d
+0x15e uchar f_15e
+0x15f uchar f_15f
+0x160 uchar f_160
+0x161 uchar f_161
+0x162 uchar f_162
+0x163 uchar f_163
+0x164 uchar f_164
+0x165 uchar f_165
+0x166 uchar f_166
+0x167 uchar f_167
+0x168 uchar f_168
+0x169 uchar f_169
+0x16a uchar f_16a
+0x16b uchar f_16b
+0x16c uchar f_16c
+0x16d uchar f_16d
+0x16e uchar f_16e
+0x16f uchar f_16f
+0x170 uchar f_170
+0x171 uchar f_171
+0x172 uchar f_172
+0x173 uchar f_173
+0x174 uchar f_174
+0x175 uchar f_175
+0x176 uchar f_176
+0x177 uchar f_177
+0x178 uchar f_178
+0x179 uchar f_179
+0x17a uchar f_17a
+0x17b uchar f_17b
+0x17c uchar f_17c
+0x17d uchar f_17d
+0x17e uchar f_17e
+0x17f uchar f_17f
+0x180 uchar f_180
+0x181 uchar f_181
+0x182 uchar f_182
+0x183 uchar f_183
+0x184 uchar f_184
+0x185 uchar f_185
+0x186 uchar f_186
+0x187 uchar f_187
+0x188 uchar f_188
+0x189 uchar f_189
+0x18a uchar f_18a
+0x18b uchar f_18b
+0x18c uchar f_18c
+0x18d uchar f_18d
+0x18e uchar f_18e
+0x18f uchar f_18f
+0x190 uchar f_190
+0x191 uchar f_191
+0x192 uchar f_192
+0x193 uchar f_193
+0x194 uchar f_194
+0x195 uchar f_195
+0x196 uchar f_196
+0x197 uchar f_197
+0x198 uchar f_198
+0x199 uchar f_199
+0x19a uchar f_19a
+0x19b uchar f_19b
+0x19c uchar f_19c
+0x19d uchar f_19d
+0x19e uchar f_19e
+0x19f uchar f_19f
+0x1a0 uchar f_1a0
+0x1a1 uchar f_1a1
+0x1a2 uchar f_1a2
+0x1a3 uchar f_1a3
+0x1a4 uchar f_1a4
+0x1a5 uchar f_1a5
+0x1a6 uchar f_1a6
+0x1a7 uchar f_1a7
+0x1a8 uchar f_1a8
+0x1a9 uchar f_1a9
+0x1aa uchar f_1aa
+0x1ab uchar f_1ab
+0x1ac uchar f_1ac
+0x1ad uchar f_1ad
+0x1ae uchar f_1ae
+0x1af uchar f_1af
+0x1b0 uchar f_1b0
+0x1b1 uchar f_1b1
+0x1b2 uchar f_1b2
+0x1b3 uchar f_1b3
+0x1b4 uchar f_1b4
+0x1b5 uchar f_1b5
+0x1b6 uchar f_1b6
+0x1b7 uchar f_1b7
+0x1b8 uchar f_1b8
+0x1b9 uchar f_1b9
+0x1ba uchar f_1ba
+0x1bb uchar f_1bb
+0x1bc uchar f_1bc
+0x1bd uchar f_1bd
+0x1be uchar f_1be
+0x1bf uchar f_1bf
+0x1c0 uchar f_1c0
+0x1c1 uchar f_1c1
+0x1c2 uchar f_1c2
+0x1c3 uchar f_1c3
+0x1c4 uchar f_1c4
+0x1c5 uchar f_1c5
+0x1c6 uchar f_1c6
+0x1c7 uchar f_1c7
+0x1c8 uchar f_1c8
+0x1c9 uchar f_1c9
+0x1ca uchar f_1ca
+0x1cb uchar f_1cb
+0x1cc uchar f_1cc
+0x1cd uchar f_1cd
+0x1ce uchar f_1ce
+0x1cf uchar f_1cf
+0x1d0 uchar f_1d0
+0x1d1 uchar f_1d1
+0x1d2 uchar f_1d2
+0x1d3 uchar f_1d3
+0x1d4 uchar f_1d4
+0x1d5 uchar f_1d5
+0x1d6 uchar f_1d6
+0x1d7 uchar f_1d7
+0x1d8 uchar f_1d8
+0x1d9 uchar f_1d9
+0x1da uchar f_1da
+0x1db uchar f_1db
+0x1dc uchar f_1dc
+0x1dd uchar f_1dd
+0x1de uchar f_1de
+0x1df uchar f_1df
+0x1e0 uchar f_1e0
+0x1e1 uchar f_1e1
+0x1e2 uchar f_1e2
+0x1e3 uchar f_1e3
+0x1e4 uchar f_1e4
+0x1e5 uchar f_1e5
+0x1e6 uchar f_1e6
+0x1e7 uchar f_1e7
+0x1e8 uchar f_1e8
+0x1e9 uchar f_1e9
+0x1ea uchar f_1ea
+0x1eb uchar f_1eb
+0x1ec uchar f_1ec
+0x1ed uchar f_1ed
+0x1ee uchar f_1ee
+0x1ef uchar f_1ef
+0x1f0 uchar f_1f0
+0x1f1 uchar f_1f1
+0x1f2 uchar f_1f2
+0x1f3 uchar f_1f3
+0x1f4 uchar f_1f4
+0x1f5 uchar f_1f5
+0x1f6 uchar f_1f6
+0x1f7 uchar f_1f7
+0x1f8 uchar f_1f8
+0x1f9 uchar f_1f9
+0x1fa uchar f_1fa
+0x1fb uchar f_1fb
+0x1fc uchar f_1fc
+0x1fd uchar f_1fd
+0x1fe uchar f_1fe
+0x1ff uchar f_1ff
+
+struct TileMapStruct 0x34
+0x00 short numRows
+0x02 short numCols
+0x04 short * * tileMap
+0x08 float zoom
+0x0c uchar isVisible
+0x0d uchar drawEveryFrame
+0x10 short * * changedTileMap
+0x14 uchar tilesChanged
+0x18 uchar * * tileChangedFlags
+0x20 uint vbo
+0x30 uchar vboMethod

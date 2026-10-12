@@ -1,0 +1,1 @@
+"Even harder greedy test.  One door leads to the escape, the other two lead to hard-to-get treasures."

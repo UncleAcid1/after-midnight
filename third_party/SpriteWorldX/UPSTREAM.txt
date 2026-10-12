@@ -1,0 +1,1 @@
+Upstream: https://svn.code.sf.net/p/spriteworldx/code/trunk/SpriteWorldX (revision 200), zlib license. Unmodified.

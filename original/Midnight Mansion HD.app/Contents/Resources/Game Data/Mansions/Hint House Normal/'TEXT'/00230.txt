@@ -1,0 +1,1 @@
+These skull platforms act just like falling platforms, but they will not return until you exit the room and re-enter.

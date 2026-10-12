@@ -1,0 +1,1 @@
+TIP: If Jack's inventory is full, he won't pick up any keys he touches. However, if he has a shield, it will be replaced by the key if there are no other free slots.

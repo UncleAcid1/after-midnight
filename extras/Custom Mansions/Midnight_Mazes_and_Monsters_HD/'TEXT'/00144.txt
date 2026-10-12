@@ -1,0 +1,1 @@
+The 7 red matches don't form an equality. Move only one match to make it an equality!Solution in the room below.

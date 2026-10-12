@@ -1,0 +1,1 @@
+Use this lever to manipulate the conveyor belts to get the key.  If it falls in the lava, you'll have to leave the room and re-enter.

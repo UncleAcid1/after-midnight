@@ -1,0 +1,1 @@
+Grey doors can only be opened using floor switches or levers. 

@@ -1,0 +1,416 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A48ED538085E33B2007FCC7D /* Simple.c in Sources */ = {isa = PBXBuildFile; fileRef = A48ED537085E33B2007FCC7D /* Simple.c */; };
+		A4915735083B793200A4399E /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4915734083B793200A4399E /* SDL_image.framework */; };
+		A491574D083B795A00A4399E /* SDL_image.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4915734083B793200A4399E /* SDL_image.framework */; };
+		A4915763083B7A0300A4399E /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4915762083B7A0300A4399E /* SDL.framework */; };
+		A4915764083B7A1400A4399E /* SDL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4915762083B7A0300A4399E /* SDL.framework */; };
+		A4979469083A1BDA00C75AF2 /* Simple.h in Headers */ = {isa = PBXBuildFile; fileRef = F58DB77202CC8E2201000102 /* Simple.h */; };
+		A497946D083A1BDA00C75AF2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */; };
+		A4979471083A1BDA00C75AF2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20286C33FDCF999611CA2CEA /* Carbon.framework */; };
+		A4979475083A1BDA00C75AF2 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5BBA37B02CCB62301000102 /* OpenGL.framework */; };
+		A4979571083A1E7500C75AF2 /* libSpriteWorldX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4979570083A1E7500C75AF2 /* libSpriteWorldX.a */; };
+		A4979575083A1E9100C75AF2 /* SWCommonHeaders.h in Headers */ = {isa = PBXBuildFile; fileRef = A4979574083A1E9100C75AF2 /* SWCommonHeaders.h */; };
+		A49796A4083A281700C75AF2 /* yinyang.png in Resources */ = {isa = PBXBuildFile; fileRef = A49796A2083A281700C75AF2 /* yinyang.png */; };
+		A4A31F980B566E6500E45E74 /* Simple.ini in Resources */ = {isa = PBXBuildFile; fileRef = A4A31F970B566E6500E45E74 /* Simple.ini */; };
+		A4A31FAE0B566EEE00E45E74 /* Simple.ini in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4A31F970B566E6500E45E74 /* Simple.ini */; };
+		A4C1094B083CB610007F5FF9 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4C1094A083CB610007F5FF9 /* AGL.framework */; };
+		A4C1131608430950007F5FF9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4C1131508430950007F5FF9 /* Cocoa.framework */; };
+		A4C1137308430B6E007F5FF9 /* yinyang.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = A49796A2083A281700C75AF2 /* yinyang.png */; };
+		A4EB2DE70845321E00C5AA32 /* donut.tga in Resources */ = {isa = PBXBuildFile; fileRef = A4EB2DE60845321E00C5AA32 /* donut.tga */; };
+		A4EB2DE80845323000C5AA32 /* donut.tga in CopyFiles */ = {isa = PBXBuildFile; fileRef = A4EB2DE60845321E00C5AA32 /* donut.tga */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A491574C083B794800A4399E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A4915764083B7A1400A4399E /* SDL.framework in CopyFiles */,
+				A491574D083B795A00A4399E /* SDL_image.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4C1137208430B61007F5FF9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				A4EB2DE80845323000C5AA32 /* donut.tga in CopyFiles */,
+				A4C1137308430B6E007F5FF9 /* yinyang.png in CopyFiles */,
+				A4A31FAE0B566EEE00E45E74 /* Simple.ini in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0867D6ABFE840B52C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		20286C33FDCF999611CA2CEA /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		A48ED537085E33B2007FCC7D /* Simple.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = Simple.c; sourceTree = "<group>"; };
+		A4915734083B793200A4399E /* SDL_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_image.framework; path = /Library/Frameworks/SDL_image.framework; sourceTree = "<absolute>"; };
+		A4915762083B7A0300A4399E /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = /Library/Frameworks/SDL.framework; sourceTree = "<absolute>"; };
+		A4979479083A1BDA00C75AF2 /* Info-Simple.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Simple.plist"; sourceTree = "<group>"; };
+		A497947A083A1BDB00C75AF2 /* Simple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Simple.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4979570083A1E7500C75AF2 /* libSpriteWorldX.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSpriteWorldX.a; path = Libraries/libSpriteWorldX.a; sourceTree = "<group>"; };
+		A4979574083A1E9100C75AF2 /* SWCommonHeaders.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SWCommonHeaders.h; path = Headers/SWCommonHeaders.h; sourceTree = "<group>"; };
+		A49796A2083A281700C75AF2 /* yinyang.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yinyang.png; sourceTree = "<group>"; };
+		A4A31F970B566E6500E45E74 /* Simple.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Simple.ini; sourceTree = "<group>"; };
+		A4C1094A083CB610007F5FF9 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
+		A4C1131508430950007F5FF9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		A4EB2DE60845321E00C5AA32 /* donut.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = donut.tga; sourceTree = "<group>"; };
+		F58DB77202CC8E2201000102 /* Simple.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Simple.h; sourceTree = SOURCE_ROOT; };
+		F5BBA37B02CCB62301000102 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A4979470083A1BDA00C75AF2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4979471083A1BDA00C75AF2 /* Carbon.framework in Frameworks */,
+				A4979475083A1BDA00C75AF2 /* OpenGL.framework in Frameworks */,
+				A4979571083A1E7500C75AF2 /* libSpriteWorldX.a in Frameworks */,
+				A4915735083B793200A4399E /* SDL_image.framework in Frameworks */,
+				A4915763083B7A0300A4399E /* SDL.framework in Frameworks */,
+				A4C1094B083CB610007F5FF9 /* AGL.framework in Frameworks */,
+				A4C1131608430950007F5FF9 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		195DF8C9FE9D4F0611CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A497947A083A1BDB00C75AF2 /* Simple.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		20286C29FDCF999611CA2CEA /* ¬´PROJECTNAME¬ª */ = {
+			isa = PBXGroup;
+			children = (
+				20286C2AFDCF999611CA2CEA /* Sources */,
+				20286C2CFDCF999611CA2CEA /* Resources */,
+				F5BBA37502CCB49101000102 /* SpriteWorldX */,
+				20286C32FDCF999611CA2CEA /* Frameworks */,
+				195DF8C9FE9D4F0611CA2CBB /* Products */,
+				A4979479083A1BDA00C75AF2 /* Info-Simple.plist */,
+			);
+			name = "¬´PROJECTNAME¬ª";
+			sourceTree = "<group>";
+		};
+		20286C2AFDCF999611CA2CEA /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				F58DB77202CC8E2201000102 /* Simple.h */,
+				A48ED537085E33B2007FCC7D /* Simple.c */,
+				A4A31F970B566E6500E45E74 /* Simple.ini */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		20286C2CFDCF999611CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */,
+				A49796A2083A281700C75AF2 /* yinyang.png */,
+				A4EB2DE60845321E00C5AA32 /* donut.tga */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		20286C32FDCF999611CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				20286C33FDCF999611CA2CEA /* Carbon.framework */,
+				A4C1131508430950007F5FF9 /* Cocoa.framework */,
+				A4915762083B7A0300A4399E /* SDL.framework */,
+				A4915734083B793200A4399E /* SDL_image.framework */,
+				F5BBA37B02CCB62301000102 /* OpenGL.framework */,
+				A4C1094A083CB610007F5FF9 /* AGL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F5BBA37502CCB49101000102 /* SpriteWorldX */ = {
+			isa = PBXGroup;
+			children = (
+				A4979574083A1E9100C75AF2 /* SWCommonHeaders.h */,
+				A4979570083A1E7500C75AF2 /* libSpriteWorldX.a */,
+			);
+			name = SpriteWorldX;
+			path = ../..;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A4979468083A1BDA00C75AF2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4979469083A1BDA00C75AF2 /* Simple.h in Headers */,
+				A4979575083A1E9100C75AF2 /* SWCommonHeaders.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		A4979467083A1BDA00C75AF2 /* Simple */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A48D40690AC08E50008A7503 /* Build configuration list for PBXNativeTarget "Simple" */;
+			buildPhases = (
+				A4979468083A1BDA00C75AF2 /* Headers */,
+				A497946C083A1BDA00C75AF2 /* Resources */,
+				A497946E083A1BDA00C75AF2 /* Sources */,
+				A4979470083A1BDA00C75AF2 /* Frameworks */,
+				A4979476083A1BDA00C75AF2 /* Rez */,
+				A491574C083B794800A4399E /* CopyFiles */,
+				A4C1137208430B61007F5FF9 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Simple;
+			productInstallPath = "$(HOME)/Applications";
+			productName = "¬´PROJECTNAME¬ª";
+			productReference = A497947A083A1BDB00C75AF2 /* Simple.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		20286C28FDCF999611CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = A48D406D0AC08E50008A7503 /* Build configuration list for PBXProject "Simple" */;
+			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 20286C29FDCF999611CA2CEA /* ¬´PROJECTNAME¬ª */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A4979467083A1BDA00C75AF2 /* Simple */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A497946C083A1BDA00C75AF2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A497946D083A1BDA00C75AF2 /* InfoPlist.strings in Resources */,
+				A49796A4083A281700C75AF2 /* yinyang.png in Resources */,
+				A4EB2DE70845321E00C5AA32 /* donut.tga in Resources */,
+				A4A31F980B566E6500E45E74 /* Simple.ini in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXRezBuildPhase section */
+		A4979476083A1BDA00C75AF2 /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXRezBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A497946E083A1BDA00C75AF2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A48ED538085E33B2007FCC7D /* Simple.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		0867D6AAFE840B52C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0867D6ABFE840B52C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A48D406A0AC08E50008A7503 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					"$(SPRITEWORLD)/Headers",
+					"$(SPRITEWORLD)/Utils",
+					"$(SPRITEWORLD)/BlitKernel",
+				);
+				INFOPLIST_FILE = "Info-Simple.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = ../../Libraries;
+				MACOSX_DEPLOYMENT_TARGET = 10.1;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-lSDLmain";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Simple;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		A48D406B0AC08E50008A7503 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(SPRITEWORLD)/Headers",
+					"$(SPRITEWORLD)/Utils",
+					"$(SPRITEWORLD)/BlitKernel",
+				);
+				INFOPLIST_FILE = "Info-Simple.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = ../../Libraries;
+				MACOSX_DEPLOYMENT_TARGET = 10.1;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-lSDLmain";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Simple;
+				SECTORDER_FLAGS = "";
+				SPRITEWORLD = ../..;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		A48D406C0AC08E50008A7503 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\"";
+				HEADER_SEARCH_PATHS = (
+					"$(SPRITEWORLD)/Headers",
+					"$(SPRITEWORLD)/Utils",
+					"$(SPRITEWORLD)/BlitKernel",
+				);
+				INFOPLIST_FILE = "Info-Simple.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = ../../Libraries;
+				MACOSX_DEPLOYMENT_TARGET = 10.1;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-lSDLmain";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Simple;
+				SECTORDER_FLAGS = "";
+				SPRITEWORLD = ../..;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Default;
+		};
+		A48D406E0AC08E50008A7503 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(SPRITEWORLD)/Headers",
+					"$(SPRITEWORLD)/Utils",
+					"$(SPRITEWORLD)/BlitKernel",
+				);
+				SPRITEWORLD = ../..;
+			};
+			name = Development;
+		};
+		A48D406F0AC08E50008A7503 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Deployment;
+		};
+		A48D40700AC08E50008A7503 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(SPRITEWORLD)/Headers",
+					"$(SPRITEWORLD)/Utils",
+					"$(SPRITEWORLD)/BlitKernel",
+				);
+				SPRITEWORLD = ../..;
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A48D40690AC08E50008A7503 /* Build configuration list for PBXNativeTarget "Simple" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A48D406A0AC08E50008A7503 /* Development */,
+				A48D406B0AC08E50008A7503 /* Deployment */,
+				A48D406C0AC08E50008A7503 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		A48D406D0AC08E50008A7503 /* Build configuration list for PBXProject "Simple" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A48D406E0AC08E50008A7503 /* Development */,
+				A48D406F0AC08E50008A7503 /* Deployment */,
+				A48D40700AC08E50008A7503 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 20286C28FDCF999611CA2CEA /* Project object */;
+}

@@ -1,0 +1,1 @@
+This map will reveal rooms you haven't visited.  Press 'M' to look at your map.
