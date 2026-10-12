@@ -236,6 +236,8 @@ static void AddScroller(SpritePtr spriteP, float factor)
 
 /// Everything that moves as the view rises: what scrolled in the opening moves the same way,
 /// except the moon and clouds, which stay in the sky.
+static void BirdMoveProc(SpritePtr spriteP);
+
 static void CollectScrollers(void)
 {
     SpriteLayerPtr layerP;
@@ -245,8 +247,8 @@ static void CollectScrollers(void)
     gMP.numScrollers = 0;
     for (layerP = gSpriteWorldP->headSpriteLayerP; layerP != NULL; layerP = SWGetNextSpriteLayer(gSpriteWorldP, layerP))
         for (spriteP = SWGetNextSprite(layerP, NULL); spriteP != NULL; spriteP = SWGetNextSprite(layerP, spriteP)) {
-            if (spriteP->miscFloat == 0.0f)
-                continue;
+            if (spriteP->miscFloat == 0.0f || (spriteP->spriteMoveProc == BirdMoveProc || spriteP->realSpriteMoveProc == BirdMoveProc))
+                continue;               // (a bird's miscFloat is its speed)
                 // the moon drifts up into the sky above the panels; the clouds settle along the
                 // bottom, under them
             if (layerP == gExitSpriteLayerP) {                  // clouds
@@ -419,7 +421,7 @@ static void SpawnBird(void)
     for (i = 0; i < flockSize; i++) {
         if (SWCloneSprite(masterP, &birdP, NULL, 0) != kNoError || birdP == NULL)
             return;
-        SWAddSprite(gRearBackgroundPictureSpriteLayerP, birdP);
+        SWAddSprite(gBottomSpriteLayerP, birdP);      // (with the moon, added after it: in front of it)
         SWSetSpriteScaledFactor(birdP, masterP->drawData->scaledWidthFactor * scale,
                                 masterP->drawData->scaledHeightFactor * scale);
             // far away against the night: dark blue, a little see-through

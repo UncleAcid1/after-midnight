@@ -668,11 +668,13 @@ void DrawTitleScreenBackgroundMM1(SWRect *rectP)
     SetBackgroundToDesignSize(spriteP);
 
     SetTextStyle(&style, "\012Action Man", 0, (short)(scale * 16.0f), 0);
+        // beside the Change Player tab (a long name gets smaller rather than run into the
+        // credit in the other corner)
     *rectP = gSpriteWorldP->workAreaRect;
     rectP->top = rectP->bottom - 30;
-    rectP->left = rectP->right - 515;
+    rectP->left += 290;
+    rectP->right -= (short)((rectP->right - rectP->left) * 0.42f);
     SWOffsetRect(rectP, 0, -16);
-    SWOffsetRect(rectP, -260, 0);      // where the registered build puts it
     if (gCurrentPlayerNameExists) {
         SWCopyPascalStringToCString((ConstStringPtr)gCurrentPlayerName, playerName);
         snprintf(message, sizeof(message), "Welcome back, %s", playerName);
@@ -682,11 +684,13 @@ void DrawTitleScreenBackgroundMM1(SWRect *rectP)
     }
 
         // (the original showed its version number here)
+        // small, in the top right corner, a little in from the edges
+    SetTextStyle(&style, "\012Action Man", 0, (short)(scale * 9.0f), 1);
     *rectP = gSpriteWorldP->workAreaRect;
+    rectP->right -= (short)(scale * 10.0f);
     rectP->left = rectP->right - (short)(scale * 300.0f);
-    rectP->right -= (short)(scale * 12.0f);
-    rectP->bottom = rectP->top + 30;
-    style.justification = 1;
+    rectP->top += (short)(scale * 8.0f);
+    rectP->bottom = rectP->top + (short)(scale * 10.0f);
     spriteP = MyDrawCTextJustified("After Midnight - An UncleAcid1 Project", &style, rectP, &gray);
     MakeTitleScreenSpriteFadeIn(spriteP);
 
@@ -705,7 +709,7 @@ static void TitleScreenEditionAndCredit(float scale)
     SetTextStyle(&style, "\015BlackChancery", 0, (short)(scale * 24.0f), 1);
     r.right = (short)(area.left + w * 0.942f);
     r.left = (short)(r.right - w * 0.5f);
-    r.bottom = (short)(area.top + h * 0.318f);
+    r.bottom = (short)(area.top + h * 0.298f);
     r.top = (short)(r.bottom - scale * 30.0f);
     spriteP = MyDrawCTextJustified("After Midnight", &style, &r, &gold);
     if (spriteP != NULL) {      // with the logo, under dialogs (the text layer is above them)
