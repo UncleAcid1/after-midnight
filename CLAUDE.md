@@ -38,7 +38,8 @@ profiles for several instances.
 
 ## Roadmap (agreed; nothing started yet)
 
-1. **Windows**: Winsock for `MMNet.c`/`MMOnline.c`, Fibers for `MMCoroutine.c`, paths and saves in
+1. **Windows** (the owner tests with **CrossOver** on the Mac, i.e. Wine; a real Windows PC is a
+   nice-to-have final check): Winsock for `MMNet.c`/`MMOnline.c`, Fibers for `MMCoroutine.c`, paths and saves in
    `%APPDATA%`. Then **GitHub Actions** builds for Windows, Linux and PS3 (Linux runners; macOS
    runners cost 10x the free minutes, so the Mac DMG stays a local build).
 2. **Deterministic co-op across platforms**: `-ffp-contract=off` and strict float settings
@@ -47,7 +48,9 @@ profiles for several instances.
 3. **Drawing through SDL2's renderer** (or a thin layer of our own) instead of fixed-function
    OpenGL, as the PS3's foundation.
 4. **PS3 (homebrew, PSL1GHT)**: the owner has a PS3 Slim on the latest **Evilnat** CFW, multiMAN,
-   moves files by **USB flash drive** (FAT32), and tests in **RPCS3** on the Mac. Write a log to
+   moves files by **USB flash drive** (FAT32), and tests in **RPCS3** on the Mac. Only one or two
+   real controllers: 4-player tests are done in RPCS3 (pads 3-4 mapped to the keyboard or another
+   controller), so keep a testing aid that fills idle player slots. Write a log to
    the flash drive (`/dev_usb000/After Midnight log.txt`) when one is present. Concerns:
    big-endian PPC (the original data is big-endian too; audit the byte swapping), 256 MB of RAM
    (load per mansion, free afterwards), an RSX backend (e.g. Tiny3D), a PPC64 context switch for
