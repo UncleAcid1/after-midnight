@@ -31,6 +31,11 @@ Linux. With the new options off, it plays exactly as the original did.
 - Desktop shortcuts for Mac that open the control screen and update the server.
 - See [docs/ONLINE.md](docs/ONLINE.md).
 
+### For Mac
+- A disk image to share the game: drag to Applications, over the original game's night sky.
+  `platform/macos/make_dmg.sh` (or the **Make After Midnight DMG** shortcut) builds the newest
+  code into a fresh one.
+
 ### Fixes
 - The original's Black Chancery headings (map, high scores) show as intended. A font-cache bug
   had drawn every font in the game's folder as the first one loaded.

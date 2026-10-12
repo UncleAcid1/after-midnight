@@ -5,3 +5,5 @@ __pycache__/
 # the lobby server's state when run from the repository
 mmhd-state/
 admin.sock
+build-release/
+dist/

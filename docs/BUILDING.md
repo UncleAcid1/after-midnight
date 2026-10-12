@@ -27,6 +27,26 @@ The game needs the original game data (`Game Data` folder, ~400 MB), which is in
 Saved games, player profiles, replays and settings go in
 `~/Library/Application Support/ActionSoft/Midnight Mansion/`.
 
+## The Mac disk image (DMG)
+
+To share the game, make a disk image: a window with the game's icon, an arrow and the
+Applications folder over the original game's night sky, ready to drag and install.
+
+    bash platform/macos/make_dmg.sh
+
+It gets the newest code first (`git pull`, when the folder is a git checkout), installs what it
+needs with Homebrew the first time (cmake, sdl2, create-dmg), builds the game, and leaves
+`dist/After-Midnight-<version>-macOS-<chip>.dmg` (the version comes from `CHANGELOG.md`; a
+build after the release's commit adds the commit, `1.0+3f2a1b9`). The first time, macOS asks
+whether Terminal may control Finder: allow it, that's how the window is laid out. The
+**Make After Midnight DMG** shortcut (made by `server/mac/make_shortcuts.sh`) does the same
+with a double-click.
+
+The DMG holds a build for the Mac's own chip (Apple Silicon or Intel), signed ad hoc rather
+than with an Apple developer certificate: the first time, open the game with right-click →
+Open (or System Settings → Privacy & Security → Open Anyway). Its background is
+`platform/macos/dmg/background.png` (+ `@2x`), drawn by `tools/make_dmg_background.py`.
+
 ## Linux
 
     sudo apt install cmake libsdl2-dev

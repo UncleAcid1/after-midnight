@@ -1,10 +1,12 @@
 #!/bin/bash
-# Makes two double-click shortcuts for looking after the Midnight Mansion HD server from a Mac:
+# Makes double-click shortcuts for looking after the Midnight Mansion HD server from a Mac, and
+# for making the game's Mac disk image:
 #
 #   Midnight Mansion Server.command          the server's control screen (mmhd-admin)
 #   Update Midnight Mansion Server.command   copies the newest server files to the server and
 #                                            reinstalls (bans and settings are kept), then
-#                                            refreshes both shortcuts
+#                                            refreshes the shortcuts
+#   Make After Midnight DMG.command          builds the newest game into a DMG (make_dmg.sh)
 #
 # Run it once from the game's folder:
 #
@@ -124,6 +126,7 @@ save_settings
 
 CONTROL="$SHORTCUTS/Midnight Mansion Server.command"
 UPDATE="$SHORTCUTS/Update Midnight Mansion Server.command"
+DMG="$SHORTCUTS/Make After Midnight DMG.command"
 
 {
     echo '#!/bin/bash'
@@ -213,9 +216,41 @@ finish
 EOF
 } > "$UPDATE"
 
-chmod +x "$CONTROL" "$UPDATE"
-xattr -d com.apple.quarantine "$CONTROL" "$UPDATE" 2>/dev/null || true
+{
+    echo '#!/bin/bash'
+    echo '# Builds the newest After Midnight and makes its Mac disk image (DMG), with'
+    echo '# platform/macos/make_dmg.sh from the newest copy of the game'"'"'s folder.'
+    echo '# (Made by server/mac/make_shortcuts.sh.)'
+    echo "$SHARED"
+    cat <<'EOF'
+
+printf '\033]0;Make After Midnight DMG\007'
+clear
+    # the newest copy of the game's folder that can make a DMG
+best=""
+for f in "$REPO/platform/macos/make_dmg.sh" "$HOME"/Desktop/*/platform/macos/make_dmg.sh \
+         "$HOME"/Desktop/*/*/platform/macos/make_dmg.sh "$HOME"/Documents/*/platform/macos/make_dmg.sh \
+         "$HOME"/Documents/*/*/platform/macos/make_dmg.sh "$HOME"/Documents/GitHub/*/platform/macos/make_dmg.sh \
+         "$HOME"/Downloads/*/platform/macos/make_dmg.sh; do
+    [ -f "$f" ] || continue
+    if [ -z "$best" ] || [ "$f" -nt "$best" ]; then best="$f"; fi
+done
+if [ -z "$best" ]; then
+    echo "Couldn't find the game's folder (with platform/macos/make_dmg.sh in it) on the Desktop,"
+    echo "in a folder on it, in Documents or Downloads."
+else
+    bash "$best"
+fi
+echo
+echo "You can close this window now."
+exit 0
+EOF
+} > "$DMG"
+
+chmod +x "$CONTROL" "$UPDATE" "$DMG"
+xattr -d com.apple.quarantine "$CONTROL" "$UPDATE" "$DMG" 2>/dev/null || true
 echo "Made the shortcuts in: $SHORTCUTS"
 echo "  Midnight Mansion Server          double-click: the server's control screen"
 echo "  Update Midnight Mansion Server   double-click: put the newest server version on the server"
+echo "  Make After Midnight DMG          double-click: build the newest game into a Mac disk image"
 echo "(Server: $SERVER   key: $KEY)"
