@@ -7,3 +7,7 @@ mmhd-state/
 admin.sock
 build-release/
 dist/
+# never commit private keys or server settings
+*.key
+*.pem
+.mmhd-server.conf
