@@ -51,7 +51,20 @@ static const ExtrasOption kExtrasOptions[] = {
       "A tap for keys and gems, a heavy rumble for doors and boulders, a jolt when Jack dies.", &gExtras.rumble },
     { "multiplayer_smoke", "Smoke in multiplayer",
       "In multiplayer games a cloud of smoke bursts out where a player dies.", &gExtras.multiplayerSmoke },
+#ifdef MM_PS3
+    { "tv_safe", "Fit the picture on a TV",
+      "Shows the picture a little smaller, for a TV that cuts off its edges (most older and CRT TVs).",
+      &gExtras.tvSafe },
+#endif
 };
+
+#ifdef MM_PS3
+/// For PS3Platform.c, which draws the picture smaller when this is on.
+int PS3ExtrasTVSafe(void)
+{
+    return gExtras.tvSafe;
+}
+#endif
 
 int GetExtrasOptions(int tab, const ExtrasOption **optionsP)
 {

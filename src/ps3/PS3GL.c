@@ -93,6 +93,9 @@ static int              gCurBuffer;
 static int              gFirstFlip = 1;
 static u32              gLabelValue = 1;
 static u32              gFrame = 1;
+static float            gOverscan;          // 0, or how much smaller the picture is shown
+static void            *gGameBuffer;        // with overscan the game draws here, not on screen
+static u32              gGameOffset;
 volatile const char    *gPS3GLDoing = "starting";
 volatile unsigned       gPS3GLLastSwap, gPS3GLFrames;
 
@@ -581,7 +584,7 @@ static void CurrentTarget(Target *t)
             return;
         }
     }
-    t->offset = gColorOffset[gCurBuffer];
+    t->offset = gOverscan > 0 ? gGameOffset : gColorOffset[gCurBuffer];
     t->pitch = gColorPitch;
     t->width = gScreenW;
     t->height = gScreenH;
@@ -1323,76 +1326,39 @@ void glRecti(GLint x1, GLint y1, GLint x2, GLint y2)
 // ---------------------------------------------------------------------------
 // Copying from the current buffer, and framebuffer objects
 
-void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y,
-                         GLsizei width, GLsizei height)
+/// Draws a rectangle of one target (s, t: 0..1, rows as stored) into a rectangle of another
+/// (pixels, rows as stored), replacing what is there. Leaves the destination as the surface.
+static void DrawTargetRect(const Target *src, const Target *dt, int prog, int linear, float s0, float t0,
+                           float s1, float t1, float x0, float y0, float x1, float y1)
 {
-    Texture *dst = TextureFor(gBoundTexture);
-    Target src, dt;
-    float scale[4], offset[4], s0, s1, t0, t1;
+    float scale[4], offset[4];
     Vertex q[4];
     int i;
 
-    if (target != GL_TEXTURE_2D || level != 0 || dst == NULL || dst->mem == NULL || width <= 0 || height <= 0) {
-        SetError(GL_INVALID_VALUE);
-        return;
-    }
-    CurrentTarget(&src);
-    if (src.offset == dst->offset) {
-        SetError(GL_INVALID_OPERATION);
-        return;
-    }
-        // only what is on the source can be copied (GL leaves the rest undefined)
-    if (x < 0) { xoffset -= x; width += x; x = 0; }
-    if (y < 0) { yoffset -= y; height += y; y = 0; }
-    if (x + width > (int)src.width) width = (int)src.width - x;
-    if (y + height > (int)src.height) height = (int)src.height - y;
-    if (xoffset + width > dst->width) width = dst->width - xoffset;
-    if (yoffset + height > dst->height) height = dst->height - yoffset;
-    if (width <= 0 || height <= 0)
-        return;
-        // draw the source rectangle into the texture, one texel per pixel
-    Trace("copy %d,%d %dx%d to %u", x, y, width, height, gBoundTexture);
     RenderBarrier();
-    dt.offset = dst->offset;
-    dt.pitch = dst->pitch;
-    dt.width = dst->width;
-    dt.height = dst->height;
-    dt.flip = 0;
-    SetSurface(&dt);
+    SetSurface(dt);
     ROOM();
-    scale[0] = dt.width * 0.5f;
-    offset[0] = dt.width * 0.5f;
-    scale[1] = dt.height * 0.5f;
-    offset[1] = dt.height * 0.5f;
+    scale[0] = dt->width * 0.5f;
+    offset[0] = dt->width * 0.5f;
+    scale[1] = dt->height * 0.5f;
+    offset[1] = dt->height * 0.5f;
     scale[2] = offset[2] = 0.5f;
     scale[3] = offset[3] = 0.0f;
-    rsxSetViewport(gContext, 0, 0, (u16)dt.width, (u16)dt.height, 0.0f, 1.0f, scale, offset);
-    rsxSetScissor(gContext, 0, 0, (u16)dt.width, (u16)dt.height);
+    rsxSetViewport(gContext, 0, 0, (u16)dt->width, (u16)dt->height, 0.0f, 1.0f, scale, offset);
+    rsxSetScissor(gContext, 0, 0, (u16)dt->width, (u16)dt->height);
     rsxSetColorMask(gContext, GCM_COLOR_MASK_R | GCM_COLOR_MASK_G | GCM_COLOR_MASK_B | GCM_COLOR_MASK_A);
     rsxSetBlendEnable(gContext, GCM_FALSE);
     rsxSetDepthTestEnable(gContext, GCM_FALSE);
     rsxSetCullFaceEnable(gContext, GCM_FALSE);
     rsxLoadVertexProgram(gContext, gVP, gVPUCode);
-    {       // the screen has no alpha to copy (as a computer's window): the copy is opaque
-        int prog = src.flip ? kProgOpaque : kProgTexture;
-        rsxLoadFragmentProgramLocation(gContext, gFP[prog].fp, gFP[prog].offset, GCM_LOCATION_RSX);
-        rsxInvalidateTextureCache(gContext, GCM_INVALIDATE_TEXTURE);
-        LoadTextureUnit(gFP[prog].texUnit->index, src.offset, src.width, src.height, src.pitch, 0);
-    }
-    s0 = (float)x / src.width;
-    s1 = (float)(x + width) / src.width;
-    if (src.flip) {
-        t0 = (float)(src.height - y) / src.height;              // GL row y, from the top
-        t1 = (float)(src.height - (y + height)) / src.height;
-    } else {
-        t0 = (float)y / src.height;
-        t1 = (float)(y + height) / src.height;
-    }
+    rsxLoadFragmentProgramLocation(gContext, gFP[prog].fp, gFP[prog].offset, GCM_LOCATION_RSX);
+    rsxInvalidateTextureCache(gContext, GCM_INVALIDATE_TEXTURE);
+    LoadTextureUnit(gFP[prog].texUnit->index, src->offset, src->width, src->height, src->pitch, linear);
     for (i = 0; i < 4; i++) {
         int right = i == 1 || i == 2, top = i >= 2;
-        float px = (float)(xoffset + (right ? width : 0)), py = (float)(yoffset + (top ? height : 0));
-        q[i].x = px / dt.width * 2.0f - 1.0f;
-        q[i].y = py / dt.height * 2.0f - 1.0f;
+        float px = right ? x1 : x0, py = top ? y1 : y0;
+        q[i].x = px / dt->width * 2.0f - 1.0f;
+        q[i].y = py / dt->height * 2.0f - 1.0f;
         q[i].z = 0.0f;
         q[i].w = 1.0f;
         q[i].u = right ? s1 : s0;
@@ -1414,6 +1380,52 @@ void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffse
     }
     gBatchStart = gRingCount;
     RenderBarrier();
+}
+
+void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y,
+                         GLsizei width, GLsizei height)
+{
+    Texture *dst = TextureFor(gBoundTexture);
+    Target src, dt;
+    float s0, s1, t0, t1;
+
+    if (target != GL_TEXTURE_2D || level != 0 || dst == NULL || dst->mem == NULL || width <= 0 || height <= 0) {
+        SetError(GL_INVALID_VALUE);
+        return;
+    }
+    CurrentTarget(&src);
+    if (src.offset == dst->offset) {
+        SetError(GL_INVALID_OPERATION);
+        return;
+    }
+        // only what is on the source can be copied (GL leaves the rest undefined)
+    if (x < 0) { xoffset -= x; width += x; x = 0; }
+    if (y < 0) { yoffset -= y; height += y; y = 0; }
+    if (x + width > (int)src.width) width = (int)src.width - x;
+    if (y + height > (int)src.height) height = (int)src.height - y;
+    if (xoffset + width > dst->width) width = dst->width - xoffset;
+    if (yoffset + height > dst->height) height = dst->height - yoffset;
+    if (width <= 0 || height <= 0)
+        return;
+        // draw the source rectangle into the texture, one texel per pixel
+    Trace("copy %d,%d %dx%d to %u", x, y, width, height, gBoundTexture);
+    dt.offset = dst->offset;
+    dt.pitch = dst->pitch;
+    dt.width = dst->width;
+    dt.height = dst->height;
+    dt.flip = 0;
+    s0 = (float)x / src.width;
+    s1 = (float)(x + width) / src.width;
+    if (src.flip) {
+        t0 = (float)(src.height - y) / src.height;              // GL row y, from the top
+        t1 = (float)(src.height - (y + height)) / src.height;
+    } else {
+        t0 = (float)y / src.height;
+        t1 = (float)(y + height) / src.height;
+    }
+        // the screen has no alpha to copy (as a computer's window): the copy is opaque
+    DrawTargetRect(&src, &dt, src.flip ? kProgOpaque : kProgTexture, 0, s0, t0, s1, t1,
+                   (float)xoffset, (float)yoffset, (float)(xoffset + width), (float)(yoffset + height));
     dst->usedInFrame = gFrame;
         // back to the current buffer, with everything sent again before the next draw
     SetSurface(&src);
@@ -1640,6 +1652,56 @@ void PS3GLGetScreenSize(int *w, int *h)
     *h = (int)gScreenH;
 }
 
+/// Overscan: the game's picture, smaller and centered on black, on the screen's buffer.
+static void ShowGameBuffer(void)
+{
+    Target src, dt;
+    float mx = gScreenW * gOverscan / 2.0f, my = gScreenH * gOverscan / 2.0f;
+
+    FlushBatch();
+    src.offset = gGameOffset;
+    src.pitch = gColorPitch;
+    src.width = gScreenW;
+    src.height = gScreenH;
+    src.flip = 1;
+    dt = src;
+    dt.offset = gColorOffset[gCurBuffer];
+    RenderBarrier();
+    SetSurface(&dt);
+    ROOM();
+    rsxSetScissor(gContext, 0, 0, (u16)gScreenW, (u16)gScreenH);
+    rsxSetClearColor(gContext, 0xff000000);
+    rsxSetColorMask(gContext, GCM_COLOR_MASK_R | GCM_COLOR_MASK_G | GCM_COLOR_MASK_B | GCM_COLOR_MASK_A);
+    rsxClearSurface(gContext, GCM_CLEAR_R | GCM_CLEAR_G | GCM_CLEAR_B | GCM_CLEAR_A);
+    DrawTargetRect(&src, &dt, kProgOpaque, 1, 0.0f, 0.0f, 1.0f, 1.0f, mx, my, gScreenW - mx, gScreenH - my);
+}
+
+void PS3GLSetOverscan(float fraction)
+{
+    if (fraction < 0.0f || gContext == NULL)
+        fraction = 0.0f;
+    if (fraction > 0.25f)
+        fraction = 0.25f;
+    if (fraction > 0 && gGameBuffer == NULL) {
+        gGameBuffer = rsxMemalign(64, gColorPitch * gScreenH);
+        if (gGameBuffer == NULL)
+            fraction = 0.0f;
+        else
+            rsxAddressToOffset(gGameBuffer, &gGameOffset);
+    }
+    if (fraction != gOverscan) {
+        Target t;
+        FlushBatch();
+        printf("PS3GL: the picture is shown %.0f%% smaller (overscan)\n", fraction * 100.0f);
+        gOverscan = fraction;
+        CurrentTarget(&t);
+        SetSurface(&t);
+        gStateDirty = gTargetDirty = 1;
+        gCurProg = -1;
+        gCurTexture = (GLuint)-1;
+    }
+}
+
 void PS3GLSwap(void)
 {
     Target t;
@@ -1656,6 +1718,8 @@ void PS3GLSwap(void)
     }
     gcmResetFlipStatus();
     gFirstFlip = 0;
+    if (gOverscan > 0)
+        ShowGameBuffer();
     Trace("flip");
     ROOM();
     gcmSetFlip(gContext, gCurBuffer);

@@ -15,6 +15,9 @@ typedef struct ExtrasSettings {
     // Extras tab
     Boolean arcadeMenu;         ///< title menu centered, arcade-cabinet style
     Boolean smoothRooms;        ///< slide between rooms instead of cutting
+#ifdef MM_PS3
+    Boolean tvSafe;             ///< the picture a little smaller, for a TV that crops its edges
+#endif
     Boolean rumble;             ///< controller rumble
     Boolean multiplayerSmoke;   ///< multiplayer: a cloud of smoke where a player dies
     // Fun tab

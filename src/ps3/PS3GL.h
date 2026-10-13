@@ -161,6 +161,9 @@ void PS3GLShutdown(void);
 void PS3GLGetScreenSize(int *w, int *h);
 /// Shows what has been drawn and starts the next frame.
 void PS3GLSwap(void);
+/// Shows the picture this much smaller (0.05 is 5%), centered on black, for a TV that crops
+/// its edges (overscan); 0 fills the screen.
+void PS3GLSetOverscan(float fraction);
 /// For the log when the game seems stuck: what the graphics code is doing, and when the last
 /// frame was shown (SDL_GetTicks-style milliseconds, from PS3GLNow).
 extern volatile const char *gPS3GLDoing;

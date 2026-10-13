@@ -479,6 +479,8 @@ int PS3_GL_MakeCurrent(SDL_Window *window, SDL_GLContext context)
     return 0;
 }
 
+int PS3ExtrasTVSafe(void);       // MMExtras.c
+
 void PS3_GL_SwapWindow(SDL_Window *window)
 {
     static Uint32 frames = 0, reported = 0;
@@ -492,6 +494,13 @@ void PS3_GL_SwapWindow(SDL_Window *window)
     if (++frames < 4 || getenv("MM_PS3_DEBUG_FRAMES") != NULL)     // testing aid: every frame's time
         printf("Frame %u at %u ms\n", (unsigned)frames, (unsigned)now);
     PS3GLSwap();
+        // "Fit the picture on a TV" (Extras), from the next frame: 7% smaller, or
+        // MM_PS3_OVERSCAN percent in the settings file
+    {
+        const char *percent = getenv("MM_PS3_OVERSCAN");
+        float amount = percent != NULL ? (float)atof(percent) / 100.0f : 0.07f;
+        PS3GLSetOverscan(PS3ExtrasTVSafe() ? amount : 0.0f);
+    }
 }
 
 void PS3_GL_GetDrawableSize(SDL_Window *window, int *w, int *h)
