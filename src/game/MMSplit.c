@@ -934,7 +934,8 @@ static void WritePlayerState(void *context)
 }
 
 /// From a save pedestal in Arcade Split Screen: saves the team's game, named after the
-/// mansion ("Falcon Manor Normal 3"), and says so in the saver's view.
+/// mansion ("Falcon Manor Normal 3"), and says so in the saver's view. (In a race the statue
+/// only gives the lives back and brings the player back there: "Saved".)
 void SplitSaveTeam(void)
 {
     Split *s = gSplit;
@@ -944,8 +945,12 @@ void SplitSaveTeam(void)
     struct stat info;
     int i, n;
 
-    if (me == NULL || s->mode != kSplitModeCoop || s->network)
+    if (me == NULL)
         return;
+    if (s->mode != kSplitModeCoop || s->network) {
+        s->savedNoticeUntil[me->index] = SDL_GetTicks() + 2500;     // a race: lives back, a checkpoint
+        return;
+    }
     folder = MultiSaveFolderForCurrentGame(kMultiSaveArcade);
     if (folder == NULL)
         return;
@@ -1304,7 +1309,7 @@ static void DrawPlayerOverlay(Split *s, SplitPlayer *p, Uint32 now)
         DrawText(s->font, small, text, x1 - 8 * unit, y0 + 66 * unit, 2, 1, 1, 1, 0.9f);
     }
     if (now < s->savedNoticeUntil[p->index])
-        DrawText(s->titleFont, (int)(30 * unit), "Team game saved", (x0 + x1) / 2, y0 + h * 0.3f, 0, 1, 0.85f, 0.3f,
+        DrawText(s->titleFont, (int)(30 * unit), s->mode == kSplitModeCoop && !s->network ? "Team game saved" : "Saved", (x0 + x1) / 2, y0 + h * 0.3f, 0, 1, 0.85f, 0.3f,
                  (float)(s->savedNoticeUntil[p->index] - now) / 2500.0f);
     if (p->status == kPlayerFinished || p->status == kPlayerOut) {
         static const char *places[] = { "", "1st", "2nd", "3rd", "4th" };

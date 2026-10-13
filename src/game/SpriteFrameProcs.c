@@ -575,10 +575,12 @@ void PauseThenFadeStatueFrameProc(SpritePtr spriteP, FramePtr curFrameP, long *f
             StopAllChannels();
         }
         if (SplitScreenActive()) {
-                // split screen: no question (the others are playing); Arcade Split Screen saves
-                // the team's game there and then, and the player carries straight on
+                // split screen: no question (the others are playing). The statue saves as
+                // usual (lives back, and the player comes back here); Arcade Split Screen also
+                // writes the team's game there and then
+            RestoreJacksLives();
             SplitSaveTeam();
-            save = false;
+            save = true;
         }
         else if (NetIsFollower()) {
                 // two computers: the player who has the turn decides
@@ -610,7 +612,7 @@ void PauseThenFadeStatueFrameProc(SpritePtr spriteP, FramePtr curFrameP, long *f
             }
             ResetKeys();
         }
-        if (save)
+        if (save && !SplitScreenActive())
             RestoreJacksLives();
         SWUpdateSpriteWorld(gStatsSpriteWorldP, true);
         SWUpdateSpriteWorld(gSpriteWorldP, true);
@@ -681,7 +683,7 @@ void PauseThenUnfreezeFrameProc(SpritePtr spriteP, FramePtr curFrameP, long *fra
         if (heroP != NULL)
             SWSetSpriteVisible(heroP, true);
     }
-    if (gMusicIsOn)
+    if (gMusicIsOn && !SplitScreenActive())     // split screen: the music kept playing for everyone
         FadeMusicIn(4);
     MMResumeGameTimer();
     UnpauseAllSpriteLayers(gSpriteWorldP);
