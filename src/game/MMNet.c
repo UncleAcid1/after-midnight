@@ -65,7 +65,12 @@ typedef struct NetFrame {
     Uint16  keys;
     Uint8   numEvents;
     Uint8   events[32];
+    Boolean hasCheck;       ///< the driver's game-state checksum came with it (every 60 frames)
+    Uint32  check;
 } NetFrame;
+
+#define kCheckEvery     60      ///< frames between the relay co-op checksums
+#define kCheckMark      'C'     ///< after a frame's events: then the checksum (older versions ignore it)
 
 /// A connection to another computer: on the host, one per guest; on a guest, the host.
 typedef struct NetLink {
@@ -496,6 +501,9 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
             if (7 + f->numEvents > length)
                 f->numEvents = (Uint8)(length - 7);
             memcpy(f->events, payload + 7, f->numEvents);
+            f->hasCheck = length >= 7 + f->numEvents + 5 && payload[7 + f->numEvents] == kCheckMark;
+            if (f->hasCheck)
+                f->check = GetU32(payload + 8 + f->numEvents);
             gNet.queueCount++;
             break;
         case kMsgSave:
@@ -1432,6 +1440,7 @@ void NetSeedRandom(void)
         return;
     SelectStream(0);
     PutSeed((long)(gNet.seed & 0x7fffffff));
+    SWSeedRandom(gNet.seed);        // GetRandom's numbers too
 }
 
 /// The join failed because this computer doesn't have the host's mansion: its name, else NULL.
@@ -1536,10 +1545,70 @@ Boolean NetMustWait(void)
     return true;
 }
 
+static Uint32 Mix(Uint32 h, Uint32 v)
+{
+    int i;
+    for (i = 0; i < 4; i++, v >>= 8)
+        h = (h ^ (v & 0xff)) * 16777619u;
+    return h;
+}
+
+/// What relay co-op's computers must agree on: the hero, the score and lives, the room, and
+/// the game's random numbers (CustomRandom: any difference in what happened shows up there).
+/// Not GetRandom's: effects draw from it as they are drawn, and the computers draw different
+/// numbers of pictures (a watcher catching up skips some).
+static Uint32 GameStateChecksum(void)
+{
+    SpritePtr heroP = GetHeroSprite();
+    Uint32 h = 2166136261u;
+    long seed;
+    float f;
+    Uint32 bits;
+
+    if (getenv("MM_DEBUG_CHECKSUM") != NULL) {      // testing aid: what goes into the checksum
+        long s0;
+        GetSeed(&s0);
+        printf("checksum frame %u: score %ld lives %d items %d level %d seed %ld rand %08x hero %.3f,%.3f\n",
+               (unsigned)gNet.frame, (long)gScore, gNumLivesLeft, gNumItemsBeingCarried, gCurrentLevel, s0,
+               SWRandomState(), heroP ? SWGetSpriteHorizLoc(heroP) : -1.0f, heroP ? SWGetSpriteVertLoc(heroP) : -1.0f);
+    }
+    h = Mix(h, gNet.frame);
+    h = Mix(h, (Uint32)gScore);
+    h = Mix(h, (Uint32)gNumLivesLeft);
+    h = Mix(h, (Uint32)gNumItemsBeingCarried);
+    h = Mix(h, (Uint32)gCurrentLevel);
+    GetSeed(&seed);
+    h = Mix(h, (Uint32)seed);
+    if (heroP != NULL) {
+        f = SWGetSpriteHorizLoc(heroP);
+        memcpy(&bits, &f, 4);
+        h = Mix(h, bits);
+        f = SWGetSpriteVertLoc(heroP);
+        memcpy(&bits, &f, 4);
+        h = Mix(h, bits);
+        h = Mix(h, (Uint32)HERO(heroP)->isDead);
+    }
+    return h;
+}
+
+/// The computers' games differ: say so and end it, rather than play on in different games.
+static void NetDesync(Uint32 frame, Uint32 here, Uint32 driver)
+{
+    char message[300];
+
+    printf("Relay co-op out of step at frame %u: checksum %08x here, %08x on %s's computer\n", (unsigned)frame,
+           (unsigned)here, (unsigned)driver, NetPlayerName(GetActivePlayer()));
+    snprintf(message, sizeof(message), "The game on this computer got out of step with %s's (at frame %u), so it "
+             "stops here. This is a bug: please send the log.", NetPlayerName(GetActivePlayer()), (unsigned)frame);
+    SendMessage(kMsgBye, NULL, 0);
+    MMDoCustomDialog(gSpriteWorldP, message, 3);
+    gEndGame = true;
+}
+
 /// At the start of each game frame (before the frame counter advances).
 void NetFrameBegin(void)
 {
-    Uint8 payload[7 + 32];
+    Uint8 payload[7 + 32 + 5];
     NetFrame *f;
     int i;
 
@@ -1551,7 +1620,13 @@ void NetFrameBegin(void)
         payload[5] = (Uint8)(KeysMask() >> 8);
         payload[6] = (Uint8)gNet.numPending;
         memcpy(payload + 7, gNet.pending, (size_t)gNet.numPending);
-        SendMessage(kMsgFrame, payload, (Uint16)(7 + gNet.numPending));
+        if (gNet.frame % kCheckEvery == 0) {
+            payload[7 + gNet.numPending] = kCheckMark;
+            PutU32(payload + 8 + gNet.numPending, GameStateChecksum());
+            SendMessage(kMsgFrame, payload, (Uint16)(7 + gNet.numPending + 5));
+        } else {
+            SendMessage(kMsgFrame, payload, (Uint16)(7 + gNet.numPending));
+        }
         gNet.numPending = 0;
     } else {
             // normally there: play only goes on once it has arrived (NetMustWait)
@@ -1567,6 +1642,13 @@ void NetFrameBegin(void)
             gNet.queueCount--;
             if (f->frame < gNet.frame)
                 continue;           // from before a turn change: already played
+            if (f->hasCheck) {
+                Uint32 here = GameStateChecksum();
+                if (here != f->check) {
+                    NetDesync(f->frame, here, f->check);
+                    break;
+                }
+            }
             for (i = kKeyUp; i <= kKeyAction; i++)
                 gKeys[i] = (f->keys >> i) & 1;
             for (i = 0; i < f->numEvents; i++) {

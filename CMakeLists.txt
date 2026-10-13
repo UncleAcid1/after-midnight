@@ -10,6 +10,12 @@ endif()
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 
+# No fused multiply-adds anywhere (Apple Silicon's compiler fuses by default): relay co-op
+# computes the same frames on a Mac, a PC and a PS3, and they must get the same numbers
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  add_compile_options(-ffp-contract=off)
+endif()
+
 # SpriteWorld X fork (rendering/sprite engine)
 file(GLOB SWX_SOURCES src/swx/*.c)
 add_library(swx STATIC ${SWX_SOURCES})
@@ -18,6 +24,7 @@ target_link_libraries(swx PUBLIC SDL2::SDL2 OpenGL::GL)
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(swx PRIVATE -Wall -Wno-unused-function)
 endif()
+
 
 # The game
 #

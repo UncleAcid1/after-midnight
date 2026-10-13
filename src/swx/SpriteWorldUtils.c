@@ -47,20 +47,90 @@ SWBoolean SWEqualRect(SWRect *rectA, SWRect *rectB)
            rectA->right == rectB->right && rectA->bottom == rectB->bottom;
 }
 
+/*  GetRandom's numbers: the C library's rand() differs from system to system, and two
+    computers playing relay co-op must draw the same numbers. So this is a generator of our own
+    (xorshift, 31 bits as rand() gave), seeded from the clock as before, and seeded the same on
+    every computer in a network game (SWSeedRandom). */
+static Uint32 gRandomState = 0x2545f491;
+
+void SWSeedRandom(unsigned long seed)
+{
+    gRandomState = (Uint32)seed != 0 ? (Uint32)seed : 0x2545f491;
+}
+
+unsigned int SWRandomState(void)
+{
+    return gRandomState;
+}
+
+static int SWRand31(void)
+{
+    gRandomState ^= gRandomState << 13;
+    gRandomState ^= gRandomState >> 17;
+    gRandomState ^= gRandomState << 5;
+    return (int)(gRandomState >> 1);
+}
+
 void Randomize(void)
 {
-    srand((unsigned)time(NULL));
+    SWSeedRandom((unsigned long)time(NULL));
 }
 
 /// Returns a random integer in [min, max].
 int GetRandom(int min, int max)
 {
-    return (int)((float)(max - min + 1) * ((float)rand() / 2147483648.0f)) + min;
+    return (int)((float)(max - min + 1) * ((float)SWRand31() / 2147483648.0f)) + min;
 }
 
 float GetRandomFloat(float min, float max)
 {
-    return (max - min) * ((float)rand() / 2147483648.0f) + min;
+    return (max - min) * ((float)SWRand31() / 2147483648.0f) + min;
+}
+
+/*  Sine and cosine of an angle in degrees, the same on every system: only + - * on doubles
+    (a system's sin() and cos() can differ in the last bit, and relay co-op computes the same
+    frames on several computers). The angle comes down to [-45, 45] degrees exactly (fmod is
+    exact); the polynomials are fdlibm's (__kernel_sin, __kernel_cos), good to < 1 ulp there. */
+#if defined(__clang__)
+#pragma STDC FP_CONTRACT OFF
+#endif
+#define kSWDegToRad 0.017453292522222223    /* the value the game always used */
+
+static void SWSinCosDegrees(double degrees, double *sinP, double *cosP)
+{
+    double d = fmod(degrees, 360.0), r, x, z, s, c;
+    int q;
+
+    if (d < 0)
+        d += 360.0;
+    q = (int)floor((d + 45.0) / 90.0);
+    r = d - 90.0 * q;
+    x = r * kSWDegToRad;
+    z = x * x;
+    s = x + x * z * (-1.66666666666666324348e-01 + z * (8.33333333332248946124e-03 + z * (-1.98412698298579493134e-04 +
+        z * (2.75573137070700676789e-06 + z * (-2.50507602534068634195e-08 + z * 1.58969099521155010221e-10)))));
+    c = 1.0 - 0.5 * z + z * z * (4.16666666666666019037e-02 + z * (-1.38888888888741095749e-03 + z * (2.48015872894767294178e-05 +
+        z * (-2.75573143513906633035e-07 + z * (2.08757232129817482790e-09 + z * -1.13596475577881948265e-11)))));
+    switch (q & 3) {
+        case 0:  *sinP = s;  *cosP = c;  break;
+        case 1:  *sinP = c;  *cosP = -s; break;
+        case 2:  *sinP = -s; *cosP = -c; break;
+        default: *sinP = -c; *cosP = s;  break;
+    }
+}
+
+double SWSinDegrees(double degrees)
+{
+    double s, c;
+    SWSinCosDegrees(degrees, &s, &c);
+    return s;
+}
+
+double SWCosDegrees(double degrees)
+{
+    double s, c;
+    SWSinCosDegrees(degrees, &s, &c);
+    return c;
 }
 
 void SWCopyPascalString(const unsigned char *sourceString, unsigned char *targetString)
@@ -140,12 +210,12 @@ void SWNumToString(long theNum, unsigned char *pString)
 /// Angles run clockwise from 0 at the top in SpriteWorld, hence the 360 - x.
 double SWCos(double degrees)
 {
-    return cos((360.0 - degrees) * 0.017453292522222223);
+    return SWCosDegrees(360.0 - degrees);
 }
 
 double SWSin(double degrees)
 {
-    return sin((360.0 - degrees) * 0.017453292522222223);
+    return SWSinDegrees(360.0 - degrees);
 }
 
 double SWATan(double value)
