@@ -1,0 +1,13 @@
+// PS3GL: positions arrive already transformed (PS3GL.c does projection * modelview).
+// The color goes on in a texture coordinate for full precision.
+void main(float4 position : POSITION,
+          float4 color : COLOR0,
+          float2 texcoord : TEXCOORD0,
+          out float4 oPosition : POSITION,
+          out float2 oTexCoord : TEXCOORD0,
+          out float4 oColor : TEXCOORD1)
+{
+    oPosition = position;
+    oTexCoord = texcoord;
+    oColor = color;
+}

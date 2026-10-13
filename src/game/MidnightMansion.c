@@ -183,6 +183,9 @@ int main(int argc, char *argv[])
 {
     SW_UNUSED(argc);
     SW_UNUSED(argv);
+#ifdef MM_PS3
+    PS3PlatformInit(argc, argv);    // folders, the log on the USB drive
+#endif
     InitVariables();
     Randomize();
     CreateAppSupportDirectories();
@@ -2210,7 +2213,7 @@ static void HWCursorNoDrawProc(SpritePtr srcSpriteP, FramePtr curFrameP, float h
 /// Bilinear resample of an RGBA image (premultiplying so edges stay clean).
 static SDL_Surface *ScaleCursorImage(SDL_Surface *src, int size)
 {
-    SDL_Surface *dst = SDL_CreateRGBSurfaceWithFormat(0, size, size, 32, SDL_PIXELFORMAT_ABGR8888);
+    SDL_Surface *dst = SDL_CreateRGBSurfaceWithFormat(0, size, size, 32, SDL_PIXELFORMAT_RGBA32);
     int x, y, c;
 
     if (dst == NULL)

@@ -1,0 +1,9 @@
+// PS3GL: glCopyTexSubImage2D from the screen. A computer's window has no alpha channel
+// (copies of it come out opaque); the PS3's screen buffer has one, so the copy drops it.
+void main(float2 texcoord : TEXCOORD0,
+          float4 color : TEXCOORD1,
+          uniform sampler2D texture,
+          out float4 oColor : COLOR0)
+{
+    oColor = float4(tex2D(texture, texcoord).rgb, 1.0);
+}

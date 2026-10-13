@@ -28,7 +28,7 @@
 #include "MMGame.h"
 #include "MMProtos.h"
 
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(MM_PS3)    // the PS3 joins in at roadmap step 7 (docs/PS3.md)
 #include <errno.h>
 #include <time.h>
 #include <fcntl.h>

@@ -2,15 +2,20 @@
  * MMCoroutine.c — minimal stackful coroutines, added by this version (see MMCoroutine.h).
  *
  * The context switch saves the callee-saved registers on the old stack, stores the stack
- * pointer and loads the other one: x86-64 (System V: Linux and macOS) and ARM64 (AAPCS64:
- * Linux and Apple Silicon). ucontext isn't used because it doesn't work on Apple Silicon.
+ * pointer and loads the other one: x86-64 (System V: Linux and macOS), ARM64 (AAPCS64:
+ * Linux and Apple Silicon) and the PS3's PPC64 (64-bit ELF v1). ucontext isn't used because
+ * it doesn't work on Apple Silicon.
  */
 
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#if defined(MM_PS3)
+#include <malloc.h>
+#else
 #include <sys/mman.h>
 #include <unistd.h>
+#endif
 #include "MMCoroutine.h"
 
 struct MMCoroutine {
@@ -142,8 +147,90 @@ static void *InitialStack(MMCoroutine *co, unsigned char *top)
     return sp;
 }
 
+#elif defined(__powerpc64__) && defined(_CALL_ELF) && _CALL_ELF == 1
+/*  PPC64, 64-bit ELF v1 (the PS3 with PSL1GHT). Frame on a suspended stack (624 bytes, from
+    the stack pointer up): back chain, then r14-r31 at 112, f14-f31 at 256, v20-v31 at 400,
+    the return address at 592, r2 (TOC) at 600, CR at 608 and VRSAVE at 612. A new coroutine
+    "returns" into mm_coro_entry with its argument in r14 and its procedure's function
+    descriptor in r15. Functions are called through descriptors (.opd): code address, TOC. */
+#define MM_PPC_SAVE_GPR(n, off) "    std " #n "," #off "(1)\n"
+#define MM_PPC_LOAD_GPR(n, off) "    ld " #n "," #off "(1)\n"
+#define MM_PPC_SAVE_FPR(n, off) "    stfd " #n "," #off "(1)\n"
+#define MM_PPC_LOAD_FPR(n, off) "    lfd " #n "," #off "(1)\n"
+#define MM_PPC_SAVE_VR(n, off)  "    li 0," #off "\n    stvx " #n ",1,0\n"
+#define MM_PPC_LOAD_VR(n, off)  "    li 0," #off "\n    lvx " #n ",1,0\n"
+#define MM_PPC_REGS(GPR, FPR, VR) \
+    GPR(14, 112) GPR(15, 120) GPR(16, 128) GPR(17, 136) GPR(18, 144) GPR(19, 152) \
+    GPR(20, 160) GPR(21, 168) GPR(22, 176) GPR(23, 184) GPR(24, 192) GPR(25, 200) \
+    GPR(26, 208) GPR(27, 216) GPR(28, 224) GPR(29, 232) GPR(30, 240) GPR(31, 248) \
+    FPR(14, 256) FPR(15, 264) FPR(16, 272) FPR(17, 280) FPR(18, 288) FPR(19, 296) \
+    FPR(20, 304) FPR(21, 312) FPR(22, 320) FPR(23, 328) FPR(24, 336) FPR(25, 344) \
+    FPR(26, 352) FPR(27, 360) FPR(28, 368) FPR(29, 376) FPR(30, 384) FPR(31, 392) \
+    VR(20, 400) VR(21, 416) VR(22, 432) VR(23, 448) VR(24, 464) VR(25, 480) \
+    VR(26, 496) VR(27, 512) VR(28, 528) VR(29, 544) VR(30, 560) VR(31, 576)
+#define kPPCFrame 624
+__asm__(
+    "    .section \".opd\",\"aw\"\n"
+    "    .align 3\n"
+    "    .globl mm_coro_switch\n"
+    "mm_coro_switch:\n"
+    "    .quad .L.mm_coro_switch,.TOC.@tocbase,0\n"
+    "    .globl mm_coro_entry\n"
+    "mm_coro_entry:\n"
+    "    .quad .L.mm_coro_entry,.TOC.@tocbase,0\n"
+    "    .text\n"
+    "    .align 2\n"
+    ".L.mm_coro_switch:\n"
+    "    stdu 1,-624(1)\n"
+    "    mflr 0\n"
+    "    std 0,592(1)\n"
+    "    std 2,600(1)\n"
+    "    mfcr 0\n"
+    "    stw 0,608(1)\n"
+    "    mfspr 0,256\n"
+    "    stw 0,612(1)\n"
+    MM_PPC_REGS(MM_PPC_SAVE_GPR, MM_PPC_SAVE_FPR, MM_PPC_SAVE_VR)
+    "    std 1,0(3)\n"
+    "    mr 1,4\n"
+    MM_PPC_REGS(MM_PPC_LOAD_GPR, MM_PPC_LOAD_FPR, MM_PPC_LOAD_VR)
+    "    lwz 0,612(1)\n"
+    "    mtspr 256,0\n"
+    "    lwz 0,608(1)\n"
+    "    mtcrf 0xff,0\n"
+    "    ld 2,600(1)\n"
+    "    ld 0,592(1)\n"
+    "    mtlr 0\n"
+    "    addi 1,1,624\n"
+    "    blr\n"
+    ".L.mm_coro_entry:\n"
+    "    stdu 1,-128(1)\n"
+    "    li 0,0\n"
+    "    std 0,0(1)\n"              // the end of the back chain
+    "    mr 3,14\n"
+    "    ld 0,0(15)\n"
+    "    ld 2,8(15)\n"
+    "    mtctr 0\n"
+    "    bctrl\n"
+    "    trap\n"
+);
+
+static void *InitialStack(MMCoroutine *co, unsigned char *top)
+{
+    uint64_t *sp = (uint64_t *)((((uintptr_t)top - 256) & ~(uintptr_t)15) - kPPCFrame);
+    const uint64_t *entry = (const uint64_t *)(uintptr_t)mm_coro_entry;     // descriptors
+    const uint64_t *proc = (const uint64_t *)(uintptr_t)CoroutineMain;
+
+    memset(sp, 0, kPPCFrame);
+    sp[112 / 8] = (uint64_t)(uintptr_t)co;                  // r14: argument
+    sp[120 / 8] = (uint64_t)(uintptr_t)proc;                // r15: procedure
+    sp[592 / 8] = entry[0];                                 // return address
+    sp[600 / 8] = proc[1];                                  // TOC
+    ((uint32_t *)sp)[612 / 4] = 0xffffffffu;                // VRSAVE: all vector registers live
+    return sp;
+}
+
 #else
-#error "MMCoroutine: unsupported CPU (x86-64 and ARM64 only)"
+#error "MMCoroutine: unsupported CPU (x86-64, ARM64 and PPC64 only)"
 #endif
 
 /// Every coroutine starts here (on its own stack).
@@ -160,6 +247,23 @@ static void CoroutineMain(void *arg)
 
 MMCoroutine *MMCoroutineCreate(MMCoroutineProc proc, void *arg, size_t stackSize)
 {
+#if defined(MM_PS3)
+        // no mmap on the PS3, so no guard page either
+    MMCoroutine *co = calloc(1, sizeof(MMCoroutine));
+
+    if (co == NULL)
+        return NULL;
+    co->mapSize = (stackSize + 4095) & ~(size_t)4095;
+    co->stack = memalign(128, co->mapSize);
+    if (co->stack == NULL) {
+        free(co);
+        return NULL;
+    }
+    co->proc = proc;
+    co->arg = arg;
+    co->sp = InitialStack(co, (unsigned char *)co->stack + co->mapSize);
+    return co;
+#else
     MMCoroutine *co = calloc(1, sizeof(MMCoroutine));
     size_t page = (size_t)sysconf(_SC_PAGESIZE);
     void *mem;
@@ -179,13 +283,18 @@ MMCoroutine *MMCoroutineCreate(MMCoroutineProc proc, void *arg, size_t stackSize
     co->arg = arg;
     co->sp = InitialStack(co, (unsigned char *)mem + co->mapSize);
     return co;
+#endif
 }
 
 void MMCoroutineDispose(MMCoroutine *co)
 {
     if (co == NULL || co == gRunning)
         return;
+#if defined(MM_PS3)
+    free(co->stack);
+#else
     munmap(co->stack, co->mapSize);
+#endif
     free(co);
 }
 

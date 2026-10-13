@@ -238,6 +238,19 @@ static void FindSegments(Split *s)
             }
         }
 }
+#elif defined(MM_PS3)
+/*  Everything is linked into one program on the PS3 (the C library, SDL): only the game's own
+    variables are swapped, which platform/ps3/GameDataBegin.c and GameDataEnd.c bracket. */
+extern char __mm_game_data_start[], __mm_game_data_end[], __mm_game_bss_start[], __mm_game_bss_end[];
+
+static void FindSegments(Split *s)
+{
+    s->segments[0].addr = (unsigned char *)__mm_game_data_start;
+    s->segments[0].size = (size_t)(__mm_game_data_end - __mm_game_data_start);
+    s->segments[1].addr = (unsigned char *)__mm_game_bss_start;
+    s->segments[1].size = (size_t)(__mm_game_bss_end - __mm_game_bss_start);
+    s->numSegments = 2;
+}
 #else
 extern char __data_start[], _end[];
 
@@ -1177,7 +1190,7 @@ static GLuint LoadTexture(const char *relativePath, int *wP, int *hP)
 
     if (path == NULL || (surface = BKLoadSurface(path)) == NULL)
         return 0;
-    rgba = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+    rgba = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
     SDL_FreeSurface(surface);
     if (rgba == NULL)
         return 0;

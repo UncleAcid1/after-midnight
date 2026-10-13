@@ -1,0 +1,7 @@
+// PS3GL: untextured (GL_TEXTURE_2D off).
+void main(float2 texcoord : TEXCOORD0,
+          float4 color : TEXCOORD1,
+          out float4 oColor : COLOR0)
+{
+    oColor = color;
+}
