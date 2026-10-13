@@ -233,6 +233,23 @@ static void SetDialogTextCentered(MMDialog *d, SpritePtr textP, const char *text
         SWSetSpriteLocation(textP, left, SWGetSpriteVertLoc(textP));
 }
 
+/// One line that must fit the panel (a mansion's name: one without spaces can't wrap, and
+/// ran off the wood): drawn smaller when it's too wide, and centered.
+static void SetDialogTextFitted(MMDialog *d, SpritePtr textP, const char *text, float scale)
+{
+    float room = (float)(d->panelP->destFrameRect.right - d->panelP->destFrameRect.left) - 60.0f * d->scale;
+    float width;
+
+    if (textP == NULL)
+        return;
+    SWSetSpriteScaledFactor(textP, d->scale * scale, d->scale * scale);
+    SetBMTextSpriteText(textP, text);
+    width = GetWidthOfBMText(textP, text);
+    if (width > room && width > 0)
+        SWSetSpriteScaledFactor(textP, d->scale * scale * room / width, d->scale * scale * room / width);
+    SetDialogTextCentered(d, textP, text);
+}
+
 /// Okay (and Cancel) at the lower right of the panel, like MMDoCustomDialog.
 static void AddDialogButtons(MMDialog *d, Boolean withCancel)
 {
@@ -1225,11 +1242,15 @@ int MMDoRandomMansionDialog(void)
                 if (elapsed > 1500) {
                     shown = pick;
                     rolling = false;
+#ifdef MM_PS3
+                    SetDialogTextCentered(&d, hintP, "Okay to play, Square to roll again.");
+#else
                     SetDialogTextCentered(&d, hintP, IsControllerConnected() ? "Okay to play, X to roll again."
                                                                               : "Okay to play, R to roll again.");
+#endif
                 }
                 MansionNameOfItem(&items[shown], name, sizeof(name));
-                SetDialogTextCentered(&d, nameP, name);
+                SetDialogTextFitted(&d, nameP, name, 0.36f);
                 SWSetSpriteColor(nameP, 0xffff, 0xffff, rolling ? 0xffff : 0x2000);
                 nextFlip = SDL_GetTicks() + interval;
             }
