@@ -5,11 +5,11 @@ The PS3 version is being built step by step (the roadmap is in `CLAUDE.md`). Whe
 | | |
 |---|---|
 | Builds automatically | Every push to GitHub builds an installable `.pkg` (GitHub Actions, about 2 minutes). |
-| Title screen and menus | Work in RPCS3 with a controller: all the menus, the Options tabs, Trophy Room, High Scores, Help, the on-screen keyboard. Sound and music play. Quit returns to the system. |
-| Playing a mansion | Works in RPCS3: the rooms draw as on the Mac, Jack walks, jumps, collects and goes from room to room. Only a few minutes were played. |
-| Split screen | 2 and 4 players start and draw in RPCS3 (with the pretend controllers below); not played through. |
-| LAN and online | Not yet (milestone 4): the PS3 builds without networking for now. |
-| Real PS3 | Not tested yet: everything so far was tested in RPCS3. |
+| Real PS3 | Runs: menus, mansions, sound, controllers (tested by Thom on a PS3 Slim). |
+| RPCS3 | Runs without flickering, with RPCS3's default settings. |
+| Split screen | 2 and 4 players start and draw in RPCS3; not played through yet. |
+| LAN and online | Work: in RPCS3 the PS3 hosted an online co-op game a Linux computer joined (both played the same mansion), and found and joined a game a computer hosted on the local network. Not yet tried on a real PS3. |
+| Installing | The package holds about 640 files (each mansion is packed into one), so it installs quickly. |
 
 ## 1. Get the package from GitHub
 
@@ -44,9 +44,16 @@ and install it with **File → Install Firmware**.
 3. Controllers: **Pads** (the gamepad button in RPCS3's toolbar). Player 1 can be your
    controller, or the keyboard. For 4-player tests later, players 3 and 4 can be the keyboard
    or another controller.
+4. For network play: **Configuration → Network**, set **Network Status** to **Connected**
+   (it starts as Disconnected, and then the game can't reach other computers).
 
 In the game: **Cross** is A (choose, jump), **Circle** is B (back), **Square** the action
-button, **Triangle** the map, **Start** pauses, the d-pad or left stick moves the highlight.
+button (and reads signs), **Triangle** the map, **Start** pauses, the d-pad or left stick moves
+the highlight. Any of Cross, Circle, Square, Triangle or Start closes a sign. In the list of
+players, **Square** makes a new player and **Triangle** deletes the highlighted one.
+
+**Options → Extras → Fit the picture on a TV** shows the picture a little smaller, for a TV
+that cuts off its edges (most older and CRT TVs).
 
 ## 3. Play it on the PS3
 
@@ -91,6 +98,8 @@ folder) can switch on the same testing aids as on the computer, one per line:
     MM_DEBUG_VIRTUAL_PADS=2        # pretend controllers for the empty player slots
     MM_PS3_DEBUG_PADS=1            # log every change on the controllers
     MM_PS3_DEBUG_FRAMES=1          # log the time of every frame
+    MM_PS3_OVERSCAN=10             # "Fit the picture on a TV" makes it 10% smaller (7 if not set)
+    MM_LOBBY=192.168.1.20:47480    # another lobby server (a test one on your network)
 
 Lines starting with `#` are ignored. The log lists the settings it read at the top. Delete
 the file (or empty it) to play normally.
@@ -114,7 +123,8 @@ Deleting the game from the XMB deletes its saves too.
 
   `make ... elf` builds only the program, `make ... gltest` a test picture for the drawing
   (`platform/ps3/gltest/gltest.c`). The package step uses PSL1GHT's `pkg.py` patched on the
-  fly: as shipped it takes hours for the game's 120,000 files.
+  fly (as shipped it takes hours for a package this size). The XMB icon, background and sound
+  (`ICON0.PNG`, `PIC1.PNG`, `SND0.AT3`) are Thom's, made from the files in `platform/ps3/xmb/`.
 - **Drawing**: the game keeps calling the same OpenGL it calls on the Mac and Linux. On the
   PS3, `src/swx/BKGL.h` includes `src/ps3/PS3GL.h` instead of OpenGL, and `src/ps3/PS3GL.c`
   draws those calls with the RSX (librsx, four small Cg shaders in `src/ps3/shaders`). The
@@ -131,4 +141,20 @@ Deleting the game from the XMB deletes its saves too.
 - **The RSX command buffer** is ours (1 MB), and PS3GL.c makes room before each group of
   commands: librsx's buffer-full callback can't be used (the code around it keeps writing at
   the old position, over the jump back).
+- **Render targets**: textures the RSX draws into (copies of the screen, framebuffer objects)
+  get memory of their own (a 64 MB arena in PS3GL.c), cleared by the RSX. RPCS3 keeps render
+  targets on the host's graphics card and kept showing old ones when that memory was reused
+  for ordinary images: the flickering and black rooms of the first builds. The real PS3 was
+  never affected.
+- **Mansions are packed**: `platform/ps3/pack_mansions.py` turns each mansion folder into one
+  `Mansion.pack` when the package is made, and `src/ps3/PS3Files.c` (through macros the game's
+  files see) opens, lists and looks up the files inside as if they were still there. The
+  package went from 122,000 files to about 640.
+- **Network**: `src/ps3/PS3Net.c` fills in what PSL1GHT's network library lacks (select,
+  fcntl, getaddrinfo, getifaddrs); the network starts with the first socket. The build uses
+  `-ffp-contract=off` so a PS3 computes relay co-op's frames as a PC does. Still to do (roadmap
+  step 6): the same sin/cos/atan on every platform, and a checksum that reports a desync.
+- **Big-endian files**: the settings file wrote 4 bytes of 8-byte variables, which on the PS3
+  were the empty half (the player was forgotten at every start); folder listings report the
+  system's own file types, which PS3Files.c turns into the standard ones.
 - **Testing in a cloud session**: see "Testing the PS3 version" in `CLAUDE.md`.

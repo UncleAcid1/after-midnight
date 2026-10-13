@@ -172,8 +172,9 @@ on macOS, and in `~/.local/share/ActionSoft/Midnight Mansion/` on Linux. More in
 
 ### PS3 (work in progress)
 
-A PS3 version is on its way: GitHub Actions builds an installable package on every push, and
-the title screen, the menus and the mansions already run in the RPCS3 emulator. See **[docs/PS3.md](docs/PS3.md)**.
+A PS3 version is on its way: GitHub Actions builds an installable package on every push. It
+runs on a real PS3 (custom firmware) and in the RPCS3 emulator, with LAN and online play
+against the computer versions. See **[docs/PS3.md](docs/PS3.md)**.
 
 ## Controls
 
