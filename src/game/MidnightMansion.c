@@ -602,6 +602,9 @@ void StartUpGameCarbon(void)
     StartOpeningMusic(true);
     SetUpActionSoftScreen();
     LoadAndSetupSounds(0x10, 7, 0x4f, GetSoundsFolderPath());
+#ifdef MM_PS3
+    PS3LogMemory("sounds loaded");
+#endif
     gOpeningMusicRefNum = GetCurrentMusicReference();
     StartMicrosecTimer();
     DoGameFadeToNormal(0);
@@ -622,6 +625,9 @@ void StartUpGameCarbon(void)
     SWSetCleanUpSpriteWorld(gSpriteWorldP);
     ChangeSplashScreenLoadingText(0);
     SetUpTiling();
+#ifdef MM_PS3
+    PS3LogMemory("tiles set up");
+#endif
     if (WasGameQuit())
         return;
     ChangeSplashScreenLoadingText(1);
@@ -640,6 +646,9 @@ void StartUpGameCarbon(void)
     InitGamePad();
     InitControllers();
     printf("About to show title screen.\n");
+#ifdef MM_PS3
+    PS3LogMemory("title screen");
+#endif
     SetUpTitleScreen();
     UpdateMenuBar();
     DebugAutoStart();
@@ -990,8 +999,14 @@ void StartGameNoEditor(void)
         int n = strchr(split, ':') != NULL ? atoi(strchr(split, ':') + 1) : 2;
         Boolean relay = strncmp(split, "relay", 5) == 0;
         SetMultiplayerPlayers(n, NULL, NULL, !relay);
-        if (!relay)
+        if (!relay) {
+#ifdef MM_PS3
+            static const int kPads[] = { kSplitInputPad1, kSplitInputPad2, kSplitInputPad3, kSplitInputPad4 };
+            SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, kPads);
+#else
             SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, NULL);
+#endif
+        }
     }
 
     if (startRoom != NULL && levelResID != -1)
@@ -1012,6 +1027,9 @@ void StartGame(short levelResID, short levelNumber, Boolean unused)
 {
     SW_UNUSED(levelResID);
     SW_UNUSED(unused);
+#ifdef MM_PS3
+    PS3LogMemory("a game starts");
+#endif
     LoadRestOfGAMEResource();
     DisposeTitleScreenSprites();
     StopAndDisposeMusic();

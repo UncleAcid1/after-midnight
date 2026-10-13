@@ -250,6 +250,12 @@ SWError SWUpdateFrame(FramePtr srcFrameP)
             if (srcFrameP->frameSurfaceP != NULL)
                 SDL_FreeSurface(srcFrameP->frameSurfaceP);
             srcFrameP->frameSurfaceP = converted;
+                // the converted copy is all that's used from now on: the original goes
+                // (a frame sharing a sprite sheet has none of its own)
+            if (!srcFrameP->sharesSurface) {
+                SDL_FreeSurface(orig);
+                srcFrameP->originalSurfaceP = NULL;
+            }
         }
     }
 

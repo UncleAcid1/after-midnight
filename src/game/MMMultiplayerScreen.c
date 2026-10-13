@@ -345,6 +345,10 @@ void EnterMultiplayerScreen(void)
         gMP.inputs[2] = kSplitInputPad2;
         gMP.inputs[3] = kSplitInputPad3;
         LoadLobby();
+#ifdef MM_PS3
+        for (i = 0; i < kMaxPlayers; i++)       // no keyboard: player n has controller n
+            gMP.inputs[i] = kSplitInputPad1 + i;
+#endif
     }
         // player 1 is whoever is signed in
     SWCopyPascalStringToCString((ConstStringPtr)gCurrentPlayerName, name);
@@ -499,6 +503,10 @@ static int NextFreeInput(int player, int from)
 
     for (tries = 0, input = from; tries < kNumSplitInputs; tries++) {
         input = (input + 1) % kNumSplitInputs;
+#ifdef MM_PS3
+        if (input < kSplitInputPad1)            // no keyboard on the PS3
+            continue;
+#endif
         for (i = 0; i < gMP.numPlayers && (i == player || gMP.inputs[i] != input); i++)
             ;
         if (i == gMP.numPlayers)
@@ -1525,7 +1533,11 @@ static void DrawPlayerRow(const Row *r, Boolean focused, float alpha)
              alpha * (gMP.profiles[p][0] || f > 0 ? 1.0f : 0.6f));
     }
     if (focused && gMP.field > 0)
+#ifdef MM_PS3
+        Text(gMP.font, 12, "Cross: change", kWindowRight - 36, r->top + 12, 2, 0.8f, 0.8f, 0.7f, alpha * 0.7f);
+#else
         Text(gMP.font, 12, "Return / A: change", kWindowRight - 36, r->top + 12, 2, 0.8f, 0.8f, 0.7f, alpha * 0.7f);
+#endif
 }
 
 static void DrawWindow(float alpha)
@@ -1582,8 +1594,12 @@ static void DrawWindow(float alpha)
     }
     if (gMP.view == kViewLobby && ModeIsSplit())
         WrappedText(gMP.font, 13,
+#ifdef MM_PS3
+                    "Press Cross on a controller that isn't playing to add a player.",
+#else
                     "Controllers: press A on one that isn't playing to add a player. Keyboards: arrows, Space, Return "
                     "and M; or W A S D, F to jump, G for action and Tab for the map.",
+#endif
                     kWindowLeft + 40, kWindowBottom - 62, kWindowRight - kWindowLeft - 80, 17, 0.75f, 0.72f, 0.64f,
                     alpha * 0.8f);
 }
@@ -1637,7 +1653,11 @@ static void MultiplayerScreenPostDraw(SpriteWorldPtr w)
         Frame(kBackLeft - 3, kBackTop - 3, kBackRight + 3, kBackBottom + 3, 3, 0.86f, 0.68f, 0.30f,
               alpha * (0.65f + 0.35f * Pulse()));
     Text(gMP.font, 24, "Back", (kBackLeft + kBackRight) / 2, kBackTop + 39, 1, 1.0f, 0.95f, 0.8f, alpha);
+#ifdef MM_PS3
+    Text(gMP.font, 14, "D-pad to move    Cross to choose    Circle to go back", 640, 930, 1, 0.8f,
+#else
     Text(gMP.font, 14, "Arrows / D-pad to move    Return / A to choose    Escape / B to go back", 640, 930, 1, 0.8f,
+#endif
          0.82f, 0.9f, alpha * 0.75f);
     if (gMP.message[0] && SDL_GetTicks() < gMP.messageUntil)
         Text(gMP.font, 18, gMP.message, (kWindowLeft + kWindowRight) / 2, kWindowBottom + 36, 1, 1.0f, 0.75f, 0.5f,

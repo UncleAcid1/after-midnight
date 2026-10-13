@@ -17,6 +17,8 @@
 #define kMenuRepeatRate     110
 
 static SDL_GameController *gControllers[4];
+static SDL_JoystickID gPretendIDs[4];       // MM_DEBUG_VIRTUAL_PADS's controllers
+static int gNumPretend = 0;
 static int gNumControllers = 0;
 static int gMenuPresses = 0;
 static Boolean gPadHeld[16];
@@ -57,9 +59,12 @@ void InitControllers(void)
     if (!SDL_WasInit(SDL_INIT_GAMECONTROLLER))
         SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
         // testing aid: MM_DEBUG_VIRTUAL_PADS=<n> plugs in n pretend controllers (DebugVirtualPadKey)
-    for (i = 0; virtualPads != NULL && i < atoi(virtualPads) && i < 4; i++)
-        SDL_JoystickAttachVirtual(SDL_JOYSTICK_TYPE_GAMECONTROLLER, SDL_CONTROLLER_AXIS_MAX,
-                                  SDL_CONTROLLER_BUTTON_MAX, 0);
+    for (i = 0; virtualPads != NULL && i < atoi(virtualPads) && i < 4; i++) {
+        int device = SDL_JoystickAttachVirtual(SDL_JOYSTICK_TYPE_GAMECONTROLLER, SDL_CONTROLLER_AXIS_MAX,
+                                               SDL_CONTROLLER_BUTTON_MAX, 0);
+        if (device >= 0)
+            gPretendIDs[gNumPretend++] = SDL_JoystickGetDeviceInstanceID(device);
+    }
     for (i = 0; i < SDL_NumJoysticks() && gNumControllers < 4; i++) {
         if (SDL_IsGameController(i)) {
             SDL_GameController *pad = SDL_GameControllerOpen(i);
@@ -71,12 +76,25 @@ void InitControllers(void)
         SWSetPostDrawCallBack(gSpriteWorldP, ExtrasPostDraw);
 }
 
+static Boolean IsPretend(SDL_GameController *pad)
+{
+    SDL_JoystickID id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad));
+    int i;
+
+    for (i = 0; i < gNumPretend; i++)
+        if (gPretendIDs[i] == id)
+            return true;
+    return false;
+}
+
+/// A controller plugged in. A real one goes before the pretend ones (MM_DEBUG_VIRTUAL_PADS),
+/// taking the last one's place when all four are in use: the pretend ones fill idle players.
 static void AddController(int deviceIndex)
 {
     SDL_GameController *pad;
-    int i;
+    int i, at;
 
-    if (!SDL_IsGameController(deviceIndex) || gNumControllers >= 4)
+    if (!SDL_IsGameController(deviceIndex))
         return;
     pad = SDL_GameControllerOpen(deviceIndex);
     if (pad == NULL)
@@ -84,7 +102,22 @@ static void AddController(int deviceIndex)
     for (i = 0; i < gNumControllers; i++)
         if (gControllers[i] == pad)
             return;
-    gControllers[gNumControllers++] = pad;
+    if (IsPretend(pad)) {
+        if (gNumControllers < 4)
+            gControllers[gNumControllers++] = pad;
+        return;
+    }
+    for (at = 0; at < gNumControllers && !IsPretend(gControllers[at]); at++)
+        ;
+    if (gNumControllers >= 4) {
+        if (at >= 4)
+            return;                     // four real ones already
+        gNumControllers--;              // the last pretend one makes room
+    }
+    for (i = gNumControllers; i > at; i--)
+        gControllers[i] = gControllers[i - 1];
+    gControllers[at] = pad;
+    gNumControllers++;
 }
 
 static void RemoveController(SDL_JoystickID id)

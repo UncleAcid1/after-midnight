@@ -30,6 +30,8 @@ const char *PS3SaveFolder(void);
 /// Reads the controllers into SDL's virtual game controllers. Called (through the macros
 /// below) whenever the game asks SDL for events, so all of SDL stays on the game's thread.
 void PS3ReadControllers(void);
+/// Free memory and the heap in use, in the log.
+void PS3LogMemory(const char *when);
 
 void PS3_PumpEvents(void);
 int  PS3_PollEvent(SDL_Event *event);

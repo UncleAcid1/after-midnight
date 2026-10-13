@@ -102,6 +102,9 @@ SDL_Surface *BKLoadSurface(const char *filename)
     free(data);
     if (pixels == NULL) {
         fprintf(stderr, "IMG_Load %s: %s\n", filename, stbi_failure_reason());
+#ifdef MM_PS3
+        PS3LogMemory("an image didn't load");
+#endif
         SDL_SetError("%s", stbi_failure_reason());
         return NULL;
     }

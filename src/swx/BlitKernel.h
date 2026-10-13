@@ -21,13 +21,14 @@ extern "C" {
 typedef struct BKGLSurface BKGLSurface;
 #endif
 struct BKGLSurface {
-    SDL_Surface *surface;       ///< RGBA copy of the pixels (kept for pixel tests / reloads)
+    SDL_Surface *surface;       ///< NULL once uploaded: the texture has the pixels (saves memory)
     int          ownsSurface;
     GLuint       texture;
     int          width;         ///< size of the drawn quad in pixels
     int          height;
     int          needsBlend;    ///< source had an alpha channel or color key
     int          flipV;         ///< texture rows run bottom-up (copied from the framebuffer)
+    int          opaqueX, opaqueY, opaqueW, opaqueH;    ///< the visible part (alpha > 96), in pixels
 };
 
 // ---- SDL surface utilities -------------------------------------------------

@@ -213,60 +213,13 @@ void UpdateExtrasOptionDescription(SpriteLayerPtr layerP, int tab)
 // ---------------------------------------------------------------------------
 // Drawn over every frame: the controller's highlight box
 
-/// The part of a frame that isn't transparent, in frame pixels (cached per frame).
-static SDL_Rect OpaqueBoundsOfFrame(FramePtr frameP)
-{
-    static FramePtr cachedFrames[64];
-    static SDL_Rect cachedBounds[64];
-    static int next = 0;
-    SDL_Surface *s;
-    SDL_Rect r = { 0, 0, 0, 0 };
-    int i, x, y, minX, minY, maxX = -1, maxY = -1;
-
-    if (frameP == NULL || frameP->glSurfaceP == NULL || frameP->glSurfaceP->surface == NULL)
-        return r;
-    for (i = 0; i < 64; i++)
-        if (cachedFrames[i] == frameP)
-            return cachedBounds[i];
-    s = frameP->glSurfaceP->surface;
-    minX = s->w;
-    minY = s->h;
-    if (SDL_LockSurface(s) == 0) {
-        for (y = 0; y < s->h; y++) {
-            const Uint8 *row = (const Uint8 *)s->pixels + y * s->pitch;
-            for (x = 0; x < s->w; x++) {
-                if (row[x * 4 + 3] > 96) {      // RGBA32: the bytes are R, G, B, A
-                    if (x < minX) minX = x;
-                    if (x > maxX) maxX = x;
-                    if (y < minY) minY = y;
-                    if (y > maxY) maxY = y;
-                }
-            }
-        }
-        SDL_UnlockSurface(s);
-    }
-    if (maxX >= minX && maxY >= minY) {
-        r.x = minX;
-        r.y = minY;
-        r.w = maxX - minX + 1;
-        r.h = maxY - minY + 1;
-    } else {
-        r.w = s->w;
-        r.h = s->h;
-    }
-    cachedFrames[next] = frameP;
-    cachedBounds[next] = r;
-    next = (next + 1) % 64;
-    return r;
-}
-
 /// The rect to box: the visible part of the button's image, plus a checkbox's label.
 static void FocusRect(SpritePtr spriteP, float *left, float *top, float *right, float *bottom)
 {
     ButtonSpritePtr buttonP = (ButtonSpritePtr)spriteP;
     SWRect *r = &spriteP->destFrameRect;
     FramePtr frameP = spriteP->curFrameP;
-    SDL_Rect opaque;
+    BKGLSurface *gls;
     float sx, sy;
 
     *left = r->left;
@@ -274,15 +227,15 @@ static void FocusRect(SpritePtr spriteP, float *left, float *top, float *right, 
     *right = r->right;
     *bottom = r->bottom;
     if (buttonP->controlType == kCheckboxControl || frameP == NULL || frameP->glSurfaceP == NULL ||
-        frameP->glSurfaceP->surface == NULL)
+        frameP->glSurfaceP->width <= 0 || frameP->glSurfaceP->height <= 0 || frameP->glSurfaceP->opaqueW <= 0)
         return;
-    opaque = OpaqueBoundsOfFrame(frameP);
-    sx = (float)(r->right - r->left) / (float)frameP->glSurfaceP->surface->w;
-    sy = (float)(r->bottom - r->top) / (float)frameP->glSurfaceP->surface->h;
-    *left = r->left + opaque.x * sx;
-    *top = r->top + opaque.y * sy;
-    *right = *left + opaque.w * sx;
-    *bottom = *top + opaque.h * sy;
+    gls = frameP->glSurfaceP;       // its visible part was measured when it was made
+    sx = (float)(r->right - r->left) / (float)gls->width;
+    sy = (float)(r->bottom - r->top) / (float)gls->height;
+    *left = r->left + gls->opaqueX * sx;
+    *top = r->top + gls->opaqueY * sy;
+    *right = *left + gls->opaqueW * sx;
+    *bottom = *top + gls->opaqueH * sy;
 }
 
 static void DrawControllerFocusBox(SpriteWorldPtr w)

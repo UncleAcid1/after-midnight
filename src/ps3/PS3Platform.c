@@ -39,6 +39,8 @@
 #include <sys/tty.h>
 #include <sysutil/sysutil.h>
 #include <unistd.h>
+#include <malloc.h>
+#include <ppu-lv2.h>
 
 SYS_PROCESS_PARAM(1001, 0x100000)   // main thread: normal priority, 1 MB of stack
 
@@ -135,6 +137,19 @@ static void ReadSettings(const char *path)
         printf("  %s=%s\n", name, eq + 1);
     }
     fclose(f);
+}
+
+/// The PS3's free main memory (of 256 MB) and the game's heap, in the log.
+void PS3LogMemory(const char *when)
+{
+    struct { u32 total, available; } info = { 0, 0 };
+    struct mallinfo heap = mallinfo();
+
+    {
+        lv2syscall1(352, (u64)&info);       // sys_memory_get_user_memory_size
+    }
+    printf("Memory (%s): %u KB free of %u KB; heap %u KB in use\n", when, info.available / 1024,
+           info.total / 1024, (unsigned)heap.uordblks / 1024);
 }
 
 void PS3PlatformInit(int argc, char *argv[])
@@ -493,6 +508,19 @@ void PS3_GL_SwapWindow(SDL_Window *window)
     }
     if (++frames < 4 || getenv("MM_PS3_DEBUG_FRAMES") != NULL)     // testing aid: every frame's time
         printf("Frame %u at %u ms\n", (unsigned)frames, (unsigned)now);
+    if (frames % 1800 == 0)
+        PS3LogMemory("every 1800 frames");
+    {       // the frame rate, every 10 seconds, for reports from a real PS3
+        static Uint32 since = 0, sinceFrames = 0;
+        if (since == 0) {
+            since = now;
+            sinceFrames = frames;
+        } else if (now - since >= 10000) {
+            printf("Frame rate: %.1f per second\n", (frames - sinceFrames) * 1000.0 / (now - since));
+            since = now;
+            sinceFrames = frames;
+        }
+    }
     PS3GLSwap();
         // "Fit the picture on a TV" (Extras), from the next frame: 7% smaller, or
         // MM_PS3_OVERSCAN percent in the settings file
