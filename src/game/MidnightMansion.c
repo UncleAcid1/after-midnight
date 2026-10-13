@@ -1375,6 +1375,10 @@ void SetStartingNumLives(void)
 /// 90 lives in the first mansion on the easiest difficulty, otherwise 6.
 short GetStartingNumLives(char difficulty)
 {
+    const char *lives = getenv("MM_DEBUG_LIVES");      // testing aid: start with this many
+
+    if (lives != NULL && atoi(lives) > 0)
+        return (short)atoi(lives);
     if (gCurrentMansionNumber == 0 && difficulty == 0)
         return 90;
     return 6;

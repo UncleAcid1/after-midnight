@@ -318,11 +318,23 @@ static void ComputeRanges(Split *s)
     s->imageSize = offset;
 }
 
+#if defined(__SANITIZE_ADDRESS__)
+/*  AddressSanitizer builds (for finding bugs): the globals are copied whole, the guard
+    bytes it puts between them too, which it would report. */
+__attribute__((no_sanitize_address)) static void CopyBytes(unsigned char *to, const unsigned char *from, size_t n)
+{
+    while (n-- > 0)
+        *to++ = *from++;
+}
+#else
+#define CopyBytes(to, from, n) memcpy((to), (from), (n))
+#endif
+
 static void SaveGlobals(unsigned char *image)
 {
     int i;
     for (i = 0; i < gSplit->numRanges; i++)
-        memcpy(image + gSplit->ranges[i].offset, gSplit->ranges[i].addr, gSplit->ranges[i].size);
+        CopyBytes(image + gSplit->ranges[i].offset, gSplit->ranges[i].addr, gSplit->ranges[i].size);
 }
 
 static void LoadGlobals(const unsigned char *image)
@@ -330,7 +342,7 @@ static void LoadGlobals(const unsigned char *image)
     Split *s = gSplit;      // the pointer itself is shared, but keep it in a register anyway
     int i;
     for (i = 0; i < s->numRanges; i++)
-        memcpy(s->ranges[i].addr, image + s->ranges[i].offset, s->ranges[i].size);
+        CopyBytes(s->ranges[i].addr, image + s->ranges[i].offset, s->ranges[i].size);
 }
 
 void MMMixerShareState(void (*share)(void *, size_t));

@@ -954,7 +954,7 @@ SDL_JoystickID ControllerLastPadID(void)
 }
 
 /// Testing aid (MM_DEBUG_VIRTUAL_PADS): keys press the pretend controllers' buttons. Pad 1:
-/// J/L left/right, I up, K down, U A, O B; pad 2: the same on the number row 4/6/8/5/7/9.
+/// J/L left/right, I up, K down, U A, O B, H X, Y Y; pad 2: the number row 4/6/8/5/7/9, 3 X, 0 Y.
 /// Returns true if the key was one of these.
 Boolean DebugVirtualPadKey(const SDL_Event *event)
 {
@@ -965,6 +965,8 @@ Boolean DebugVirtualPadKey(const SDL_Event *event)
         { SDLK_4, 1, SDL_CONTROLLER_BUTTON_DPAD_LEFT }, { SDLK_6, 1, SDL_CONTROLLER_BUTTON_DPAD_RIGHT },
         { SDLK_8, 1, SDL_CONTROLLER_BUTTON_DPAD_UP }, { SDLK_5, 1, SDL_CONTROLLER_BUTTON_DPAD_DOWN },
         { SDLK_7, 1, SDL_CONTROLLER_BUTTON_A }, { SDLK_9, 1, SDL_CONTROLLER_BUTTON_B },
+        { SDLK_y, 0, SDL_CONTROLLER_BUTTON_Y }, { SDLK_h, 0, SDL_CONTROLLER_BUTTON_X },
+        { SDLK_0, 1, SDL_CONTROLLER_BUTTON_Y }, { SDLK_3, 1, SDL_CONTROLLER_BUTTON_X },
     };
     size_t i;
 
