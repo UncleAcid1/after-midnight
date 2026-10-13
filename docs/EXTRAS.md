@@ -49,6 +49,14 @@ the keyboard.
 Rumble: a tap for keys and treasure, a heavy rumble for doors opening and blocks falling, a
 jolt when Jack dies.
 
+**Controllers** (Options → Controls → Controllers..., or the Multiplayer lobby): each controller
+plugged in, by name (its line lights up while it's used); which one runs the menus and plays
+alone (controller 1 unless another is chosen, or any controller); the buttons for jump, action,
+map, jump left and jump right (choose one, then press the button; a button belongs to one action;
+Start always pauses, and in menus A chooses and B goes back); rumble. Kept in
+`Midnight Mansion HD Controllers.txt` next to the preferences. Only that controller moves the
+menus; in multiplayer games each player's own controls play (see below).
+
 ## Multiplayer
 
 **Multiplayer** on the title screen lifts the view off the mansion into the night sky (the
@@ -66,13 +74,15 @@ wood-panelled window lists the games:
 automatically), **Host a game** and **Join by address**. A new game opens the lobby: who plays
 (2-4 players), each with a profile, a character and (split screen) their controls; then
 **Choose a mansion** (difficulty and mansion as usual) or **Custom mansion**. The lobby is
-remembered in `Multiplayer.txt` next to the preferences. Mouse, keyboard and controllers all
-work; in the lobby, A on a controller that isn't playing yet adds it as a player.
+remembered in `Multiplayer.txt` next to the preferences. Mouse, keyboard and the menus'
+controller all work. **Add a player** asks for their controls (the keyboard, or each controller
+by name), then their profile; a player's controls field opens the same list. **Controllers...**
+opens the Controllers menu.
 
 | Game | Players | Where |
 |---|---|---|
 | Co-op | 2-4 take turns | one computer, or two |
-| Arcade Split Screen | 2-4 at once, split screen, one shared mansion | one computer |
+| Arcade Split Screen | 2-4 at once, one shared mansion | split screen, or 2-4 computers |
 | Ghost Race | 2-4 at once, a race, each in their own copy of the mansion | split screen, or 2-4 computers |
 
 Characters: **Jack**, **Henry**, **Jack 2** and **Henry 2**; players 1-4 start as those, and
@@ -88,7 +98,9 @@ Smoke in multiplayer turns it off) and tolls a bell at 40% volume: `extras/Sound
 ### Relay co-op
 
 Everyone shares the mansion and the lives. When the player whose turn it is dies, the next
-player comes in. The status bar shows "Player N" above the score; the bottom right of the play
+player comes in. On one computer each player has controls (the keyboard or a controller; one
+controller can be passed round): only the controls of the player whose turn it is move Jack and
+rumble. The status bar shows "Player N" above the score; the bottom right of the play
 area and the banner when the turn changes use the player's profile name ("Ann's turn!").
 Mansion Complete shows each player's share of the loot.
 
@@ -113,14 +125,18 @@ Controls are per player, and nobody's input reaches anyone else's game:
 
 Escape, P or Start pauses everyone (Resume / Quit to title). Each player's map opens in their
 own view and shows the other players' heads (tinted in their colour) with their names.
-Save statues bring the player back there; in Arcade Split Screen they also save the team's game
-(see Saved games below). Signs open over your own view; the other players stay where they are,
+Save statues give the lives back and bring the player back there (no question asked: the
+others are playing); in Arcade Split Screen they also save the team's game (see Saved games
+below). Signs open over your own view; the other players stay where they are,
 under the sign.
 
 **Arcade Split Screen**: one mansion for the team. Each player runs their own copy of the room
 they are in, so whatever one player does to the mansion is passed to the others standing in that
 room and done in their copy too: levers, brick switches, doors unlocked with a key, enemies
-killed, blocks that start to fall; gold and silver floors switch for everyone. Keys, treasure,
+killed, blocks that start to fall; gold and silver floors switch for everyone. What moves by
+itself (platforms, falling blocks, trap doors, enemies, zappers) is kept the same in every copy:
+the player who has been in the room longest keeps it, and the others' copies start each frame
+from the keeper's (`src/game/MMRoomSync.c`), so the enemies follow the keeper's copy. Keys, treasure,
 secrets and the score are shared; treasure one player takes vanishes for the others with a puff
 of smoke; the status bars all show the team's items. Lives are each player's own: whoever runs
 out sits out (their view says so) and the others play on. Anyone reaching the exit wins it for
@@ -166,6 +182,13 @@ the Fun tab is locked until the game ends.
 Ghost Race: each computer plays its own copy of the mansion, full window, and sends where
 its player is every frame; the other players show as ghosts (and on the map), with their
 times over the view. Results when everyone is done.
+
+Arcade Split Screen: as the race, one player per computer, and the team's game is shared: each
+computer sends what its player collects or puts back, the events done, the rooms explored, lit
+and mapped, the changes to the score, secrets and items (kMsgTeam), and the levers, switches,
+doors, enemies and falling blocks; the keeper of a room sends its snapshot to the players in it
+elsewhere a few times a second (kMsgRoomSnap), written field by field so a PS3 and a PC agree.
+Anyone reaching the exit wins it for the team. (No team saves on several computers yet.)
 
 ### Online
 
@@ -221,7 +244,12 @@ gone (it comes back when the group does).
 |---|---|
 | `MM_DEBUG_START_ROOM=<resID>` | New games start in that room |
 | `MM_DEBUG_AUTOSTART=<n>` | Starts standard mansion n (0 Hint House, 1 Falcon Manor...) on Normal straight away |
-| `MM_DEBUG_SPLIT=<game>:<players>` | With it: `coop:2`, `race:4`, `relay:3`... (no profiles needed) |
+| `MM_DEBUG_SPLIT=<game>:<players>` | With it: `coop:2`, `race:4`, `relay:3`... (no profiles needed); `coop:2:pads` plays on controllers 1, 2... |
+| `MM_DEBUG_VIRTUAL_PADS=<n>` | n pretend controllers: pad 1 is J L I K (d-pad), U (A), O (B), H (X), Y (Y); pad 2 the number row 4 6 8 5, 7, 9, 3, 0 |
+| `MM_DEBUG_LIVES=<n>` | Every game starts with n lives |
+| `MM_DEBUG_NET=host:<mode>` / `join:<address>` | With AUTOSTART, hosts a game on the network (mode 0 Co-op, 1 Ghost Race, 2 Arcade Split Screen); or joins one |
+| `MM_DEBUG_NET_START=<n>` | The host starts once n players are in |
+| `MM_DEBUG_NO_ROOM_SYNC=1` | Arcade Split Screen: each player's copy of a room runs on its own (to compare) |
 | `MM_DEBUG_CHEATS=1` | F6 loses a life (in a game on several computers, on the one with the turn, and the others follow); in split screen F5/F6 player 1 finishes/dies, F7/F8 player 2, F9/F10, F11/F12 |
 | `MM_OLD_MULTIPLAYER_DIALOG=1` | Multiplayer opens the old simple dialog instead of the screen |
 | `MM_DEBUG_PAD=1` | F5-F8 d-pad, F9 A, F10 B, F11 X, F12 Y (controller menus without a controller) |

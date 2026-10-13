@@ -112,6 +112,7 @@ folder) can switch on the same testing aids as on the computer, one per line:
     MM_DEBUG_AUTOSTART=0           # start the first mansion (Normal) straight away
     MM_DEBUG_SPLIT=coop:2          # with AUTOSTART: split screen co-op for 2 (or race:2, coop:4)
     MM_DEBUG_VIRTUAL_PADS=2        # pretend controllers for the empty player slots
+    MM_DEBUG_LIVES=99              # start every game with 99 lives
     MM_PS3_DEBUG_PADS=1            # log every change on the controllers
     MM_PS3_DEBUG_FRAMES=1          # log the time of every frame
     MM_PS3_OVERSCAN=10             # "Fit the picture on a TV" makes it 10% smaller (7 if not set)
