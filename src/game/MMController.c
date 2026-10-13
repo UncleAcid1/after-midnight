@@ -32,6 +32,7 @@ static Boolean gVirtualButton = false;
 static SpritePtr gFocusP = NULL;
 Boolean gControllerMenuAlt = false;
 Boolean gControllerMenuAlt2 = false;
+int gControllerTabStep = 0;     // L1 / R1 outside a list: -1 / +1 (the Options dialog's tabs)
 static Boolean gListMode = false;
 
 /// In a scrolling list, up/down (and the shoulders) move through the list as the arrow
@@ -598,6 +599,10 @@ Boolean ControllerOverridesMouse(SWPoint *pointP, Boolean *buttonP)
         gControllerMenuAlt = true;
     if (presses & kPadAlt2)
         gControllerMenuAlt2 = true;
+    if (!gListMode && (presses & kPadPageUp))
+        gControllerTabStep = -1;
+    if (!gListMode && (presses & kPadPageDown))
+        gControllerTabStep = 1;
 
     ButtonCenter(gFocusP, &h, &v);
         // button rects are in scrolled world coordinates; callers convert the pointer to those

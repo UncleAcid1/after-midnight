@@ -84,6 +84,9 @@ SpritePtr MyDrawCTextJustified(const char *text, MMTextStyleRec *style, SWRect *
  * With renderToSprite the lines are rendered once and captured as a single sprite;
  * otherwise each line becomes a text sprite. Either way they go into layerP.
  */
+static Boolean gTextBoxMeasureOnly = false;     // MeasureTextBox: lay out, draw nothing
+static short gTextBoxBottom;                    // and where the last line ended
+
 SpritePtr MyDrawTextBox(SpriteWorldPtr spriteWorldP, const char *text, MMTextStyleRec *style, SWRect *rectP,
                         SWRGBColor *color, SpriteLayerPtr layerP, Boolean renderToSprite)
 {
@@ -99,7 +102,9 @@ SpritePtr MyDrawTextBox(SpriteWorldPtr spriteWorldP, const char *text, MMTextSty
     Boolean done, lineDone;
     SWError err;
 
-    if (!renderToSprite) {
+    if (gTextBoxMeasureOnly) {
+        renderToSprite = false;
+    } else if (!renderToSprite) {
         style->style = 0;
     } else {
         SW_ASSERT(spriteWorldP != NULL);
@@ -177,6 +182,11 @@ SpritePtr MyDrawTextBox(SpriteWorldPtr spriteWorldP, const char *text, MMTextSty
 drawLine:
         if (lineText[0] == '\0')
             break;
+        if (gTextBoxMeasureOnly) {
+            gTextBoxBottom = (short)(r.top + style->size / 3);
+            SWOffsetRect(&r, 0, lineSpacing);
+            continue;
+        }
         err = SWCreateTextSprite(&lineSpriteP, lineText, fontName, style->size, style->style, rgb,
                                  style->dropShadow);
         if (err == kNoError) {
@@ -201,6 +211,21 @@ drawLine:
         SWDisposeSpriteLayer(&tempLayerP);
     }
     return resultSpriteP;
+}
+
+/// How tall MyDrawTextBox's text would be in rectP's width (rectP's top to the last line's
+/// bottom, in the same units).
+short MeasureTextBox(const char *text, const MMTextStyleRec *style, const SWRect *rectP)
+{
+    MMTextStyleRec copy = *style;
+    SWRect rect = *rectP;
+    SWRGBColor color = { 0, 0, 0 };
+
+    gTextBoxMeasureOnly = true;
+    gTextBoxBottom = rect.top;
+    MyDrawTextBox(NULL, text, &copy, &rect, &color, NULL, false);
+    gTextBoxMeasureOnly = false;
+    return (short)(gTextBoxBottom - rectP->top);
 }
 
 /// Draws the world without the cursor, fade and top layers, at zoom 1, so that it

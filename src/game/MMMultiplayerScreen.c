@@ -1389,8 +1389,25 @@ static void WoodPanel(float x0, float y0, float x1, float y1, float brightness, 
 }
 
 /// Text with its baseline at y: justify 0 left, 1 centered, 2 right. Returns its width.
+/// "Larger text" (Extras): the small print grows (the titles stay as they are).
+static float Big(float size)
+{
+    if (!gExtras.largeText || size >= 20)
+        return size;
+    return size * 1.4f > 22 ? 22 : size * 1.4f;
+}
+
+static float TextAt(MMFont *font, float size, const char *text, float x, float y, int justify, float r, float g,
+                    float b, float a);
+
 static float Text(MMFont *font, float size, const char *text, float x, float y, int justify, float r, float g, float b,
                   float a)
+{
+    return TextAt(font, Big(size), text, x, y, justify, r, g, b, a);
+}
+
+static float TextAt(MMFont *font, float size, const char *text, float x, float y, int justify, float r, float g,
+                    float b, float a)
 {
     int face = (int)(size * gScale + 0.5f);
     float unit, width;
@@ -1419,8 +1436,13 @@ static float WrappedText(MMFont *font, float size, const char *text, float x, fl
 {
     char line[256], word[128];
     const char *p = text;
-    int face = (int)(size * gScale + 0.5f);
-    float unit = size / (float)(face < 6 ? 6 : face);
+    int face;
+    float unit;
+
+    lineHeight *= Big(size) / size;
+    size = Big(size);
+    face = (int)(size * gScale + 0.5f);
+    unit = size / (float)(face < 6 ? 6 : face);
 
     line[0] = 0;
     MMFontFaceSize(font, face < 6 ? 6 : face);
@@ -1436,7 +1458,7 @@ static float WrappedText(MMFont *font, float size, const char *text, float x, fl
             break;
         snprintf(trial, sizeof(trial), "%s%s%s", line, line[0] ? " " : "", word);
         if (line[0] && MMFontRenderWidth(font, trial) * unit > width) {
-            Text(font, size, line, x, y, 0, r, g, b, a);
+            TextAt(font, size, line, x, y, 0, r, g, b, a);
             y += lineHeight;
             snprintf(line, sizeof(line), "%s", word);
             MMFontFaceSize(font, face < 6 ? 6 : face);
@@ -1445,7 +1467,7 @@ static float WrappedText(MMFont *font, float size, const char *text, float x, fl
         }
     }
     if (line[0]) {
-        Text(font, size, line, x, y, 0, r, g, b, a);
+        TextAt(font, size, line, x, y, 0, r, g, b, a);
         y += lineHeight;
     }
     return y;
@@ -1496,10 +1518,14 @@ static void DrawModeCards(float alpha)
                   alpha * (selected || hovered ? 1.0f : 0.75f));
         Text(gMP.font, 19, kModes[i].tagline, kCardLeft + 28, top + 78, 0, 0.95f, 0.93f, 0.85f,
              alpha * (selected ? 1.0f : 0.7f));
-        WrappedText(gMP.font, 15, kModes[i].details, kCardLeft + 28, top + 104, kCardRight - kCardLeft - 56, 19,
-                    0.85f, 0.80f, 0.70f, alpha * (selected ? 0.95f : 0.55f));
-        Text(gMP.font, 14, kModes[i].badges, kCardRight - 22, bottom - 14, 2, 0.75f, 0.9f, 1.0f,
-             alpha * (selected ? 0.9f : 0.5f));
+            // with "Larger text" a card has room for the details or the badges, not both:
+            // the chosen card explains itself, the others say how many can play where
+        if (!gExtras.largeText || selected)
+            WrappedText(gMP.font, 15, kModes[i].details, kCardLeft + 28, top + 104, kCardRight - kCardLeft - 56, 19,
+                        0.85f, 0.80f, 0.70f, alpha * (selected ? 0.95f : 0.55f));
+        if (!gExtras.largeText || !selected)
+            Text(gMP.font, 14, kModes[i].badges, kCardRight - 22, bottom - 14, 2, 0.75f, 0.9f, 1.0f,
+                 alpha * (selected ? 0.9f : 0.5f));
     }
 }
 

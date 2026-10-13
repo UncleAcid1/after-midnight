@@ -164,6 +164,8 @@ void PS3GLSwap(void);
 /// Shows the picture this much smaller (0.05 is 5%), centered on black, for a TV that crops
 /// its edges (overscan); 0 fills the screen.
 void PS3GLSetOverscan(float fraction);
+/// A screen pixel's width / height on this TV (1 in HD modes, not in 480 and 576 modes).
+float PS3GLPixelAspect(void);
 /// For the log when the game seems stuck: what the graphics code is doing, and when the last
 /// frame was shown (SDL_GetTicks-style milliseconds, from PS3GLNow).
 extern volatile const char *gPS3GLDoing;

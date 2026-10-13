@@ -20,6 +20,7 @@ static CleanUpCallBackPtr gSWCleanUpCallBackP = NULL;
 
 SWPresentHookPtr    gSWPresentHook = NULL;
 SWBoolean           gSWForceFrames = false;
+SWBoolean           gSWSkipDrawing = false;     ///< run this frame without drawing it (catching up)
 
 static void SWDrawWorldContents(SpriteWorldPtr spriteWorldP);
 
@@ -413,6 +414,8 @@ void SWSetSpriteWorldZoom(SpriteWorldPtr spriteWorldP, float zoomH, float zoomV)
 
 /*  Works out how the world fits in a window of the given size: the largest area with the
     world's aspect ratio (or the whole window with stretchToFit), centered with bars. */
+float gSWPixelAspect = 1.0f;     ///< a screen pixel's width / height (not 1 on a PS3's SD TV modes)
+
 void SWCalculateViewport(SpriteWorldPtr w, int windowWidth, int windowHeight)
 {
     float scaleH = 1.0f, scaleV = 1.0f, aspect;
@@ -423,12 +426,12 @@ void SWCalculateViewport(SpriteWorldPtr w, int windowWidth, int windowHeight)
     if (w->designHeight != -1)
         scaleV = (float)windowHeight / (float)w->designHeight;
     aspect = (float)(w->screenRect.right - w->screenRect.left) / (float)(w->screenRect.bottom - w->screenRect.top);
-    if (aspect < (float)windowWidth / (float)windowHeight) {
-        scaledW = (short)(int)((float)windowHeight * aspect);
+    if (aspect < (float)windowWidth * gSWPixelAspect / (float)windowHeight) {
+        scaledW = (short)(int)((float)windowHeight * aspect / gSWPixelAspect);
         scaledH = (short)windowHeight;
     } else {
         scaledW = (short)windowWidth;
-        scaledH = (short)(int)((float)windowWidth / aspect);
+        scaledH = (short)(int)((float)windowWidth * gSWPixelAspect / aspect);
     }
     if (w->stretchToFit) {
         scaledW = (short)windowWidth;
@@ -1097,7 +1100,7 @@ void SWAnimateSpriteWorld(SpriteWorldPtr spriteWorldP)
 {
     SW_ASSERT(spriteWorldP != NULL);
     gSWCurrentSpriteWorld = spriteWorldP;
-    if (spriteWorldP->frameHasOccurred) {
+    if (spriteWorldP->frameHasOccurred && !gSWSkipDrawing) {
         if (spriteWorldP->deadSpriteLayerP->headSpriteP != NULL)
             SWAddSpriteLayer(spriteWorldP, spriteWorldP->deadSpriteLayerP);
         SWDrawWorldContents(spriteWorldP);
@@ -1106,6 +1109,8 @@ void SWAnimateSpriteWorld(SpriteWorldPtr spriteWorldP)
         if (spriteWorldP->deadSpriteLayerP->headSpriteP != NULL)
             SWRemoveSpriteLayer(spriteWorldP, spriteWorldP->deadSpriteLayerP);
     }
+    if (spriteWorldP->frameHasOccurred)
+        gSWSkipDrawing = false;         // for one frame only
     gSWCurrentSpriteWorld = NULL;
 }
 

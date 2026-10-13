@@ -184,6 +184,7 @@ extern SpritePtr gCurBackgroundSprite;
 void      MyDrawText(const char *text, MMTextStyleRec *style, short h, short v, SWRGBColor *color);
 SpritePtr MyDrawPascalTextJustified(ConstStringPtr text, MMTextStyleRec *style, SWRect *rectP, SWRGBColor *color);
 SpritePtr MyDrawCTextJustified(const char *text, MMTextStyleRec *style, SWRect *rectP, SWRGBColor *color);
+short MeasureTextBox(const char *text, const MMTextStyleRec *style, const SWRect *rectP);
 SpritePtr MyDrawTextBox(SpriteWorldPtr spriteWorldP, const char *text, MMTextStyleRec *style, SWRect *rectP,
                         SWRGBColor *color, SpriteLayerPtr layerP, Boolean renderToSprite);
 void      MMRenderSceneForWorkAreaSprite(SpriteWorldPtr spriteWorldP);

@@ -93,7 +93,8 @@ static int              gCurBuffer;
 static int              gFirstFlip = 1;
 static u32              gLabelValue = 1;
 static u32              gFrame = 1;
-static float            gOverscan;          // 0, or how much smaller the picture is shown
+static float            gOverscan;
+static float            gDisplayAspect = 16.0f / 9.0f;          // 0, or how much smaller the picture is shown
 static void            *gGameBuffer;        // with overscan the game draws here, not on screen
 static u32              gGameOffset;
 volatile const char    *gPS3GLDoing = "starting";
@@ -1580,7 +1581,15 @@ static int SetUpVideo(void)
         return -1;
     gScreenW = res.width;
     gScreenH = res.height;
+        // the TV's shape (the XMB's TV settings): SD modes have pixels that aren't square
+    gDisplayAspect = state.displayMode.aspect == VIDEO_ASPECT_4_3 ? 4.0f / 3.0f : 16.0f / 9.0f;
+    printf("PS3GL: TV %ux%u, %s\n", gScreenW, gScreenH, state.displayMode.aspect == VIDEO_ASPECT_4_3 ? "4:3" : "16:9");
     return 0;
+}
+
+float PS3GLPixelAspect(void)
+{
+    return gScreenW > 0 && gScreenH > 0 ? gDisplayAspect / ((float)gScreenW / (float)gScreenH) : 1.0f;
 }
 
 int PS3GLInit(void)

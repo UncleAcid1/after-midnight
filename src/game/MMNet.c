@@ -1534,8 +1534,10 @@ Boolean NetMustWait(void)
         NetPeerLeftDuringGame();
         return true;
     }
-        // catch up a little faster when frames have piled up
-    SWSetSpriteWorldMaxFPS(gSpriteWorldP, gNet.queueCount > 6 ? 90 : 60);
+        // frames have piled up (the driver's computer runs a little faster, or this one
+        // stalled): play them faster, drawing only some. A PS3 can't show more than its
+        // TV's 59.94 pictures a second, so only skipping pictures lets it catch up.
+    SWSetSpriteWorldMaxFPS(gSpriteWorldP, gNet.queueCount > 6 ? 240 : gNet.queueCount > 3 ? 120 : 60);
     if (gNet.queueCount > 0) {
         gNet.waitStart = 0;
         return false;
@@ -1642,6 +1644,11 @@ void NetFrameBegin(void)
             gNet.queueCount--;
             if (f->frame < gNet.frame)
                 continue;           // from before a turn change: already played
+            {       // behind: this frame isn't drawn (one in two, or four in five far behind)
+                static int skipped = 0;
+                gSWSkipDrawing = gNet.queueCount > 3 && skipped < (gNet.queueCount > 12 ? 4 : 1);
+                skipped = gSWSkipDrawing ? skipped + 1 : 0;
+            }
             if (f->hasCheck) {
                 Uint32 here = GameStateChecksum();
                 if (here != f->check) {

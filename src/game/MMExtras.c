@@ -42,6 +42,10 @@ static const ExtrasOption kFunOptions[] = {
       "Starting a new game plays the Out of This World guard instead of the evil laugh.", &gExtras.myTuba },
 };
 
+#ifdef MM_PS3
+static char gTVSizeLabel[48] = "Picture size: whole screen";     // (changes with the size)
+#endif
+
 static const ExtrasOption kExtrasOptions[] = {
     { "arcade_menu", "Centered main menu",
       "Centers the main menu text, like an arcade cabinet.", &gExtras.arcadeMenu },
@@ -51,18 +55,80 @@ static const ExtrasOption kExtrasOptions[] = {
       "A tap for keys and gems, a heavy rumble for doors and boulders, a jolt when Jack dies.", &gExtras.rumble },
     { "multiplayer_smoke", "Smoke in multiplayer",
       "In multiplayer games a cloud of smoke bursts out where a player dies.", &gExtras.multiplayerSmoke },
+    { "large_text", "Larger text",
+      "Bigger small print: the menus' smaller text, the multiplayer screens, whose turn it is, and signs.",
+      &gExtras.largeText },
 #ifdef MM_PS3
-    { "tv_safe", "Fit the picture on a TV",
-      "Shows the picture a little smaller, for a TV that cuts off its edges (most older and CRT TVs).",
+    { "tv_safe", gTVSizeLabel,
+      "For a TV that cuts off the picture's edges (most older and CRT TVs): press Cross to make the "
+      "picture smaller, step by step, until all of it shows. Options: Stretch to fit fills the screen.",
       &gExtras.tvSafe },
 #endif
 };
 
 #ifdef MM_PS3
-/// For PS3Platform.c, which draws the picture smaller when this is on.
-int PS3ExtrasTVSafe(void)
+// "Picture size" (Extras): how much smaller the picture is shown, in percent (0: all the screen)
+static const int kTVSizes[] = { 0, 3, 5, 7, 10, 13, 16, 20 };
+static int gTVSizePercent = 0, gTVSizeAtOpen = 0;
+
+static void UpdateTVSizeLabel(void)
 {
-    return gExtras.tvSafe;
+    if (gTVSizePercent == 0)
+        snprintf(gTVSizeLabel, sizeof(gTVSizeLabel), "Picture size: whole screen");
+    else
+        snprintf(gTVSizeLabel, sizeof(gTVSizeLabel), "Picture size: %d%% smaller", gTVSizePercent);
+}
+
+/// For PS3Platform.c: how much smaller to show the picture (0 to 0.2).
+float PS3ExtrasTVShrink(void)
+{
+    return gExtras.tvSafe || gTVSizePercent != gTVSizeAtOpen ? gTVSizePercent / 100.0f : 0.0f;
+}
+
+/// The Options dialog opens: Cancel goes back to this size.
+void PS3ExtrasTVSizeDialogOpened(void)
+{
+    gTVSizeAtOpen = gExtras.tvSafe ? gTVSizePercent : 0;
+    gTVSizePercent = gTVSizeAtOpen;
+    UpdateTVSizeLabel();
+}
+
+void PS3ExtrasTVSizeCancelled(void)
+{
+    gTVSizePercent = gTVSizeAtOpen;
+    UpdateTVSizeLabel();
+}
+
+/// Its checkbox was pressed: the next size, shown at once (the label too).
+void PS3ExtrasTVSizeNext(SpriteLayerPtr layerP, short buttonIndex)
+{
+    SpritePtr spriteP;
+    int i;
+
+    for (i = 0; i < (int)SDL_arraysize(kTVSizes) - 1 && kTVSizes[i] != gTVSizePercent; i++)
+        ;
+    gTVSizePercent = kTVSizes[(i + 1) % (int)SDL_arraysize(kTVSizes)];
+    UpdateTVSizeLabel();
+    for (spriteP = SWGetNextSprite(layerP, NULL); spriteP != NULL; spriteP = SWGetNextSprite(layerP, spriteP)) {
+        ButtonSpritePtr buttonP = (ButtonSpritePtr)spriteP;
+        if (spriteP->userData != kButtonSpriteSignature || buttonP->buttonIndex != buttonIndex)
+            continue;
+        SetCheckboxChecked(spriteP, gTVSizePercent != 0);
+        if (buttonP->textSpriteP != NULL && buttonP->textSpriteP->userData == kBMTextSpriteMagic)
+            SetBMTextSpriteText(buttonP->textSpriteP, gTVSizeLabel);
+    }
+    gExtras.tvSafe = gTVSizePercent != 0;     // so the picture changes now (OK keeps it)
+}
+
+/// The Extras option's number, for the Options dialog.
+int PS3ExtrasTVSizeOption(void)
+{
+    const ExtrasOption *options;
+    int count = GetExtrasOptions(kExtrasTabExtras, &options), i;
+
+    for (i = 0; i < count && options[i].valueP != &gExtras.tvSafe; i++)
+        ;
+    return i < count ? i : -1;
 }
 #endif
 
@@ -92,11 +158,18 @@ void LoadExtrasSettings(void)
     gExtras.rumble = true;
     gExtras.multiplayerSmoke = true;
     file = fopen(ExtrasSettingsPath(), "r");
+#ifdef MM_PS3
+    gTVSizePercent = 7;         // until the file says (an older one had only "on" and 7%)
+#endif
     if (file == NULL)
         return;
     while (fgets(line, sizeof(line), file) != NULL) {
         if (sscanf(line, " %127[a-z_0-9] = %d", key, &value) != 2)
             continue;
+#ifdef MM_PS3
+        if (strcmp(key, "tv_size") == 0)
+            gTVSizePercent = SDL_clamp(value, 0, 20);
+#endif
         for (tab = 0; tab < 2; tab++) {
             count = GetExtrasOptions(tab, &options);
             for (i = 0; i < count; i++)
@@ -105,6 +178,11 @@ void LoadExtrasSettings(void)
         }
     }
     fclose(file);
+#ifdef MM_PS3
+    if (!gExtras.tvSafe)
+        gTVSizePercent = 0;
+    UpdateTVSizeLabel();
+#endif
 }
 
 /// After the Options dialog's OK: settings that show outside of play take effect now.
@@ -128,6 +206,9 @@ void SaveExtrasSettings(void)
         for (i = 0; i < count; i++)
             fprintf(file, "%s = %d\n", options[i].key, *options[i].valueP ? 1 : 0);
     }
+#ifdef MM_PS3
+    fprintf(file, "tv_size = %d\n", gTVSizePercent);
+#endif
     fclose(file);
 }
 

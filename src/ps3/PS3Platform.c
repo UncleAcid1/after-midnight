@@ -40,6 +40,8 @@
 #include <sysutil/sysutil.h>
 #include <unistd.h>
 #include <malloc.h>
+
+extern float gSWPixelAspect;        // SpriteWorld.c
 #include <ppu-lv2.h>
 
 SYS_PROCESS_PARAM(1001, 0x100000)   // main thread: normal priority, 1 MB of stack
@@ -476,6 +478,7 @@ SDL_Window *PS3_CreateWindow(const char *title, int x, int y, int w, int h, Uint
         }
         atexit(PS3GLShutdown);
         gVideoUp = 1;
+        gSWPixelAspect = PS3GLPixelAspect();    // a 4:3 TV gets the picture across all its width
     }
     return (SDL_Window *)gWindowStandIn;
 }
@@ -507,7 +510,7 @@ int PS3_GL_MakeCurrent(SDL_Window *window, SDL_GLContext context)
     return 0;
 }
 
-int PS3ExtrasTVSafe(void);       // MMExtras.c
+float PS3ExtrasTVShrink(void);      // MMExtras.c
 
 void PS3_GL_SwapWindow(SDL_Window *window)
 {
@@ -535,12 +538,11 @@ void PS3_GL_SwapWindow(SDL_Window *window)
         }
     }
     PS3GLSwap();
-        // "Fit the picture on a TV" (Extras), from the next frame: 7% smaller, or
-        // MM_PS3_OVERSCAN percent in the settings file
+        // "Picture size" (Extras), from the next frame; MM_PS3_OVERSCAN=<percent> in the
+        // settings file overrides it
     {
         const char *percent = getenv("MM_PS3_OVERSCAN");
-        float amount = percent != NULL ? (float)atof(percent) / 100.0f : 0.07f;
-        PS3GLSetOverscan(PS3ExtrasTVSafe() ? amount : 0.0f);
+        PS3GLSetOverscan(percent != NULL ? (float)atof(percent) / 100.0f : PS3ExtrasTVShrink());
     }
 }
 

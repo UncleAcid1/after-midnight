@@ -272,6 +272,8 @@ struct SpriteWorldRec {
 
 /// Set while every SWProcessSpriteWorld must start a frame (split screen paces frames itself).
 extern SWBoolean gSWForceFrames;
+extern SWBoolean gSWSkipDrawing;
+extern float gSWPixelAspect;
 /// A new main SpriteWorld drawing into mainWorldP's window, with its size and settings.
 SWError SWCreateSpriteWorldSharingWindow(SpriteWorldPtr *spriteWorldPP, SpriteWorldPtr mainWorldP);
 
