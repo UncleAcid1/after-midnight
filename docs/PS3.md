@@ -4,10 +4,11 @@ The PS3 version is being built step by step (the roadmap is in `CLAUDE.md`). Whe
 
 | | |
 |---|---|
-| Builds automatically | Every push to GitHub builds an installable `.pkg` (GitHub Actions, about 5 minutes). |
+| Builds automatically | Every push to GitHub builds an installable `.pkg` (GitHub Actions, about 2 minutes). |
 | Title screen and menus | Work in RPCS3 with a controller: all the menus, the Options tabs, Trophy Room, High Scores, Help, the on-screen keyboard. Sound and music play. Quit returns to the system. |
-| Playing a mansion | Starts, and the hero, enemies and lights draw, but the walls and floors of the rooms are still black. This is the next step (milestone 2). |
-| Split screen, LAN, online | Not yet: split screen is milestone 3, network play milestone 4 (the PS3 builds without networking for now). |
+| Playing a mansion | Works in RPCS3: the rooms draw as on the Mac, Jack walks, jumps, collects and goes from room to room. Only a few minutes were played. |
+| Split screen | 2 and 4 players start and draw in RPCS3 (with the pretend controllers below); not played through. |
+| LAN and online | Not yet (milestone 4): the PS3 builds without networking for now. |
 | Real PS3 | Not tested yet: everything so far was tested in RPCS3. |
 
 ## 1. Get the package from GitHub
@@ -16,7 +17,7 @@ The PS3 version is being built step by step (the roadmap is in `CLAUDE.md`). Whe
    "Pull requests").
 2. In the list on the left click **Build**. The runs are listed newest first; each line is
    one push. A green check means it built, a red cross that it didn't, a yellow dot that it's
-   still building (about 5 minutes).
+   still building (about 2 minutes).
 3. Click the run you want (its title is the commit message).
 4. Scroll to the bottom of the page, to **Artifacts**. Click **After-Midnight-PS3-xxxxxxx**
    (the letters are the start of the commit's ID). Your browser downloads a `.zip`.
@@ -86,7 +87,7 @@ A text file **`After Midnight settings.txt`** at the top of the flash drive (or 
 folder) can switch on the same testing aids as on the computer, one per line:
 
     MM_DEBUG_AUTOSTART=0           # start the first mansion (Normal) straight away
-    MM_DEBUG_SPLIT=coop:2          # with AUTOSTART: split screen co-op for 2 (not ready yet)
+    MM_DEBUG_SPLIT=coop:2          # with AUTOSTART: split screen co-op for 2 (or race:2, coop:4)
     MM_DEBUG_VIRTUAL_PADS=2        # pretend controllers for the empty player slots
     MM_PS3_DEBUG_PADS=1            # log every change on the controllers
     MM_PS3_DEBUG_FRAMES=1          # log the time of every frame
@@ -126,5 +127,8 @@ Deleting the game from the XMB deletes its saves too.
   uses `-fsigned-char` (PowerPC's `char` is unsigned; the original game's was signed).
 - **Split screen**: `MMCoroutine.c` has a PPC64 context switch, and the game's variables are
   bracketed by `platform/ps3/GameDataBegin.c`/`GameDataEnd.c` so split screen swaps only
-  them. Not tested yet.
+  them. 2 and 4 players run in RPCS3.
+- **The RSX command buffer** is ours (1 MB), and PS3GL.c makes room before each group of
+  commands: librsx's buffer-full callback can't be used (the code around it keeps writing at
+  the old position, over the jump back).
 - **Testing in a cloud session**: see "Testing the PS3 version" in `CLAUDE.md`.

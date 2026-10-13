@@ -164,26 +164,52 @@ GLenum glGetError(void)
 static gcmContextData   gCommands;          // our command buffer (static: the system needs a 32-bit address)
 static u32              gCommandStart;      // its I/O offset
 
-/// Takes the RSX back to the start of the command buffer: a jump where the commands end, PUT
-/// to the start, and a wait until the RSX has taken the jump, so nothing it hasn't read yet is
-/// overwritten. The callback the RSX library calls when the buffer is full.
-static s32 WrapCommandBuffer(gcmContextData *context, u32 count)
+/// Takes the RSX back to the start of the command buffer. The jump goes in first, just past
+/// the last command (RPCS3 reads a little beyond PUT, and read the old words there); then
+/// the RSX reads everything up to it, PUT moves to the start, and the PPU waits until the RSX
+/// has taken the jump, so nothing it hasn't read is overwritten. The callback librsx calls
+/// when the buffer is full.
+static void WaitForGet(u32 offset, const char *what)
 {
     gcmControlRegister volatile *control = gcmGetControlRegister();
     int waited = 0;
 
-    (void)count;
-    *context->current = 0x20000000u | gCommandStart;     // the old-style JUMP command
-    __asm__ volatile("sync" ::: "memory");
-    context->current = context->begin;
-    control->put = gCommandStart;
-    while (control->get != gCommandStart) {
+    while (control->get != offset) {
         usleep(10);
         if (++waited == 200000)
-            printf("PS3GL: the RSX hasn't taken the jump back (get %x, put %x)\n", control->get, control->put);
+            printf("PS3GL: the RSX hasn't %s (get %x, put %x)\n", what, control->get, control->put);
     }
+}
+
+static s32 WrapCommandBuffer(gcmContextData *context, u32 count)
+{
+    gcmControlRegister volatile *control = gcmGetControlRegister();
+    u32 end;
+
+    (void)count;
+    rsxAddressToOffset(context->current, &end);
+    *context->current = 0x20000000u | gCommandStart;     // the old-style JUMP command
+    __asm__ volatile("sync" ::: "memory");
+    control->put = end;
+    WaitForGet(end, "read its commands");
+    context->current = context->begin;
+    __asm__ volatile("sync" ::: "memory");
+    control->put = gCommandStart;
+    WaitForGet(gCommandStart, "taken the jump back");
     return 0;
 }
+
+/*  Room for the next commands, made before each group of them. librsx's own check calls the
+    callback above when the buffer is full, but the code around it keeps writing where it was
+    (the callback's inline assembly doesn't tell the compiler memory changed), over the jump:
+    so we never let it come to that. */
+#define kCommandRoom 2048           // words: more than any one operation here sends
+static void EnsureCommandSpace(u32 words)
+{
+    if (gContext == &gCommands && gCommands.current + words > gCommands.end)
+        WrapCommandBuffer(&gCommands, words);
+}
+#define ROOM() EnsureCommandSpace(kCommandRoom)
 
 /// Moves the RSX from the system's command buffer (where rsxInit left it) to ours.
 static int UseOwnCommandBuffer(void)
@@ -255,6 +281,7 @@ static void WaitIdle(void)
     int waited = 0;
     volatile const char *was = gPS3GLDoing;
 
+    ROOM();
     gPS3GLDoing = "waiting for the RSX to finish";
     rsxSetWriteBackendLabel(gContext, kLabelIndex, gLabelValue);
     rsxFlushBuffer(gContext);
@@ -271,6 +298,7 @@ static void WaitIdle(void)
 /// Makes the RSX finish drawing before it goes on (before reading what it drew as a texture).
 static void RenderBarrier(void)
 {
+    ROOM();
     rsxSetWriteBackendLabel(gContext, kLabelIndex, gLabelValue);
     rsxSetWaitLabel(gContext, kLabelIndex, gLabelValue);
     gLabelValue++;
@@ -568,6 +596,7 @@ static void SetSurface(const Target *t)
 {
     gcmSurface sf;
 
+    ROOM();
     EnsureDepthBuffer(t->width, t->height);
     memset(&sf, 0, sizeof(sf));
     sf.colorFormat = GCM_SURFACE_A8R8G8B8;
@@ -943,6 +972,7 @@ static int PrepareDraw(void)
     Texture *t = gTextureEnabled ? TextureFor(gBoundTexture) : NULL;
     int prog;
 
+    ROOM();
     if (gTextureEnabled && (t == NULL || t->mem == NULL))
         t = NULL;           // GL samples an incomplete texture as black; drawing nothing is close
     if (gTextureEnabled && t == NULL)
@@ -998,6 +1028,7 @@ static void FlushBatch(void)
     if (PrepareDraw()) {
         offset = gRingOffset + gBatchStart * sizeof(Vertex);
         __asm__ volatile("sync" ::: "memory");      // the vertices reach RSX memory first
+        ROOM();
         rsxBindVertexArrayAttrib(gContext, gPosAttr->index, 0, offset, sizeof(Vertex), 4,
                                  GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
         rsxBindVertexArrayAttrib(gContext, gTexAttr->index, 0, offset + 16, sizeof(Vertex), 2,
@@ -1182,6 +1213,15 @@ void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffse
         SetError(GL_INVALID_OPERATION);
         return;
     }
+        // only what is on the source can be copied (GL leaves the rest undefined)
+    if (x < 0) { xoffset -= x; width += x; x = 0; }
+    if (y < 0) { yoffset -= y; height += y; y = 0; }
+    if (x + width > (int)src.width) width = (int)src.width - x;
+    if (y + height > (int)src.height) height = (int)src.height - y;
+    if (xoffset + width > dst->width) width = dst->width - xoffset;
+    if (yoffset + height > dst->height) height = dst->height - yoffset;
+    if (width <= 0 || height <= 0)
+        return;
         // draw the source rectangle into the texture, one texel per pixel
     Trace("copy %d,%d %dx%d to %u", x, y, width, height, gBoundTexture);
     RenderBarrier();
@@ -1191,6 +1231,7 @@ void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffse
     dt.height = dst->height;
     dt.flip = 0;
     SetSurface(&dt);
+    ROOM();
     scale[0] = dt.width * 0.5f;
     offset[0] = dt.width * 0.5f;
     scale[1] = dt.height * 0.5f;
@@ -1235,6 +1276,7 @@ void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffse
     EmitTriangle(&q[0], &q[2], &q[3]);
     {
         u32 voff = gRingOffset + gBatchStart * sizeof(Vertex);
+        ROOM();
         __asm__ volatile("sync" ::: "memory");
         rsxBindVertexArrayAttrib(gContext, gPosAttr->index, 0, voff, sizeof(Vertex), 4, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
         rsxBindVertexArrayAttrib(gContext, gTexAttr->index, 0, voff + 16, sizeof(Vertex), 2, GCM_VERTEX_DATA_TYPE_F32, GCM_LOCATION_RSX);
@@ -1453,6 +1495,7 @@ void PS3GLShutdown(void)
 {
     if (gContext == NULL)
         return;
+    ROOM();
     gcmSetWaitFlip(gContext);
     rsxFinish(gContext, 1);
 }
@@ -1479,6 +1522,7 @@ void PS3GLSwap(void)
     gcmResetFlipStatus();
     gFirstFlip = 0;
     Trace("flip");
+    ROOM();
     gcmSetFlip(gContext, gCurBuffer);
     rsxFlushBuffer(gContext);
     gcmSetWaitFlip(gContext);

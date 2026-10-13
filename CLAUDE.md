@@ -56,8 +56,8 @@ settings file next to the log sets testing aids (docs/PS3.md). It runs at ~25 fp
 ## Roadmap (agreed). The owner's priority is the PS3; Windows comes later.
 
 Status: steps 1–3 done (Actions builds the `.pkg`; drawing goes through `src/ps3/PS3GL.c` on the
-PS3 while Mac/Linux compile as before; title screen and menus work in RPCS3, see docs/PS3.md).
-Not yet on a real PS3. Next: step 4; in a mansion the room tiles are still black.
+PS3 while Mac/Linux compile as before; title screen, menus, a mansion and 2/4-player split screen
+work in RPCS3, see docs/PS3.md). Not yet on a real PS3: next is step 4 on the hardware.
 
 The owner has a PS3 Slim on the latest **Evilnat** CFW, multiMAN, moves files by **USB flash drive**
 (FAT32), and tests in **RPCS3** on the Mac. Only one or two real controllers: 4-player tests are
