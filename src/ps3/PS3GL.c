@@ -51,6 +51,8 @@
 #define kMaxProjection      4
 #define kMaxTextures        4096
 #define kMaxFramebuffers    16
+#define kTargetArenaSize    (64 * 1024 * 1024)  // memory for the textures the RSX draws into
+#define kMaxArenaBlocks     4096
 
 typedef struct { float m[16]; } Mat4;       // column-major, as OpenGL
 
@@ -69,6 +71,8 @@ typedef struct {
     int     linearFilter;
     int     repeat;
     u32     usedInFrame;        // last frame that drew with it (or into it)
+    int     target;             // its memory is from the render-target arena (see there)
+    u32     size;
 } Texture;
 
 typedef struct {
@@ -103,6 +107,13 @@ typedef struct {
 } FragProg;
 enum { kProgColor, kProgTexture, kProgRepeat, kProgOpaque, kNumProgs };
 static FragProg         gFP[kNumProgs];
+
+// render-target arena: the textures the RSX draws into, never shared with ordinary images
+typedef struct { u32 start, size; } ArenaBlock;
+static u8              *gArena;
+static ArenaBlock       gArenaFree[kMaxArenaBlocks];    // free blocks, by address
+static int              gArenaFreeCount;
+static u32              gTextureBytes, gTargetBytes;
 
 // vertex ring
 static Vertex          *gRing;
@@ -732,6 +743,31 @@ void glClear(GLbitfield mask)
     }
 }
 
+/// A new render-target texture starts transparent black, cleared by the RSX (not the CPU: to an
+/// emulator, memory the RSX draws into belongs to the RSX).
+static void ClearTarget(Texture *tex)
+{
+    Target t, cur;
+
+    WaitForTexture(tex);
+    t.offset = tex->offset;
+    t.pitch = tex->pitch;
+    t.width = (u32)tex->width;
+    t.height = (u32)tex->height;
+    t.flip = 0;
+    RenderBarrier();
+    SetSurface(&t);
+    ROOM();
+    rsxSetScissor(gContext, 0, 0, (u16)t.width, (u16)t.height);
+    rsxSetClearColor(gContext, 0);
+    rsxSetColorMask(gContext, GCM_COLOR_MASK_R | GCM_COLOR_MASK_G | GCM_COLOR_MASK_B | GCM_COLOR_MASK_A);
+    rsxClearSurface(gContext, GCM_CLEAR_R | GCM_CLEAR_G | GCM_CLEAR_B | GCM_CLEAR_A);
+    RenderBarrier();
+    CurrentTarget(&cur);
+    SetSurface(&cur);
+    gStateDirty = gTargetDirty = 1;
+}
+
 // ---------------------------------------------------------------------------
 // Textures
 
@@ -755,13 +791,103 @@ void glGenTextures(GLsizei n, GLuint *textures)
     }
 }
 
+// Render-target memory is kept apart. A texture the RSX draws into (a copy of the screen, a
+// framebuffer object) is a render target to an emulator: RPCS3 keeps its pixels on the host's
+// graphics card, and when the same memory later holds an image written by the CPU, or a
+// target of another size, it may go on showing the old target (the flickering and the black
+// rooms). On a real PS3 it makes no difference.
+static void *ArenaAlloc(u32 size)
+{
+    int i;
+
+    size = (size + 127) & ~127u;
+    for (i = 0; i < gArenaFreeCount; i++) {
+        ArenaBlock *b = &gArenaFree[i];
+        if (b->size >= size) {
+            u32 start = b->start;
+            b->start += size;
+            b->size -= size;
+            if (b->size == 0) {
+                memmove(b, b + 1, (gArenaFreeCount - i - 1) * sizeof(*b));
+                gArenaFreeCount--;
+            }
+            return gArena + start;
+        }
+    }
+    return NULL;
+}
+
+static void ArenaFree(void *mem, u32 size)
+{
+    u32 start = (u32)((u8 *)mem - gArena);
+    int i;
+
+    size = (size + 127) & ~127u;
+    for (i = 0; i < gArenaFreeCount && gArenaFree[i].start < start; i++)
+        ;
+    if (i > 0 && gArenaFree[i - 1].start + gArenaFree[i - 1].size == start) {
+        gArenaFree[i - 1].size += size;         // joins the block before
+        if (i < gArenaFreeCount && start + size == gArenaFree[i].start) {
+            gArenaFree[i - 1].size += gArenaFree[i].size;
+            memmove(&gArenaFree[i], &gArenaFree[i + 1], (gArenaFreeCount - i - 1) * sizeof(ArenaBlock));
+            gArenaFreeCount--;
+        }
+        return;
+    }
+    if (i < gArenaFreeCount && start + size == gArenaFree[i].start) {
+        gArenaFree[i].start = start;            // joins the block after
+        gArenaFree[i].size += size;
+        return;
+    }
+    if (gArenaFreeCount == kMaxArenaBlocks)
+        return;                                 // too scattered: this block stays lost
+    memmove(&gArenaFree[i + 1], &gArenaFree[i], (gArenaFreeCount - i) * sizeof(ArenaBlock));
+    gArenaFree[i].start = start;
+    gArenaFree[i].size = size;
+    gArenaFreeCount++;
+}
+
+static int IsArenaMemory(void *mem)
+{
+    return gArena != NULL && (u8 *)mem >= gArena && (u8 *)mem < gArena + kTargetArenaSize;
+}
+
 static void FreeTextureMemory(Texture *t)
 {
     if (t->mem != NULL) {
         WaitForTexture(t);
-        rsxFree(t->mem);
+        if (IsArenaMemory(t->mem)) {
+            ArenaFree(t->mem, t->size);
+            gTargetBytes -= t->size;
+        } else {
+            rsxFree(t->mem);
+            gTextureBytes -= t->size;
+        }
         t->mem = NULL;
     }
+}
+
+static void *AllocTextureMemory(Texture *t, u32 size, int target)
+{
+    void *mem = NULL;
+
+    if (target) {
+        mem = ArenaAlloc(size);
+        if (mem == NULL) {
+            static int warned;
+            if (!warned++)
+                fprintf(stderr, "PS3GL: the render-target arena is full (%u KB used)\n", gTargetBytes / 1024);
+        } else {
+            gTargetBytes += size;
+        }
+    }
+    if (mem == NULL) {
+        mem = rsxMemalign(128, size);
+        if (mem != NULL)
+            gTextureBytes += size;
+    }
+    t->size = size;
+    return mem;
 }
 
 void glDeleteTextures(GLsizei n, const GLuint *textures)
@@ -869,9 +995,11 @@ void glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei widt
         return;
     }
     pitch = ((u32)width * 4 + 63) & ~63u;      // a multiple of 64: it can also be drawn into
-    if (t->mem == NULL || t->pitch * (u32)t->height < pitch * (u32)height) {
+    if (t->mem == NULL || t->size < pitch * (u32)height || t->target != (pixels == NULL)) {
+            // a texture made without pixels is one the RSX will draw into: render-target memory
         FreeTextureMemory(t);
-        t->mem = rsxMemalign(128, pitch * (u32)height);
+        t->target = pixels == NULL;
+        t->mem = AllocTextureMemory(t, pitch * (u32)height, t->target);
         if (t->mem == NULL) {
             fprintf(stderr, "PS3GL: out of RSX memory for a %dx%d texture\n", width, height);
             SetError(GL_OUT_OF_MEMORY);
@@ -888,7 +1016,7 @@ void glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei widt
     if (pixels != NULL)
         StorePixels(t, 0, 0, width, height, format, pixels);
     else
-        memset(t->mem, 0, pitch * (u32)height);
+        ClearTarget(t);
     gTextureCacheDirty = 1;
     if (gCurTexture == gBoundTexture)
         gCurTexture = (GLuint)-1;
@@ -1476,6 +1604,12 @@ int PS3GLInit(void)
     if (gRing == NULL)
         return -1;
     rsxAddressToOffset(gRing, &gRingOffset);
+    gArena = rsxMemalign(128, kTargetArenaSize);
+    if (gArena != NULL) {
+        gArenaFree[0].start = 0;
+        gArenaFree[0].size = kTargetArenaSize;
+        gArenaFreeCount = 1;
+    }
     if (LoadPrograms() != 0) {
         fprintf(stderr, "PS3GL: the shaders didn't load\n");
         return -1;
@@ -1513,7 +1647,8 @@ void PS3GLSwap(void)
     if (gContext == NULL)
         return;
     if (gFrame < 4 || gFrame % 3600 == 0)
-        printf("PS3GL: frame %u, %u vertices\n", gFrame, gRingCount);
+        printf("PS3GL: frame %u, %u vertices, textures %u KB, render targets %u KB\n", gFrame, gRingCount,
+               gTextureBytes / 1024, gTargetBytes / 1024);
     gPS3GLDoing = "waiting for the last frame to show";
     if (!gFirstFlip) {
         while (gcmGetFlipStatus() != 0)

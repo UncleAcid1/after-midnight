@@ -102,20 +102,23 @@ $(OUT)/gltest.self: $(OUT)/gltest.elf
 	@$(SELF) $(OUT)/gltest.stripped.elf $@ > /dev/null
 
 # The package: USRDIR holds the program, the original game's data and this version's extras
-$(OUT)/$(PKGNAME).pkg: $(OUT)/EBOOT.elf $(PLATFORM)/ICON0.PNG $(PLATFORM)/PIC1.PNG
+$(OUT)/$(PKGNAME).pkg: $(OUT)/EBOOT.elf $(PLATFORM)/ICON0.PNG $(PLATFORM)/PIC1.PNG $(PLATFORM)/SND0.AT3
 	@echo packing ... $(notdir $@)
 	@rm -rf $(OUT)/pkg && mkdir -p $(OUT)/pkg/USRDIR
 	@$(STRIP) $(OUT)/EBOOT.elf -o $(OUT)/EBOOT.stripped.elf
 	@$(SPRX) $(OUT)/EBOOT.stripped.elf
 	@$(SELF_NPDRM) $(OUT)/EBOOT.stripped.elf $(OUT)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) > /dev/null
-	@cp $(PLATFORM)/ICON0.PNG $(PLATFORM)/PIC1.PNG $(OUT)/pkg/
+	@cp $(PLATFORM)/ICON0.PNG $(PLATFORM)/PIC1.PNG $(PLATFORM)/SND0.AT3 $(OUT)/pkg/
 	@sed -e "s/@TITLE@/$(TITLE)/" -e "s/@APPID@/$(APPID)/" -e "s/@APPVER@/$(APPVER)/" \
 	  $(PLATFORM)/sfo.xml > $(OUT)/sfo.xml
 	@$(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(OUT)/sfo.xml $(OUT)/pkg/PARAM.SFO
 	@cp -R "$(GAMEDATA)" "$(OUT)/pkg/USRDIR/Game Data"
 	@cp -R "$(ROOT)/extras" "$(OUT)/pkg/USRDIR/Game Data Extras"
-	@# PSL1GHT's pkg.py grows the package with "bytes +=", which takes hours for the game's
-	@# 120,000 files; the same script with a bytearray makes the identical package in a minute
+	@# each mansion folder as one file: the PS3 installs 120,000 small files very slowly
+	@python3 $(PLATFORM)/pack_mansions.py "$(OUT)/pkg/USRDIR/Game Data/Mansions" \
+	  "$(OUT)/pkg/USRDIR/Game Data Extras/Custom Mansions"
+	@# PSL1GHT's pkg.py grows the package with "bytes +=", which takes hours for a package this
+	@# size; the same script with a bytearray makes the identical package in a minute
 	@sed -e 's/dataToEncrypt = b""/dataToEncrypt = bytearray()/' \
 	  -e 's/crypt(context, dataToEncrypt, header.dataSize)/crypt(context, bytes(dataToEncrypt), header.dataSize)/' \
 	  $(PS3DEV)/bin/pkg.py > $(OUT)/pkg_fast.py

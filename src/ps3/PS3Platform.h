@@ -15,6 +15,7 @@
 
 #include <SDL.h>
 #include "PS3GL.h"
+#include "PS3Files.h"
 
 #ifdef __cplusplus
 extern "C" {
