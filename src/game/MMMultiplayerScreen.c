@@ -56,7 +56,7 @@ static const ModeInfo kModes[kNumModes] = {
       "2-4 players  |  This computer or Wi-Fi", true },
     { "Arcade Split Screen", "Everyone at once, side by side",
       "Everyone plays at once, each in their own view. One mansion: what one player opens or takes, all share.",
-      "2-4 players  |  Split screen", false },
+      "2-4 players  |  Split screen or Wi-Fi", true },
     { "Ghost Race", "A race through twin mansions",
       "Everyone gets their own copy of the mansion; the others show as ghosts. Fastest out wins; each life lost "
       "adds 15 seconds.",
@@ -486,6 +486,12 @@ static void ShowNote(const char *text)
     gMP.messageUntil = SDL_GetTicks() + 4000;
 }
 
+/// The kind of game (card) a game on the network is.
+static int ModeForNetMode(int netMode)
+{
+    return netMode == kNetModeRace ? kModePhantoms : netMode == kNetModeArcade ? kModeTwin : kModeRelay;
+}
+
 static Boolean ModeIsSplit(void)
 {
     return gMP.mode == kModeTwin || gMP.mode == kModePhantoms;
@@ -737,7 +743,7 @@ static void ContinueLocalSave(int index)
 /// then on as the title screen's old Multiplayer did.
 static void StartNetworkGame(int rowKind, const char *address)
 {
-    int netMode = gMP.mode == kModePhantoms ? kNetModeRace : kNetModeRelay;
+    int netMode = gMP.mode == kModePhantoms ? kNetModeRace : gMP.mode == kModeTwin ? kNetModeArcade : kNetModeRelay;
     Boolean online = rowKind == kRowHostPublic || rowKind == kRowHostPrivate || rowKind == kRowOnlineGame ||
                      rowKind == kRowJoinCode || rowKind == kRowFriend;
     Boolean host = rowKind == kRowHost || rowKind == kRowHostPublic || rowKind == kRowHostPrivate;
@@ -880,7 +886,7 @@ static void ActivateRow(Row *r)
             ShowView(kViewOnline);
             break;
         case kRowOnlineGame:
-            gMP.mode = gMP.online[r->arg].mode == kNetModeRace ? kModePhantoms : kModeRelay;
+            gMP.mode = ModeForNetMode(gMP.online[r->arg].mode);
             snprintf(gJoin.code, sizeof(gJoin.code), "%s", gMP.online[r->arg].code);
             snprintf(gJoin.hostID, sizeof(gJoin.hostID), "%s", gMP.online[r->arg].code[0] ? "" : gMP.online[r->arg].hostID);
             StartNetworkGame(kRowOnlineGame, NULL);
@@ -946,7 +952,7 @@ static void ActivateRow(Row *r)
             gMP.field = 0;
             break;
         case kRowFoundGame:
-            gMP.mode = gMP.found[r->arg].mode == kNetModeRace ? kModePhantoms : kModeRelay;
+            gMP.mode = ModeForNetMode(gMP.found[r->arg].mode);
             StartNetworkGame(kRowFoundGame, gMP.found[r->arg].address);
             break;
         case kRowHost:
@@ -1060,7 +1066,7 @@ static Row *AddRow(int kind, int arg, const char *text, const char *detail)
     return r;
 }
 
-static const char *kNetModeNames[] = { "Co-op", "Ghost Race" };
+static const char *kNetModeNames[] = { "Co-op", "Ghost Race", "Arcade Split Screen" };
 
 /// The lobby's state as a row, while it isn't ready.
 static Boolean AddLobbyStatusRow(void)
@@ -1086,7 +1092,7 @@ static void BuildOnlineRows(void)
         for (i = 0, shown = 0; i < gMP.numOnline && shown < 4; i++, shown++) {
             OnlineGame *g = &gMP.online[i];
             snprintf(text, sizeof(text), "%s%s's game", g->isFriend ? "* " : "", g->hostName);
-            snprintf(detail, sizeof(detail), "%s, %d of 4 players, %s%s", kNetModeNames[g->mode == kNetModeRace],
+            snprintf(detail, sizeof(detail), "%s, %d of 4 players, %s%s", kNetModeNames[g->mode >= 0 && g->mode <= kNetModeArcade ? g->mode : 0],
                      g->numPlayers > 0 ? g->numPlayers : 1, g->isPublic ? "public" : "private",
                      g->isFriend ? ", a friend's" : "");
             AddRow(kRowOnlineGame, i, text, detail);
@@ -1157,7 +1163,7 @@ static void BuildFriendRows(void)
 
 static void BuildRows(void)
 {
-    static const char *modeNames[] = { "Co-op", "Ghost Race" };
+    static const char *modeNames[] = { "Co-op", "Ghost Race", "Arcade Split Screen" };
     char text[160], detail[160];
     float y = kWindowTop + 100;
     int i;
@@ -1171,7 +1177,7 @@ static void BuildRows(void)
             gMP.numFound = NetBrowseGames(gMP.found, kMaxFound);
             for (i = 0; i < gMP.numFound; i++) {
                 snprintf(text, sizeof(text), "%s's game", gMP.found[i].hostName);
-                snprintf(detail, sizeof(detail), "%s, %d of 4 players  |  %s", modeNames[gMP.found[i].mode == kNetModeRace],
+                snprintf(detail, sizeof(detail), "%s, %d of 4 players  |  %s", modeNames[gMP.found[i].mode >= 0 && gMP.found[i].mode <= kNetModeArcade ? gMP.found[i].mode : 0],
                          gMP.found[i].numPlayers > 0 ? gMP.found[i].numPlayers : 1, gMP.found[i].address);
                 AddRow(kRowFoundGame, i, text, detail);
             }

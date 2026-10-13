@@ -271,6 +271,7 @@ typedef struct SplitOtherPlayer {
 } SplitOtherPlayer;
 void SplitConfigure(int mode, int numPlayers, const int *inputs);
 void SplitConfigureNetworkRace(int localPlayer, int numPlayers);
+void SplitConfigureNetworkGame(int mode, int localPlayer, int numPlayers);
 void SplitCancel(void);
 Boolean SplitScreenPending(void);
 Boolean SplitScreenActive(void);
@@ -309,8 +310,9 @@ int  ControllerIndexForInstanceID(SDL_JoystickID id);
 Boolean DebugVirtualPadKey(const SDL_Event *event);
 
 // Two computers (MMNet.c)
-enum { kNetModeRelay = 0, kNetModeRace = 1 };
-/// The race: where a player is and how they're doing (sent every frame).
+enum { kNetModeRelay = 0, kNetModeRace = 1, kNetModeArcade = 2 };
+/// Split screen's machinery on several computers (the race, Arcade Split Screen): where a
+/// player is and how they're doing (sent every frame).
 typedef struct NetRaceState {
     short   room, mapRoom;
     float   x, y, scaleW, scaleH;
@@ -319,7 +321,33 @@ typedef struct NetRaceState {
     Uint8   status;             ///< kSplitPlayer... (MMSplit.c): starting, playing, finished, out
     Uint8   deaths, place;
     Uint32  elapsedMs;
+    short   runningRoom;        ///< Arcade: the room their game is running, -1 none
+    Uint32  roomMs;             ///< Arcade: how long they've been running it
 } NetRaceState;
+Boolean NetArcadeActive(void);
+/// Arcade Split Screen on several computers: what one player did to the team's game, and the
+/// room snapshots (MMCoopSync.c, MMRoomSync.c).
+void NetSendTeamOps(const Uint8 *ops, int length);
+void NetSendRoomSnapshot(const Uint8 *data, int length);
+void CoopSyncReceiveOps(int from, const Uint8 *ops, int length);
+void RoomSyncReceive(int from, const Uint8 *data, int length);
+void CoopSyncNetFrame(Boolean playing);
+enum { kCoopOpObjectAdd = 1, kCoopOpObjectRemove, kCoopOpDoOnceAdd, kCoopOpDoOnceRemove, kCoopOpRoom,
+       kCoopOpLitRoom, kCoopOpMapRoom };
+void CoopNoteArrayChange(int op, long value);
+void RoomSyncSetRemotePlayer(int player, short room, Uint32 roomMs);
+void RoomSyncNetFrame(void);
+Uint32 RoomSyncLocalRoomMs(int player);
+short RoomSyncLocalRoom(int player);
+/// Little-endian numbers in messages (the PS3 is big-endian).
+void NetPutU16(Uint8 *p, Uint16 v);
+void NetPutU32(Uint8 *p, Uint32 v);
+void NetPutF32(Uint8 *p, float v);
+void NetPutF64(Uint8 *p, double v);
+Uint16 NetGetU16(const Uint8 *p);
+Uint32 NetGetU32(const Uint8 *p);
+float NetGetF32(const Uint8 *p);
+double NetGetF64(const Uint8 *p);
 /// A game found on the local network.
 typedef struct NetFoundGame {
     char    hostName[64];
@@ -350,7 +378,7 @@ int  NetBrowseGames(NetFoundGame *games, int max);
 Boolean NetBrowsing(void);
 const char *NetMissingMansion(void);
 const char *NetPeerMissingMansion(void);
-void MultiplayerSetUpNetworkRace(void);
+void MultiplayerSetUpNetworkRace(void);      ///< the race or Arcade Split Screen (NetMode)
 Boolean NetHostGameOnline(Boolean isPublic);
 Boolean NetJoinGameOnline(const char *code, const char *hostID);
 Boolean NetIsOnline(void);
@@ -363,7 +391,7 @@ typedef struct OnlineGame {
     char    code[32];
     char    hostName[64];
     char    hostID[16];
-    int     mode;               ///< kNetModeRelay or kNetModeRace
+    int     mode;               ///< kNetModeRelay, kNetModeRace or kNetModeArcade
     Boolean isPublic, isFriend;
     int     character;
     int     numPlayers;         ///< in the host's waiting room so far

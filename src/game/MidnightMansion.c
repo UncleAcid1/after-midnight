@@ -976,10 +976,19 @@ void StartTutorialMansion(void)
 void DebugAutoStart(void)
 {
     const char *autoStart = getenv("MM_DEBUG_AUTOSTART");
+    const char *net = getenv("MM_DEBUG_NET");       // testing aid: "host:<net mode>" or "join:<address>"
     unsigned char mansionName[256] = { 0 };
     short n;
 
+    if (net != NULL && strncmp(net, "join:", 5) == 0) {
+        if (MultiplayerConnect(kNetModeRelay, false, net + 5) == kMultiplayerJoined)
+            StartCustomMansion();
+        return;
+    }
     if (autoStart == NULL)
+        return;
+    if (net != NULL && strncmp(net, "host:", 5) == 0 &&
+        MultiplayerConnect(atoi(net + 5), true, NULL) != kMultiplayerNewGame)     // (MM_DEBUG_NET_START)
         return;
     n = (short)atoi(autoStart);
     SWConcatPascalStrings(mansionName, GetMansionNameFromIndex(n));

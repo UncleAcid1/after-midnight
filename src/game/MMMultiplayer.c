@@ -348,7 +348,7 @@ void MultiplayerSetUpNetworkRace(void)
     MultiplayerSetNetworkPlayers();
     gMulti.split = true;
     gMulti.active = me;
-    SplitConfigureNetworkRace(me, gMulti.numPlayers);
+    SplitConfigureNetworkGame(NetMode() == kNetModeArcade ? kSplitModeCoop : kSplitModeRace, me, gMulti.numPlayers);
 }
 
 /// The character sprites are loaded once for all players' games.
@@ -558,7 +558,7 @@ static int AfterConnected(int netMode, Boolean host)
     (void)name;
     MultiplayerSetNetworkPlayers();
     if (host) {
-        if (netMode == kNetModeRace)
+        if (netMode == kNetModeRace || netMode == kNetModeArcade)
             MultiplayerSetUpNetworkRace();
         return kMultiplayerNewGame;
     }

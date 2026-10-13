@@ -160,12 +160,19 @@ void SplitConfigure(int mode, int numPlayers, const int *inputs)
 /// A race on several computers: one player here (localPlayer), the others elsewhere.
 void SplitConfigureNetworkRace(int localPlayer, int numPlayers)
 {
+    SplitConfigureNetworkGame(kSplitModeRace, localPlayer, numPlayers);
+}
+
+/// The race or Arcade Split Screen (kSplitModeCoop) on several computers.
+void SplitConfigureNetworkGame(int mode, int localPlayer, int numPlayers)
+{
     Split *s = GetSplit();
     int i;
 
     if (s == NULL || s->active)
         return;
-    s->mode = kSplitModeRace;
+    s->mode = mode == kSplitModeCoop ? kSplitModeCoop : kSplitModeRace;
+    s->continuePath[0] = 0;
     s->numPlayers = numPlayers < 2 ? 2 : numPlayers > kMaxPlayers ? kMaxPlayers : numPlayers;
     s->numLocal = 1;
     s->firstLocal = localPlayer >= 0 && localPlayer < s->numPlayers ? localPlayer : 0;
@@ -1358,6 +1365,8 @@ static void DrawRemotePlayerStatus(Split *s, SplitPlayer *p, int line, Uint32 no
         snprintf(text, sizeof(text), "%s finished in %s", GetPlayerDisplayName(p->index), timeText);
     } else if (p->status == kPlayerOut) {
         snprintf(text, sizeof(text), p->left ? "%s left the game" : "%s is out of lives", GetPlayerDisplayName(p->index));
+    } else if (s->mode == kSplitModeCoop) {
+        return;                 // playing on: their view says the rest
     } else {
         FormatRaceTime(timeText, sizeof(timeText), p->remoteElapsedMs);
         snprintf(text, sizeof(text), "%s  %s", GetPlayerDisplayName(p->index), timeText);
@@ -1733,7 +1742,8 @@ static void EndSplit(Split *s)
     }
 }
 
-/// The network race: tells the other computers where this player is, and hears where theirs are.
+/// Several computers: tells the others where this player is, and hears where theirs are (and
+/// in Arcade Split Screen, the rooms they're running and whether the team has won).
 static void ExchangeWithOtherComputers(Split *s)
 {
     SplitPlayer *me = &s->players[s->firstLocal];
@@ -1757,6 +1767,8 @@ static void ExchangeWithOtherComputers(Split *s)
     st.place = (Uint8)me->place;
     st.elapsedMs = me->status == kPlayerFinished ? me->finishMs
                                                  : now - s->startTicks + (Uint32)me->deaths * kDeathPenaltyMs;
+    st.runningRoom = RoomSyncLocalRoom(me->index);
+    st.roomMs = RoomSyncLocalRoomMs(me->index);
     NetRaceSendState(&st);
     NetRacePump();
 
@@ -1779,13 +1791,19 @@ static void ExchangeWithOtherComputers(Split *s)
                 them->status = kPlayerFinished;
                 them->finishMs = st.elapsedMs;
                 them->place = st.place;
+                if (s->mode == kSplitModeCoop && s->end == kEndNone)
+                    s->end = kEndTeamWon;       // someone got out: the team has won
             } else if (st.status == kPlayerOut) {
                 them->status = kPlayerOut;
             }
+            if (s->mode == kSplitModeCoop)
+                RoomSyncSetRemotePlayer(i, them->status == kPlayerPlaying ? st.runningRoom : -1, st.roomMs);
         }
         if (gone && them->status != kPlayerFinished && them->status != kPlayerOut) {
             them->status = kPlayerOut;
             them->left = true;
+            if (s->mode == kSplitModeCoop)
+                RoomSyncSetRemotePlayer(i, -1, 0);
         }
     }
     if (NetPeerMissingMansion() != NULL && s->end == kEndNone) {
@@ -1831,6 +1849,11 @@ void SplitRunFrame(void)
             }
         }
         gSWForceFrames = false;
+        if (s->network && s->mode == kSplitModeCoop) {
+                // Arcade Split Screen on several computers: what happened here, to the others
+            CoopSyncNetFrame(s->players[s->firstLocal].status != kPlayerStarting);
+            RoomSyncNetFrame();
+        }
         MMSoundsSplitFrameEnd();
         if (s->end == kEndNone && playing == 0)
             s->end = s->mode == kSplitModeRace ? kEndRaceOver : kEndTeamLost;

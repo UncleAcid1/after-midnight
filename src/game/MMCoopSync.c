@@ -12,6 +12,11 @@
  *
  * Applying an event is idempotent (a lever already in that position, a door already open,
  * an enemy already gone are left alone), so a room loaded just after the event is fine.
+ *
+ * On several computers the team's game is kept in step with operations (kMsgTeam): an object
+ * collected or put back, a one-shot event done, a room explored, lit or put on the map, and
+ * changes to the score, the secrets found and the items carried (as differences, so two
+ * players collecting at once both count), along with the events above.
  */
 
 #include "MMGame.h"
@@ -39,13 +44,32 @@ typedef struct CoopQueue {
     CoopEvent       events[kQueueSize];
 } CoopQueue;
 
+/// Several computers: what this one's player did, to send at the end of the frame, and the
+/// team's numbers as last sent or heard of (so only what changed here goes out).
+typedef struct TeamNet {
+    Uint8   out[8192];
+    int     outLen;
+    Boolean applying;           ///< doing another computer's operations (not to be sent back)
+    Boolean started;            ///< the numbers below are the game's (taken once it's playing)
+    long    score;
+    short   secrets;
+    ObjectsCarriedRec objects;
+} TeamNet;
+
+enum {
+    kOpObjectAdd = 1, kOpObjectRemove, kOpDoOnceAdd, kOpDoOnceRemove, kOpRoom, kOpLitRoom, kOpMapRoom,
+    kOpScore, kOpSecrets, kOpItem, kOpLantern, kOpBackpack, kOpEvent
+};
+
 static CoopQueue gCoopQueue;            // shared by every player's game (see CoopSyncShareState)
+static TeamNet gTeamNet;                // shared too
 static unsigned long gCoopSeenSeq = 0;  // per player's game: events up to here are done
 static Boolean gCoopApplying = false;   // per player's game: replaying someone else's event
 
 void CoopSyncShareState(void (*share)(void *, size_t))
 {
     share(&gCoopQueue, sizeof(gCoopQueue));
+    share(&gTeamNet, sizeof(gTeamNet));
 }
 
 /// A new split screen co-op game: nothing has happened yet.
@@ -55,6 +79,178 @@ void CoopSyncReset(void)
     gCoopQueue.nextSeq = 1;
     gCoopSeenSeq = 0;
     gCoopApplying = false;
+    memset(&gTeamNet, 0, sizeof(gTeamNet));
+    gTeamNet.score = gScore;
+    gTeamNet.secrets = gNumSecretsFound;
+    gTeamNet.objects = gObjects;
+}
+
+// ---------------------------------------------------------------------------
+// Several computers: operations
+
+static Boolean TeamNetRecording(void)
+{
+    return NetArcadeActive() && SplitScreenActive() && !gTeamNet.applying;
+}
+
+static Uint8 *OutRoom(int bytes)
+{
+    Uint8 *p;
+
+    if (gTeamNet.outLen + bytes > (int)sizeof(gTeamNet.out))
+        return NULL;
+    p = gTeamNet.out + gTeamNet.outLen;
+    gTeamNet.outLen += bytes;
+    return p;
+}
+
+/// From GameArrays.c: the team's mansion changed here (only real changes come here).
+void CoopNoteArrayChange(int op, long value)
+{
+    Uint8 *p;
+
+    if (!TeamNetRecording() || (p = OutRoom(5)) == NULL)
+        return;
+    p[0] = (Uint8)op;
+    NetPutU32(p + 1, (Uint32)value);
+}
+
+static void SendEventOp(const CoopEvent *e)
+{
+    Uint8 *p;
+
+    if (!TeamNetRecording() || (p = OutRoom(28)) == NULL)
+        return;
+    p[0] = kOpEvent;
+    p[1] = (Uint8)e->kind;
+    NetPutU16(p + 2, (Uint16)e->room);
+    NetPutU32(p + 4, (Uint32)e->objectID);
+    NetPutU32(p + 8, (Uint32)e->type);
+    NetPutF32(p + 12, e->x);
+    NetPutF32(p + 16, e->y);
+    NetPutU32(p + 20, (Uint32)e->param);
+    NetPutU16(p + 24, (Uint16)e->action);
+    p[26] = p[27] = 0;
+}
+
+static void PutDelta(int op, int index, long delta)
+{
+    Uint8 *p;
+
+    if (delta == 0 || (p = OutRoom(6)) == NULL)
+        return;
+    p[0] = (Uint8)op;
+    p[1] = (Uint8)index;
+    NetPutU32(p + 2, (Uint32)delta);
+}
+
+/// Once a frame on several computers (after this computer's game ran; playing once it has
+/// started): what changed here goes out.
+void CoopSyncNetFrame(Boolean playing)
+{
+    int i;
+
+    if (!NetArcadeActive() || !SplitScreenActive())
+        return;
+    if (!gTeamNet.started) {
+        if (!playing)
+            return;
+        gTeamNet.started = true;
+        gTeamNet.score = gScore;
+        gTeamNet.secrets = gNumSecretsFound;
+        gTeamNet.objects = gObjects;
+    }
+    PutDelta(kOpScore, 0, gScore - gTeamNet.score);
+    PutDelta(kOpSecrets, 0, gNumSecretsFound - gTeamNet.secrets);
+    for (i = 0; i < 7; i++)
+        PutDelta(kOpItem, i, gObjects.counts[i] - gTeamNet.objects.counts[i]);
+    PutDelta(kOpLantern, 0, gObjects.hasLantern && !gTeamNet.objects.hasLantern);
+    PutDelta(kOpBackpack, 0, gObjects.hasBackpack && !gTeamNet.objects.hasBackpack);
+    gTeamNet.score = gScore;
+    gTeamNet.secrets = gNumSecretsFound;
+    gTeamNet.objects = gObjects;
+    if (gTeamNet.outLen > 0)
+        NetSendTeamOps(gTeamNet.out, gTeamNet.outLen);
+    gTeamNet.outLen = 0;
+}
+
+/// What another computer's player did: done here too.
+void CoopSyncReceiveOps(int from, const Uint8 *ops, int length)
+{
+    int n = 0;
+
+    if (!SplitScreenActive() || SplitScreenMode() != kSplitModeCoop)
+        return;
+    gTeamNet.applying = true;
+    while (n < length) {
+        int op = ops[n];
+        if (op >= kOpObjectAdd && op <= kOpMapRoom) {
+            long value;
+            if (n + 5 > length)
+                break;
+            value = (long)(Sint32)NetGetU32(ops + n + 1);
+            switch (op) {
+                case kOpObjectAdd:      AddObjectToArray(value); break;
+                case kOpObjectRemove:   RemoveObjectFromArray(value); break;
+                case kOpDoOnceAdd:      AddObjectToDoOnceArray(value); break;
+                case kOpDoOnceRemove:   RemoveObjectFromDoOnceArray(value); break;
+                case kOpRoom:           AddRoomToArray((short)value); break;
+                case kOpLitRoom:        AddRoomToLitRoomArray((short)value); break;
+                default:                AddRoomToMapArray((short)value); break;
+            }
+            n += 5;
+        } else if (op >= kOpScore && op <= kOpBackpack) {
+            int index;
+            long delta;
+            if (n + 6 > length)
+                break;
+            index = ops[n + 1];
+            delta = (long)(Sint32)NetGetU32(ops + n + 2);
+            switch (op) {
+                case kOpScore:
+                    gScore += delta;
+                    gTeamNet.score += delta;
+                    break;
+                case kOpSecrets:
+                    gNumSecretsFound = (short)(gNumSecretsFound + delta);
+                    gTeamNet.secrets = (short)(gTeamNet.secrets + delta);
+                    break;
+                case kOpItem:
+                    if (index < 7) {
+                        gObjects.counts[index] = (short)SDL_max(0, gObjects.counts[index] + delta);
+                        gTeamNet.objects.counts[index] = gObjects.counts[index];
+                    }
+                    break;
+                case kOpLantern:
+                    gObjects.hasLantern = gTeamNet.objects.hasLantern = true;
+                    break;
+                default:
+                    gObjects.hasBackpack = gTeamNet.objects.hasBackpack = true;
+                    break;
+            }
+            n += 6;
+        } else if (op == kOpEvent) {
+            CoopEvent *e;
+            if (n + 28 > length)
+                break;
+            e = &gCoopQueue.events[gCoopQueue.nextSeq % kQueueSize];
+            memset(e, 0, sizeof(*e));
+            e->seq = gCoopQueue.nextSeq++;
+            e->kind = ops[n + 1];
+            e->player = from;
+            e->room = (short)NetGetU16(ops + n + 2);
+            e->objectID = (long)(Sint32)NetGetU32(ops + n + 4);
+            e->type = (long)(Sint32)NetGetU32(ops + n + 8);
+            e->x = NetGetF32(ops + n + 12);
+            e->y = NetGetF32(ops + n + 16);
+            e->param = (int)(Sint32)NetGetU32(ops + n + 20);
+            e->action = (short)NetGetU16(ops + n + 24);
+            n += 28;
+        } else {
+            break;                  // unknown: the rest can't be read
+        }
+    }
+    gTeamNet.applying = false;
 }
 
 static Boolean CoopSyncOn(void)
@@ -81,6 +277,7 @@ static void Post(int kind, SpritePtr spriteP, int param, short action)
     e->param = param;
     e->action = action;
     gCoopSeenSeq = e->seq;              // nothing to replay for the one who did it
+    SendEventOp(e);                     // several computers: to the others
 }
 
 void CoopPostLeverPulled(SpritePtr leverP)

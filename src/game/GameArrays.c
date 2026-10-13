@@ -88,6 +88,7 @@ void RemoveSpriteFromObjectArray(SpritePtr spriteP)
 void AddObjectToArray(long objectID)
 {
     if (!IsObjectInArray(objectID)) {
+        CoopNoteArrayChange(kCoopOpObjectAdd, objectID);
         gObjectArray[gNextFreeObjectIndex++] = objectID;
         SDL_assert(gNextFreeObjectIndex < kMaxObjects);
         if (gNextFreeObjectIndex >= kMaxObjects)
@@ -101,6 +102,7 @@ void RemoveObjectFromArray(long objectID)
 
     if (!IsObjectInArray(objectID))
         return;
+    CoopNoteArrayChange(kCoopOpObjectRemove, objectID);
     index = gNextFreeObjectIndex;
     for (i = 0; i < gNextFreeObjectIndex; i++) {
         if (gObjectArray[i] == objectID) {
@@ -151,6 +153,7 @@ void RemoveSpriteFromDoOnceArray(SpritePtr spriteP)
 void AddObjectToDoOnceArray(long objectID)
 {
     if (!IsObjectInDoOnceArray(objectID)) {
+        CoopNoteArrayChange(kCoopOpDoOnceAdd, objectID);
         gDoOnceArray[gNextDoOnceIndex++] = objectID;
         if (gNextDoOnceIndex >= kMaxDoOnce - 1)
             gNextDoOnceIndex = 0;
@@ -163,6 +166,7 @@ void RemoveObjectFromDoOnceArray(long objectID)
 
     if (!IsObjectInDoOnceArray(objectID))
         return;
+    CoopNoteArrayChange(kCoopOpDoOnceRemove, objectID);
     index = gNextDoOnceIndex;
     for (i = 0; i < gNextDoOnceIndex; i++) {
         if (gDoOnceArray[i] == objectID) {
@@ -203,6 +207,7 @@ void InitRoomArray(void)
 void AddRoomToArray(short room)
 {
     if (!IsRoomInArray(room)) {
+        CoopNoteArrayChange(kCoopOpRoom, room);
         gRoomArray[gNextRoomArrayIndex++] = room;
         if (gNextRoomArrayIndex >= kMaxRooms)
             gNextRoomArrayIndex = 0;
@@ -243,6 +248,7 @@ void InitLitRoomArray(void)
 void AddRoomToLitRoomArray(short room)
 {
     if (!IsRoomInLitRoomArray(room)) {
+        CoopNoteArrayChange(kCoopOpLitRoom, room);
         gLitRoomArray[gNextLitRoomArrayIndex++] = room;
         if (gNextLitRoomArrayIndex >= kMaxRooms)
             gNextLitRoomArrayIndex = 0;
@@ -277,6 +283,7 @@ void InitMapArray(void)
 void AddRoomToMapArray(short room)
 {
     if (!IsRoomInMapArray(room)) {
+        CoopNoteArrayChange(kCoopOpMapRoom, room);
         gMapArray[gNextMapArrayIndex++] = room;
         if (gNextMapArrayIndex >= kMaxRooms)
             gNextMapArrayIndex = 0;

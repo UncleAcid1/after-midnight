@@ -21,6 +21,10 @@
  * with one player here and the others elsewhere). Every frame each sends where its player is
  * (kMsgPhantom); the others draw them as ghosts, and the times decide the race.
  *
+ * Arcade Split Screen: the same, and the team's game is shared: what each player collects,
+ * opens and pulls goes to the others (kMsgTeam, MMCoopSync.c), and whoever keeps a room sends
+ * its snapshot to the players in it elsewhere (kMsgRoomSnap, MMRoomSync.c).
+ *
  * Messages are [type:1][length:2][payload] over TCP (port 47474). While a host waits it
  * broadcasts "MMHD-LAN" beacons on UDP port 47475 once a second.
  */
@@ -48,8 +52,8 @@
 
 #define kNetPort        47474
 #define kBeaconPort     47475
-#define kNetVersion     4           ///< 4: up to four computers, the host passing messages on
-#define kBeaconMagic    "MMHD-LAN 3"
+#define kNetVersion     5           ///< 5: Arcade Split Screen, numbers in a fixed byte order
+#define kBeaconMagic    "MMHD-LAN 4"
 #define kMaxFoundGames  16
 #define kMaxQueuedFrames 4096
 #define kMaxLinks       (kMaxPlayers - 1)
@@ -57,7 +61,8 @@
 
 enum {
     kMsgHello = 1, kMsgStart = 2, kMsgReady = 3, kMsgFrame = 4, kMsgSave = 5, kMsgBye = 6, kMsgPhantom = 7,
-    kMsgNoMansion = 8, kMsgChat = 9, kMsgRoster = 10, kMsgFrom = 11, kMsgLeft = 12
+    kMsgNoMansion = 8, kMsgChat = 9, kMsgRoster = 10, kMsgFrom = 11, kMsgLeft = 12, kMsgTeam = 13,
+    kMsgRoomSnap = 14
 };
 
 typedef struct NetFrame {
@@ -148,7 +153,13 @@ Boolean NetGameActive(void)
 /// A race on several computers is being played.
 Boolean NetRaceActive(void)
 {
-    return gNet.active && gNet.inGame && gNet.mode == kNetModeRace;
+    return gNet.active && gNet.inGame && (gNet.mode == kNetModeRace || gNet.mode == kNetModeArcade);
+}
+
+/// Arcade Split Screen on several computers is being played.
+Boolean NetArcadeActive(void)
+{
+    return gNet.active && gNet.inGame && gNet.mode == kNetModeArcade;
 }
 
 int NetMode(void)
@@ -218,6 +229,60 @@ static void PlayerList(char *text, size_t size)
     for (p = 0; p < gNet.numPlayers; p++)
         n += (size_t)snprintf(text + n, size > n ? size - n : 0, "%s%s%s", p == 0 ? "" : p == gNet.numPlayers - 1 ? " and " : ", ",
                               gNet.names[p], p == 0 ? " (host)" : "");
+}
+
+// ---------------------------------------------------------------------------
+// Numbers in messages: little-endian whatever the computer (the PS3 is big-endian)
+
+void NetPutU16(Uint8 *p, Uint16 v)
+{
+    p[0] = (Uint8)v; p[1] = (Uint8)(v >> 8);
+}
+
+Uint16 NetGetU16(const Uint8 *p)
+{
+    return (Uint16)(p[0] | p[1] << 8);
+}
+
+void NetPutU32(Uint8 *p, Uint32 v)
+{
+    p[0] = (Uint8)v; p[1] = (Uint8)(v >> 8); p[2] = (Uint8)(v >> 16); p[3] = (Uint8)(v >> 24);
+}
+
+Uint32 NetGetU32(const Uint8 *p)
+{
+    return (Uint32)p[0] | (Uint32)p[1] << 8 | (Uint32)p[2] << 16 | (Uint32)p[3] << 24;
+}
+
+void NetPutF32(Uint8 *p, float v)
+{
+    Uint32 bits;
+    memcpy(&bits, &v, 4);
+    NetPutU32(p, bits);
+}
+
+float NetGetF32(const Uint8 *p)
+{
+    Uint32 bits = NetGetU32(p);
+    float v;
+    memcpy(&v, &bits, 4);
+    return v;
+}
+
+void NetPutF64(Uint8 *p, double v)
+{
+    Uint64 bits;
+    memcpy(&bits, &v, 8);
+    NetPutU32(p, (Uint32)bits);
+    NetPutU32(p + 4, (Uint32)(bits >> 32));
+}
+
+double NetGetF64(const Uint8 *p)
+{
+    Uint64 bits = (Uint64)NetGetU32(p) | (Uint64)NetGetU32(p + 4) << 32;
+    double v;
+    memcpy(&v, &bits, 8);
+    return v;
 }
 
 #ifdef MM_HAVE_SOCKETS
@@ -462,23 +527,33 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
                 PlayerLeft(payload[0]);
             break;
         case kMsgPhantom:
-            if (length >= 26 && from >= 0 && from < kMaxPlayers) {
+            if (length >= 32 && from >= 0 && from < kMaxPlayers) {
                 NetRaceState *st = &gNet.states[from];
-                st->room = (short)(payload[0] | payload[1] << 8);
-                memcpy(&st->x, payload + 2, 4);
-                memcpy(&st->y, payload + 6, 4);
-                st->frame = (short)(payload[10] | payload[11] << 8);
+                st->room = (short)NetGetU16(payload);
+                st->x = NetGetF32(payload + 2);
+                st->y = NetGetF32(payload + 6);
+                st->frame = (short)NetGetU16(payload + 10);
                 st->flipped = (payload[12] & 1) != 0;
                 st->visible = (payload[12] & 2) != 0;
                 st->status = payload[13];
                 st->elapsedMs = GetU32(payload + 14);
                 st->deaths = payload[18];
-                memcpy(&st->scaleW, payload + 19, 4);
+                st->scaleW = NetGetF32(payload + 19);
                 st->scaleH = st->scaleW;
                 st->place = payload[23];
-                st->mapRoom = (short)(payload[24] | payload[25] << 8);
+                st->mapRoom = (short)NetGetU16(payload + 24);
+                st->runningRoom = (short)NetGetU16(payload + 26);
+                st->roomMs = GetU32(payload + 28);
                 gNet.stateValid[from] = true;
             }
+            break;
+        case kMsgTeam:
+            if (from >= 0 && from < kMaxPlayers && from != gNet.localPlayer)
+                CoopSyncReceiveOps(from, payload, length);
+            break;
+        case kMsgRoomSnap:
+            if (from >= 0 && from < kMaxPlayers && from != gNet.localPlayer)
+                RoomSyncReceive(from, payload, length);
             break;
         case kMsgStart:
             if (!gNet.isHost && length <= (int)sizeof(gNet.startPayload)) {
@@ -543,7 +618,7 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
         // the host passes on what the others need to hear
     if (gNet.isHost && link != NULL && link->player >= 0 && from == link->player &&
         (type == kMsgFrame || type == kMsgSave || type == kMsgPhantom || type == kMsgChat || type == kMsgReady ||
-         type == kMsgNoMansion))
+         type == kMsgNoMansion || type == kMsgTeam || type == kMsgRoomSnap))
         ForwardToOthers(from, type, payload, length);
 }
 
@@ -801,6 +876,8 @@ static int LanHostPoll(void *unused)
         AddLink(sock, NULL, 0);
     }
     NetPump();
+    if (getenv("MM_DEBUG_NET_START") != NULL && gNet.numPlayers >= atoi(getenv("MM_DEBUG_NET_START")))
+        return 1;       // testing aid: starts once this many are in
     return 0;
 }
 
@@ -1256,7 +1333,7 @@ Boolean NetClientWaitForStart(void)
     }
     gNet.beaten[gNet.localPlayer] = HasBeatenCurrentMansion();
     SendMessage(kMsgReady, &gNet.beaten[gNet.localPlayer], 1);
-    if (gNet.mode == kNetModeRace)
+    if (gNet.mode == kNetModeRace || gNet.mode == kNetModeArcade)
         MultiplayerSetUpNetworkRace();
     return true;
 }
@@ -1293,25 +1370,38 @@ void NetGameStarted(void)
 /// Sends this computer's player (every frame).
 void NetRaceSendState(const NetRaceState *st)
 {
-    Uint8 payload[26];
+    Uint8 payload[32];
 
     if (!gNet.active)
         return;
-    payload[0] = (Uint8)st->room;
-    payload[1] = (Uint8)(st->room >> 8);
-    memcpy(payload + 2, &st->x, 4);
-    memcpy(payload + 6, &st->y, 4);
-    payload[10] = (Uint8)st->frame;
-    payload[11] = (Uint8)(st->frame >> 8);
+    NetPutU16(payload, (Uint16)st->room);
+    NetPutF32(payload + 2, st->x);
+    NetPutF32(payload + 6, st->y);
+    NetPutU16(payload + 10, (Uint16)st->frame);
     payload[12] = (Uint8)((st->flipped ? 1 : 0) | (st->visible ? 2 : 0));
     payload[13] = st->status;
     PutU32(payload + 14, st->elapsedMs);
     payload[18] = st->deaths;
-    memcpy(payload + 19, &st->scaleW, 4);
+    NetPutF32(payload + 19, st->scaleW);
     payload[23] = st->place;
-    payload[24] = (Uint8)st->mapRoom;
-    payload[25] = (Uint8)(st->mapRoom >> 8);
+    NetPutU16(payload + 24, (Uint16)st->mapRoom);
+    NetPutU16(payload + 26, (Uint16)st->runningRoom);
+    PutU32(payload + 28, st->roomMs);
     SendMessage(kMsgPhantom, payload, sizeof(payload));
+}
+
+/// Arcade Split Screen: what this computer's player did to the team's game.
+void NetSendTeamOps(const Uint8 *ops, int length)
+{
+    if (NetArcadeActive() && length > 0 && length <= 65535)
+        SendMessage(kMsgTeam, ops, (Uint16)length);
+}
+
+/// Arcade Split Screen: the room this computer's player keeps, for the others in it.
+void NetSendRoomSnapshot(const Uint8 *data, int length)
+{
+    if (NetArcadeActive() && length > 0 && length <= 65535)
+        SendMessage(kMsgRoomSnap, data, (Uint16)length);
 }
 
 /// Reads what has arrived (once a frame, before NetRaceGetState).
@@ -1788,6 +1878,8 @@ Boolean NetWaitForSaveChoice(void) { return false; }
 void NetPeerLeftDuringGame(void) {}
 void NetAskToLeave(void) {}
 void NetRaceSendState(const NetRaceState *st) { (void)st; }
+void NetSendTeamOps(const Uint8 *ops, int length) { (void)ops; (void)length; }
+void NetSendRoomSnapshot(const Uint8 *data, int length) { (void)data; (void)length; }
 void NetRacePump(void) {}
 Boolean NetRaceGetState(int player, NetRaceState *st, Boolean *goneP) { (void)player; (void)st; *goneP = true; return false; }
 void NetBrowseStart(void) {}
