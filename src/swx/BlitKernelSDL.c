@@ -107,7 +107,7 @@ SDL_Surface *BKLoadSurface(const char *filename)
     }
 
     if (channels == 4 || channels == 2) {
-        surface = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_ABGR8888);
+        surface = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
         if (surface != NULL) {
             int x, y;
             for (y = 0; y < h; y++) {
@@ -156,7 +156,7 @@ SDL_Surface *BKCreateSurface(int w, int h, int bpp, SDL_bool video, SDL_bool mas
     if (bpp != 32 && bpp != 24)
         bpp = 32;
     if (alpha || bpp == 32)
-        surface = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, alpha ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_XBGR8888);
+        surface = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, alpha ? SDL_PIXELFORMAT_RGBA32 : SDL_PIXELFORMAT_RGBX32);
     else
         surface = SDL_CreateRGBSurfaceWithFormat(0, w, h, 24, SDL_PIXELFORMAT_RGB24);
     if (surface != NULL && mask)
@@ -176,7 +176,7 @@ SDL_Surface *BKCreateGLSurface(int w, int h, int bpp, SDL_bool power2, SDL_bool 
     }
     if (!mask && !alpha)
         return SDL_CreateRGBSurfaceWithFormat(0, w, h, 24, SDL_PIXELFORMAT_RGB24);
-    return SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_ABGR8888);
+    return SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
 }
 
 int BKFlipHorizontal(SDL_Surface *surface)

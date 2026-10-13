@@ -38,10 +38,10 @@ static SDL_Surface *BKCopyToRGBA(SDL_Surface *surface, const SDL_Rect *rect)
     SDL_Surface *converted, *out;
     SDL_bool hadKey = SDL_HasColorKey(surface);
 
-    converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+    converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
     if (converted == NULL)
         return NULL;
-    out = SDL_CreateRGBSurfaceWithFormat(0, src.w, src.h, 32, SDL_PIXELFORMAT_ABGR8888);
+    out = SDL_CreateRGBSurfaceWithFormat(0, src.w, src.h, 32, SDL_PIXELFORMAT_RGBA32);
     if (out != NULL) {
         int y;
         SDL_Rect clipped = src;
@@ -89,7 +89,7 @@ BKGLSurface *BKCreateNewGLSurface(SDL_Surface *surface, const SDL_Rect *rect)
 
 BKGLSurface *BKCreateBlankGLSurface(int w, int h, int depth, SDL_bool alpha)
 {
-    SDL_Surface *s = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_ABGR8888);
+    SDL_Surface *s = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
     BKGLSurface *gls;
     SW_UNUSED(depth);
 

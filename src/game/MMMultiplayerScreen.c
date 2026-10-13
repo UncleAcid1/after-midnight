@@ -281,7 +281,7 @@ static GLuint LoadTexture(const char *path, int *w, int *h)
 
     if (surface == NULL)
         return 0;
-    rgba = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+    rgba = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
     SDL_FreeSurface(surface);
     if (rgba == NULL)
         return 0;

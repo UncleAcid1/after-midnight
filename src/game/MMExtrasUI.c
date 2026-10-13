@@ -54,7 +54,7 @@ SpritePtr NewSolidBoxSprite(SpriteLayerPtr layerP, const SWRect *rectP, unsigned
     SpritePtr boxP = NULL;
 
     if (masterP == NULL) {
-        surface = SDL_CreateRGBSurfaceWithFormat(0, 4, 4, 32, SDL_PIXELFORMAT_ABGR8888);
+        surface = SDL_CreateRGBSurfaceWithFormat(0, 4, 4, 32, SDL_PIXELFORMAT_RGBA32);
         if (surface == NULL)
             return NULL;
         SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 255, 255, 255, 255));
@@ -235,7 +235,7 @@ static SDL_Rect OpaqueBoundsOfFrame(FramePtr frameP)
         for (y = 0; y < s->h; y++) {
             const Uint8 *row = (const Uint8 *)s->pixels + y * s->pitch;
             for (x = 0; x < s->w; x++) {
-                if (row[x * 4 + 3] > 96) {      // ABGR8888 bytes are R, G, B, A
+                if (row[x * 4 + 3] > 96) {      // RGBA32: the bytes are R, G, B, A
                     if (x < minX) minX = x;
                     if (x > maxX) maxX = x;
                     if (y < minY) minY = y;

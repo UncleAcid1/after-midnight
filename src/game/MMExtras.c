@@ -712,7 +712,7 @@ static SpritePtr ConfettiMaster(void)
 
     if (masterP != NULL)
         return masterP;
-    surface = SDL_CreateRGBSurfaceWithFormat(0, 8, 5, 32, SDL_PIXELFORMAT_ABGR8888);
+    surface = SDL_CreateRGBSurfaceWithFormat(0, 8, 5, 32, SDL_PIXELFORMAT_RGBA32);
     if (surface == NULL)
         return NULL;
     SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 255, 255, 255, 255));
