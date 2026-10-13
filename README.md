@@ -170,6 +170,11 @@ Saves, profiles and settings live in `~/Library/Application Support/ActionSoft/M
 on macOS, and in `~/.local/share/ActionSoft/Midnight Mansion/` on Linux. More in
 **[docs/BUILDING.md](docs/BUILDING.md)**.
 
+### PS3 (work in progress)
+
+A PS3 version is on its way: GitHub Actions builds an installable package on every push, and
+the title screen and menus already run in the RPCS3 emulator. See **[docs/PS3.md](docs/PS3.md)**.
+
 ## Controls
 
 | | Keyboard | Controller |
