@@ -1,5 +1,34 @@
 # Changelog
 
+## After Midnight 1.1
+
+The PlayStation 3 version: *After Midnight* now also runs on a PS3 with custom firmware (and in
+the RPCS3 emulator), and plays together with the Mac and Linux versions.
+
+### PS3
+- An installable `.pkg`, built by GitHub Actions on every push, with its own XMB icon, background
+  and sound by Thom Yorke. Each mansion is packed into one file, so it installs quickly.
+- All the game: the 11 mansions, the 89 bundled custom mansions, Random Mansion, Trophy Room,
+  high scores, the on-screen keyboard, the Fun and Extras options. Quit returns to the XMB.
+- **Your own custom mansions** from a USB flash drive: a folder named
+  `Midnight Mansion HD Custom Mansions` at the top of the drive.
+- **Multiplayer**: Arcade Split Screen and Ghost Race for 2–4 players (one controller each), and
+  Co-op and Ghost Race on the local network and online, with Macs and PCs too.
+- **Fit the picture on a TV** (Options → Extras): a little smaller, for TVs that cut off the edges.
+- The menus name the PS3's buttons (Cross, Circle, Square, Triangle).
+- A log on the USB flash drive (`After Midnight log.txt`) for reporting problems.
+- See [docs/PS3.md](docs/PS3.md) for installing it, in RPCS3 and on a PS3.
+
+### Everywhere
+- Relay co-op computes the same game on every computer (the game's own sine, cosine and random
+  numbers, the same floating-point rules), and checks once a second that the computers agree:
+  if they ever don't, it stops with a message instead of playing on in two different games.
+- Controllers: signs close with any button; the map's mansions can be chosen; the Multiplayer
+  screen and the Extras checkboxes can be reached; B goes back everywhere; lists start on Okay;
+  Y deletes in the player list.
+- Random Mansion: a long name is drawn smaller to stay on the sign.
+- Less memory: pictures are no longer kept twice once they are on the graphics card.
+
 ## After Midnight 1.0
 
 The first release of *Midnight Mansion HD: After Midnight*, Vern Jensen's *Midnight Mansion HD*

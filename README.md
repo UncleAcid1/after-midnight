@@ -2,10 +2,10 @@
   <img src="docs/images/social-preview.png" alt="Midnight Mansion HD: After Midnight" width="100%">
 </p>
 
-<h3 align="center">Vern Jensen's <i>Midnight Mansion HD</i>, kept playing on today's computers.</h3>
+<h3 align="center">Vern Jensen's <i>Midnight Mansion HD</i>, kept playing on today's computers, and on the PS3.</h3>
 
 <p align="center">
-  <img alt="macOS and Linux" src="https://img.shields.io/badge/runs_on-macOS_%7C_Linux-1f2a44?style=for-the-badge">
+  <img alt="macOS, Linux and PS3" src="https://img.shields.io/badge/runs_on-macOS_%7C_Linux_%7C_PS3-1f2a44?style=for-the-badge">
   <img alt="1 to 4 players" src="https://img.shields.io/badge/players-1--4-c9a227?style=for-the-badge">
   <img alt="Split screen, local network and online" src="https://img.shields.io/badge/multiplayer-split_screen_%7C_LAN_%7C_online-2e7d5b?style=for-the-badge">
   <img alt="Written in C with SDL2 and OpenGL" src="https://img.shields.io/badge/C99-SDL2_%2B_OpenGL-5c6b8a?style=for-the-badge">
@@ -47,8 +47,8 @@ skeletons, spiders and zappers, on the trail of a treasure hidden deep in Spider
 The 2011 Mac release no longer runs on modern Macs.
 
 *After Midnight* is that game rebuilt from its original Mac release. Its C source was
-reconstructed function by function and now runs natively on Apple Silicon and Intel Macs and on
-Linux, using the original game's own art, sound, music and mansions. **With the new options
+reconstructed function by function and now runs natively on Apple Silicon and Intel Macs, on
+Linux and on the PlayStation 3, using the original game's own art, sound, music and mansions. **With the new options
 off, it plays exactly as the original did.** Turn them on and the house has some new rooms.
 
 ## What After Midnight adds
@@ -170,23 +170,41 @@ Saves, profiles and settings live in `~/Library/Application Support/ActionSoft/M
 on macOS, and in `~/.local/share/ActionSoft/Midnight Mansion/` on Linux. More in
 **[docs/BUILDING.md](docs/BUILDING.md)**.
 
-### PS3 (work in progress)
+### PS3
 
-A PS3 version is on its way: GitHub Actions builds an installable package on every push. It
-runs on a real PS3 (custom firmware) and in the RPCS3 emulator, with LAN and online play
-against the computer versions. See **[docs/PS3.md](docs/PS3.md)**.
+*After Midnight* runs on a PS3 with custom firmware (it was made and tested on a PS3 Slim with
+Evilnat's CFW) and in the [RPCS3](https://rpcs3.net) emulator. Everything is there: all the
+mansions, split screen for up to four controllers, and LAN and online play with the Mac and
+Linux versions.
+
+1. **Get the package.** On GitHub, open the **Actions** tab, then the newest **Build** run with
+   a green check, and download **After-Midnight-PS3-…** under **Artifacts**. Inside the `.zip`
+   is `After-Midnight-1.1-PS3.pkg`.
+2. **On a PS3:** copy the `.pkg` to the top of a FAT32 USB flash drive, plug it in, and choose
+   **Game → Package Manager → Install Package Files → Standard** on the XMB (or install it with
+   multiMAN). **After Midnight** appears in the Game column.
+3. **In RPCS3:** **File → Install Packages/Raps/Edats**. For network play set
+   **Configuration → Network → Network Status** to **Connected**.
+
+Leave the flash drive in while playing: the game writes its log there
+(`After Midnight log.txt`), and plays any custom mansions you put in a folder named
+`Midnight Mansion HD Custom Mansions` at its top. On an older TV that cuts off the edges, turn
+on **Options → Extras → Fit the picture on a TV**. Saves live in the game's own folder
+(`/dev_hdd0/game/AMHD00001/USRDIR/Saves/`). Everything else, including building the package
+yourself, is in **[docs/PS3.md](docs/PS3.md)**.
 
 ## Controls
 
-| | Keyboard | Controller |
-|---|---|---|
-| Walk / climb | Arrow keys (or keypad 4 6 8 2) | Stick or d-pad |
-| Jump | Space (keypad 7 / 9 to jump left / right) | A |
-| Action: levers, signs | Return | X or B |
-| Map | M | Y or Back |
-| Pause | Escape | Start |
+| | Keyboard | Controller | PS3 |
+|---|---|---|---|
+| Walk / climb | Arrow keys (or keypad 4 6 8 2) | Stick or d-pad | Stick or d-pad |
+| Jump | Space (keypad 7 / 9 to jump left / right) | A | Cross |
+| Action: levers, signs | Return | X or B | Square or Circle |
+| Map | M | Y or Back | Triangle or Select |
+| Pause | Escape | Start | Start |
 | Chat (games on several computers) | T | |
 
+In menus, A (Cross) chooses and B (Circle) goes back; any button closes a sign.
 In split screen, a second keyboard player uses **W A S D**, **F** to jump, **G** for action
 and **Tab** for the map. Every controller that's plugged in can join with **A**. All keys can
 be changed under **Options → Controls**.
@@ -263,6 +281,7 @@ About 47,000 lines of C, and a clean build has no warnings.
 ```
 src/game/        the game: the reconstructed original, plus everything After Midnight adds (MM*.c)
 src/swx/         SpriteWorld X, the sprite and rendering engine, ported to SDL2 + OpenGL
+src/ps3/         the PS3 version: OpenGL on the RSX, controllers, sound, files, network
 server/          the lobby server, mmhd-admin, the installer, and Mac desktop shortcuts
 extras/          new art and sounds, and the 89 bundled custom mansions
 original/        the original Mac app bundle and its game data
@@ -270,6 +289,7 @@ reference/       Ghidra output and symbol maps of the original (read-only)
 tools/           decompiling and art-generating scripts
 docs/            building, extras, online play, the reconstruction plan, images
 platform/macos/  the app bundle's Info.plist and library bundling
+platform/ps3/    the PS3 package: Makefile, shaders' build, XMB art and sound, mansion packing
 third_party/     stb, dr_mp3, and SpriteWorld X upstream
 ```
 
@@ -277,12 +297,13 @@ third_party/     stb, dr_mp3, and SpriteWorld X upstream
 
 <table>
 <tr><td><b>Vern Jensen</b></td><td>Creator of <i>Midnight Mansion</i> and <i>Midnight Mansion HD</i>. The original game, its design, and its mansions are his work. Published by ActionSoft.</td></tr>
-<tr><td><b>Thom Yorke</b> (<a href="https://github.com/UncleAcid1">@UncleAcid1</a>)</td><td>After Midnight's creator and director: the vision, every design note, testing, additional art, and running the lobby server.</td></tr>
+<tr><td><b>Thom Yorke</b> (<a href="https://github.com/UncleAcid1">@UncleAcid1</a>)</td><td>After Midnight's creator and director: the vision, every design note, testing, additional art, the PS3 version's XMB icon, background and sound, and running the lobby server.</td></tr>
 <tr><td><b>Claude Opus 5.5</b> (Anthropic)</td><td>All of the code, via Claude Code.</td></tr>
 <tr><td><b>The Midnight Mansion community</b></td><td>The 89 custom mansions bundled in <code>extras/Custom Mansions</code>, each by its own author.</td></tr>
 <tr><td><b>SpriteWorld X</b></td><td>Michael Cabral, Ben Henke, Justin Van Eaton, David Beck and Anders F Björklund (zlib licence).</td></tr>
 <tr><td><b>stb</b> and <b>dr_mp3</b></td><td>Sean Barrett (stb_image, stb_truetype, stb_vorbis) and David Reid (dr_mp3), both public domain or MIT.</td></tr>
 <tr><td><b>SDL2</b></td><td>The Simple DirectMedia Layer project (zlib licence).</td></tr>
+<tr><td><b>PSL1GHT</b> and <b>ps3dev</b></td><td>The open-source PS3 SDK and toolchain the PS3 version is built with (MIT licence), and the SDL2 port for it.</td></tr>
 </table>
 
 ## Legal
