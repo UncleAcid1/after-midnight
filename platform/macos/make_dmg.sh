@@ -70,7 +70,10 @@ VERSION="$(sed -n 's/^## After Midnight \([0-9][0-9.]*\).*/\1/p' CHANGELOG.md 2>
 [ -n "$VERSION" ] || VERSION="dev"
 if [ -d .git ] && [ "$VERSION" != "dev" ]; then
         # builds made after the release's own commit say which commit they're from
-    if [ "$(git log -1 --format=%H -- CHANGELOG.md)" != "$(git rev-parse HEAD)" ]; then
+        # (only what goes into the app counts: a merge on GitHub, or a change to this script,
+        # leaves it the release)
+    if ! git diff --quiet "$(git log -1 --format=%H -- CHANGELOG.md)" HEAD -- src extras original \
+            CMakeLists.txt platform/macos/Info.plist.in 2>/dev/null; then
         VERSION="$VERSION+$(git rev-parse --short HEAD)"
     fi
 fi
@@ -89,19 +92,37 @@ rm -f "$DMG"
 
 # Icon centres: the game at (175, 235), Applications at (485, 235), in a 660x420 window
 # (tools/make_dmg_background.py draws the arrow between them).
-if ! create-dmg \
-        --volname "After Midnight" \
-        --volicon "$APP/Contents/Resources/mm_icon.icns" \
-        --background "$BUILD/dmg-background.tiff" \
-        --window-pos 200 120 \
-        --window-size 660 420 \
-        --icon-size 112 \
-        --text-size 13 \
-        --icon "$APP_NAME.app" 175 235 \
-        --hide-extension "$APP_NAME.app" \
-        --app-drop-link 485 235 \
-        --hdiutil-quiet \
-        "$DMG" "$STAGE"; then
+# Finder sometimes refuses the window settings ("Can't set statusbar visible", -10006): it's
+# tried three times, then the image is made without the arranged window rather than not at all.
+make_dmg() {
+    rm -f "$DMG" "$DIST"/rw.*.dmg
+    create-dmg "$@" "$DMG" "$STAGE"
+}
+DMG_LOOK=(--volicon "$APP/Contents/Resources/mm_icon.icns"
+        --background "$BUILD/dmg-background.tiff"
+        --window-pos 200 120
+        --window-size 660 420
+        --icon-size 112
+        --text-size 13
+        --icon "$APP_NAME.app" 175 235
+        --hide-extension "$APP_NAME.app"
+        --app-drop-link 485 235)
+made=no
+for try in 1 2 3; do
+    if make_dmg --volname "After Midnight" "${DMG_LOOK[@]}" --hdiutil-quiet; then
+        made=yes
+        break
+    fi
+    echo "(Finder didn't arrange the window; trying again, $try of 3)"
+    sleep 3
+done
+if [ "$made" = no ]; then
+    echo "Making it without the arranged window instead (the game inside is the same)."
+    if make_dmg --volname "After Midnight" --skip-jenkins --app-drop-link 485 235 --hdiutil-quiet; then
+        made=yes
+    fi
+fi
+if [ "$made" = no ]; then
     echo
     echo "If it says Terminal isn't allowed to control Finder: open System Settings > Privacy &"
     echo "Security > Automation, turn on Finder under Terminal, and run this again."
