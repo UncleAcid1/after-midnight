@@ -39,7 +39,7 @@ enum {
     kRowHeader, kRowLocalGame, kRowFoundGame, kRowHost, kRowJoinAddress, kRowSearching,
     kRowPlayer, kRowAddPlayer, kRowRemovePlayer, kRowChooseMansion, kRowCustomMansion, kRowBackToGames,
     kRowGoOnline, kRowOnlineGame, kRowHostPublic, kRowHostPrivate, kRowJoinCode, kRowGoFriends, kRowLobbyAddress,
-    kRowAddFriend, kRowFriend, kRowRecent, kRowBackToOnline, kRowInfo, kRowContinueSave
+    kRowAddFriend, kRowFriend, kRowRecent, kRowBackToOnline, kRowInfo, kRowContinueSave, kRowControllers
 };
 
 typedef struct ModeInfo {
@@ -340,10 +340,18 @@ void EnterMultiplayerScreen(void)
         gMP.characters[1] = kCharacterHenry;
         gMP.characters[2] = kCharacterJack2;
         gMP.characters[3] = kCharacterHenry2;
-        gMP.inputs[0] = kSplitInputKeyboard;
-        gMP.inputs[1] = IsControllerConnected() ? kSplitInputPad1 : kSplitInputKeyboardLeft;
-        gMP.inputs[2] = kSplitInputPad2;
-        gMP.inputs[3] = kSplitInputPad3;
+            // the first time: player 1 on the controller that runs the menus, then the other
+            // controllers, then the keyboard
+        if (IsControllerConnected()) {
+            int first = ControllerMenuPad() >= 1 && ControllerMenuPad() <= GetNumControllers() ? ControllerMenuPad() - 1 : 0;
+            gMP.inputs[0] = kSplitInputPad1 + first;
+            gMP.inputs[1] = GetNumControllers() > 1 ? kSplitInputPad1 + (first == 0 ? 1 : 0) : kSplitInputKeyboard;
+        } else {
+            gMP.inputs[0] = kSplitInputKeyboard;
+            gMP.inputs[1] = kSplitInputKeyboardLeft;
+        }
+        gMP.inputs[2] = kSplitInputPad3;
+        gMP.inputs[3] = kSplitInputPad4;
         LoadLobby();
 #ifdef MM_PS3
         for (i = 0; i < kMaxPlayers; i++)       // no keyboard: player n has controller n
@@ -488,12 +496,73 @@ static const char *InputName(int input)
     static char text[32];
 
     switch (input) {
-        case kSplitInputKeyboard:     return "Arrow keys";
+        case kSplitInputKeyboard:     return ModeIsSplit() ? "Arrow keys" : "Keyboard";
         case kSplitInputKeyboardLeft: return "W A S D keys";
         default:
             snprintf(text, sizeof(text), "Controller %d", input - kSplitInputPad1 + 1);
             return text;
     }
+}
+
+/// Gives a player controls. In split screen nobody shares: whoever had them gets this
+/// player's old ones. (Taking turns, players can pass one controller round.)
+static void SetPlayerControls(int player, int input)
+{
+    int i;
+
+    for (i = 0; ModeIsSplit() && i < gMP.numPlayers; i++)
+        if (i != player && gMP.inputs[i] == input)
+            gMP.inputs[i] = gMP.inputs[player];
+    gMP.inputs[player] = input;
+}
+
+/// Asks which controls a player plays with: the keyboard and each controller plugged in, by
+/// name. Returns the input, or -1 if cancelled.
+static int AskControls(int player, Boolean adding)
+{
+    static char labels[kNumSplitInputs][160];
+    const char *choices[kNumSplitInputs];
+    int inputs[kNumSplitInputs], n = 0, selected = 0, input, i, owner;
+    char title[64];
+
+    for (input = 0; input < kNumSplitInputs; input++) {
+        int pad = input - kSplitInputPad1;
+#ifdef MM_PS3
+        if (input < kSplitInputPad1)
+            continue;           // no keyboard on the PS3
+#endif
+        if (input == kSplitInputKeyboardLeft && !ModeIsSplit() && gMP.inputs[player] != input)
+            continue;
+        if (pad >= GetNumControllers() && (gMP.inputs[player] != input || adding))
+            continue;
+        if (input == kSplitInputKeyboard)
+            snprintf(labels[n], sizeof(labels[n]), "%s", ModeIsSplit() ? "Arrow keys (the keys set in Options)" : "Keyboard");
+        else if (input == kSplitInputKeyboardLeft)
+            snprintf(labels[n], sizeof(labels[n]), "W A S D keys (F jump, G action, Tab map)");
+        else if (pad < GetNumControllers())
+            snprintf(labels[n], sizeof(labels[n]), "Controller %d: %.18s", pad + 1, ControllerPadName(pad));
+        else
+            snprintf(labels[n], sizeof(labels[n]), "Controller %d (not plugged in)", pad + 1);
+        for (owner = -1, i = 0; i < gMP.numPlayers; i++)
+            if (i != player && gMP.inputs[i] == input)
+                owner = i;
+        if (owner >= 0) {
+            size_t len = strlen(labels[n]);
+            snprintf(labels[n] + len, sizeof(labels[n]) - len, " (player %d)", owner + 1);
+        }
+        if (input == gMP.inputs[player] && (!adding || owner < 0))
+            selected = n;
+        inputs[n] = input;
+        choices[n] = labels[n];
+        n++;
+    }
+    snprintf(title, sizeof(title), "Player %d plays with", player + 1);
+    SWSetPostDrawCallBack(gSpriteWorldP, gMP.savedPostDraw);
+    SetMMEventCallback(NULL);
+    i = DoSimpleChoiceDialog(title, choices, n, selected);
+    SWSetPostDrawCallBack(gSpriteWorldP, MultiplayerScreenPostDraw);
+    SetMMEventCallback(MPEventCallback);
+    return i >= 0 && i < n ? inputs[i] : -1;
 }
 
 /// The next control scheme nobody else is using.
@@ -533,22 +602,30 @@ static void ChooseProfile(int player)
     SetMMEventCallback(MPEventCallback);
 }
 
-static void AddPlayer(int input)
+/// A new player: their controls, then their profile.
+static void AddPlayer(void)
 {
-    int p = gMP.numPlayers;
+    int p = gMP.numPlayers, input;
 
     if (p >= kMaxPlayers)
         return;
     gMP.numPlayers++;
     gMP.profiles[p][0] = 0;
-    gMP.inputs[p] = input >= 0 ? input : NextFreeInput(p, gMP.inputs[p > 0 ? p - 1 : 0]);
+    gMP.inputs[p] = NextFreeInput(p, gMP.inputs[p > 0 ? p - 1 : 0]);
+    input = AskControls(p, true);
+    if (input < 0) {
+        gMP.numPlayers--;
+        return;
+    }
+    SetPlayerControls(p, input);
     FillMissingProfiles();
+    ChooseProfile(p);
 }
 
 /// Sets everything up for the chosen game and leaves for the mansion choice.
 static void StartLocalGame(Boolean customMansion)
 {
-    int i;
+    int i, j;
 
     for (i = 0; i < gMP.numPlayers; i++) {
         if (gMP.profiles[i][0] == 0) {
@@ -556,7 +633,7 @@ static void StartLocalGame(Boolean customMansion)
             ShowNote("Every player needs a profile: choose one for each player.");
             return;
         }
-        if (ModeIsSplit() && gMP.inputs[i] >= kSplitInputPad1 && gMP.inputs[i] - kSplitInputPad1 >= GetNumControllers()) {
+        if (gMP.inputs[i] >= kSplitInputPad1 && gMP.inputs[i] - kSplitInputPad1 >= GetNumControllers()) {
             char note[160];
             snprintf(note, sizeof(note), "%s isn't plugged in: plug it in, or give player %d other controls.",
                      InputName(gMP.inputs[i]), i + 1);
@@ -564,9 +641,19 @@ static void StartLocalGame(Boolean customMansion)
             ShowNote(note);
             return;
         }
+        for (j = 0; ModeIsSplit() && j < i; j++)
+            if (gMP.inputs[j] == gMP.inputs[i]) {
+                char note[160];
+                snprintf(note, sizeof(note), "Players %d and %d have the same controls: in split screen each "
+                         "player needs their own.", j + 1, i + 1);
+                gMP.column = 1;
+                ShowNote(note);
+                return;
+            }
     }
     SaveLobby();
     SetMultiplayerPlayers(gMP.numPlayers, gMP.profiles, gMP.characters, ModeIsSplit());
+    SetMultiplayerInputs(gMP.inputs);
     if (ModeIsSplit())
         SplitConfigure(gMP.mode == kModeTwin ? kSplitModeCoop : kSplitModeRace, gMP.numPlayers, gMP.inputs);
     else
@@ -625,7 +712,7 @@ static void ContinueLocalSave(int index)
     char path[1500];
     int i;
 
-    for (i = 0; ModeIsSplit() && i < gMP.numPlayers; i++)
+    for (i = 0; i < gMP.numPlayers; i++)
         if (gMP.inputs[i] >= kSplitInputPad1 && gMP.inputs[i] - kSplitInputPad1 >= GetNumControllers()) {
             gMP.column = 1;
             ShowNote("A player's controller isn't plugged in: plug it in, or give them other controls.");
@@ -634,6 +721,7 @@ static void ContinueLocalSave(int index)
     snprintf(path, sizeof(path), "%s", gMP.saves[index].path);
     SaveLobby();
     SetMultiplayerPlayers(gMP.numPlayers, gMP.profiles, gMP.characters, ModeIsSplit());
+    SetMultiplayerInputs(gMP.inputs);
     ShutDownScreen();
     if (ModeIsSplit()) {
         SplitConfigure(kSplitModeCoop, gMP.numPlayers, gMP.inputs);
@@ -872,11 +960,21 @@ static void ActivateRow(Row *r)
                 ChooseProfile(r->arg);
             else if (gMP.field == 1)
                 gMP.characters[r->arg] = (gMP.characters[r->arg] + 1) % kNumCharacters;
-            else
-                gMP.inputs[r->arg] = NextFreeInput(r->arg, gMP.inputs[r->arg]);
+            else {
+                int input = AskControls(r->arg, false);
+                if (input >= 0)
+                    SetPlayerControls(r->arg, input);
+            }
             break;
         case kRowAddPlayer:
-            AddPlayer(-1);
+            AddPlayer();
+            break;
+        case kRowControllers:
+            SWSetPostDrawCallBack(gSpriteWorldP, gMP.savedPostDraw);
+            SetMMEventCallback(NULL);
+            DoControllersDialog();
+            SWSetPostDrawCallBack(gSpriteWorldP, MultiplayerScreenPostDraw);
+            SetMMEventCallback(MPEventCallback);
             break;
         case kRowRemovePlayer:
             if (gMP.numPlayers > 2)
@@ -1099,6 +1197,7 @@ static void BuildRows(void)
             AddRow(kRowAddPlayer, 0, "Add a player", NULL);
         if (gMP.numPlayers > 2)
             AddRow(kRowRemovePlayer, 0, "Remove the last player", NULL);
+        AddRow(kRowControllers, 0, "Controllers...", NULL);
         FindLobbySaves();
         for (i = 0; i < gMP.numSaves; i++) {
             MultiSaveDescribe(&gMP.saves[i], detail, sizeof(detail));
@@ -1109,24 +1208,36 @@ static void BuildRows(void)
         AddRow(kRowCustomMansion, 0, "Custom mansion...", NULL);
         AddRow(kRowBackToGames, 0, "Back to the games", NULL);
     }
-    for (i = 0; i < gMP.numRows; i++) {
-        Row *r = &gMP.rows[i];
-        float h = r->kind == kRowHeader ? 40.0f : (r->kind == kRowPlayer ? 62.0f : (r->detail[0] ? 58.0f : kRowHeight));
-        if (r->kind == kRowHeader && i > 0)
-            y += 12;
-        r->top = y;
-        r->bottom = y + h;
-        y += h;
+    {
+            // rows closer together when they wouldn't fit in the window (four players and saves)
+        float total = 0, squeeze = 1.0f, room = kWindowBottom - 16 - y;
+        for (i = 0; i < gMP.numRows; i++) {
+            Row *r = &gMP.rows[i];
+            total += r->kind == kRowHeader ? 40.0f + (i > 0 ? 12 : 0)
+                                           : (r->kind == kRowPlayer ? 62.0f : (r->detail[0] ? 58.0f : kRowHeight));
+        }
+        if (total > room)
+            squeeze = room / total;
+        for (i = 0; i < gMP.numRows; i++) {
+            Row *r = &gMP.rows[i];
+            float h = r->kind == kRowHeader ? 40.0f : (r->kind == kRowPlayer ? 62.0f : (r->detail[0] ? 58.0f : kRowHeight));
+            if (r->kind == kRowHeader && i > 0)
+                y += 12 * squeeze;
+            h *= squeeze;
+            r->top = y;
+            r->bottom = y + h;
+            y += h;
+        }
     }
     FixRowFocus();
 }
 
-/// Lobby rows have three fields across: profile, character, controls (split screen only).
+/// Lobby rows have three fields across: profile, character, controls.
 static int FieldAt(float x)
 {
     if (x < kWindowLeft + 272)
         return 0;
-    if (!ModeIsSplit() || x < kWindowLeft + 388)
+    if (x < kWindowLeft + 388)
         return 1;
     return 2;
 }
@@ -1153,17 +1264,6 @@ static void HandleMenuInput(void)
     if (presses != 0 || gControllerHidesCursor) {
         gMP.pointer = false;
         gMP.hoverCard = -1;
-    }
-
-        // a controller that isn't playing yet: A adds it as a player (in the lobby)
-    if ((presses & kPadAccept) && gMP.view == kViewLobby && ModeIsSplit() && gControllerHidesCursor) {
-        int pad = ControllerIndexForInstanceID(ControllerLastPadID());
-        for (i = 0; pad >= 0 && i < gMP.numPlayers && gMP.inputs[i] != kSplitInputPad1 + pad; i++)
-            ;
-        if (pad >= 0 && i == gMP.numPlayers && gMP.numPlayers < kMaxPlayers) {
-            AddPlayer(kSplitInputPad1 + pad);
-            presses &= ~kPadAccept;
-        }
     }
 
     if (moved || clicked) {
@@ -1244,7 +1344,7 @@ static void HandleMenuInput(void)
             else
                 gMP.column = 0;
         }
-        if ((presses & kPadRight) && r != NULL && r->kind == kRowPlayer && gMP.field < (ModeIsSplit() ? 2 : 1))
+        if ((presses & kPadRight) && r != NULL && r->kind == kRowPlayer && gMP.field < 2)
             gMP.field++;
         if ((presses & kPadAccept) && r != NULL) {
             MMPlaySound(0x0b, 8, 1);
@@ -1533,11 +1633,11 @@ static void DrawPlayerRow(const Row *r, Boolean focused, float alpha)
 {
     int p = r->arg, c = gMP.characters[p];
     const float *rgb = GetCharacterColor(c);
-    float y = r->top + 40, x = kWindowLeft + 40;
+    float y = r->top + 40 * (r->bottom - r->top) / 62.0f, x = kWindowLeft + 40;
     char label[96];
     const char *fields[3];
     float fx[3] = { kWindowLeft + 96, kWindowLeft + 282, kWindowLeft + 398 };
-    int f, numFields = ModeIsSplit() ? 3 : 2;
+    int f, numFields = 3;
 
     snprintf(label, sizeof(label), "%d", p + 1);
     Text(gMP.font, 30, label, x, y, 1, rgb[0], rgb[1], rgb[2], alpha);
@@ -1582,7 +1682,8 @@ static void DrawWindow(float alpha)
     for (i = 0; i < gMP.numRows; i++) {
         Row *r = &gMP.rows[i];
         Boolean focused = gMP.column == 1 && gMP.row == i;
-        float textY = r->top + (r->detail[0] ? 30 : 32);
+        float squeeze = (r->bottom - r->top) / (r->kind == kRowHeader ? 40.0f : r->detail[0] ? 58.0f : kRowHeight);
+        float textY = r->top + (r->detail[0] ? 30 : 32) * squeeze;
 
         if (focused && r->kind != kRowPlayer)
             Fill(kWindowLeft + 26, r->top + 4, kWindowRight - 26, r->bottom - 4, 1, 0.85f, 0.4f,

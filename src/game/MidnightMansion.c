@@ -998,14 +998,15 @@ void StartGameNoEditor(void)
     if (split != NULL && !SplitScreenPending()) {
         int n = strchr(split, ':') != NULL ? atoi(strchr(split, ':') + 1) : 2;
         Boolean relay = strncmp(split, "relay", 5) == 0;
-        SetMultiplayerPlayers(n, NULL, NULL, !relay);
-        if (!relay) {
-            static const int kPads[] = { kSplitInputPad1, kSplitInputPad2, kSplitInputPad3, kSplitInputPad4 };
+        static const int kPads[] = { kSplitInputPad1, kSplitInputPad2, kSplitInputPad3, kSplitInputPad4 };
 #ifdef MM_PS3
-            Boolean pads = true;
+        Boolean pads = true;
 #else
-            Boolean pads = strstr(split, ":pads") != NULL;     // "coop:2:pads": controllers 1, 2...
+        Boolean pads = strstr(split, ":pads") != NULL;     // "coop:2:pads": controllers 1, 2...
 #endif
+        SetMultiplayerPlayers(n, NULL, NULL, !relay);
+        SetMultiplayerInputs(pads ? kPads : NULL);
+        if (!relay) {
             SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, pads ? kPads : NULL);
         }
     }

@@ -937,6 +937,224 @@ int DoSimpleChoiceDialog(const char *title, const char **choices, int count, int
     return result;
 }
 
+// ---------------------------------------------------------------------------
+// Controllers (this version): which controller runs the menus and plays alone, the buttons for
+// play, and rumble. A controller's line lights up while it's used, to tell them apart.
+
+enum { kCtlPadRow = 0x200, kCtlAnyRow = 0x204, kCtlBindRow = 0x210, kCtlRumble = 0x220, kCtlDefaults = 0x221 };
+
+typedef struct LabelButton {
+    SpritePtr buttonP, labelP;
+    char text[160];
+} LabelButton;
+
+/// A key box as wide as asked, with a line of text in it (left-aligned, or centered).
+static void AddLabelButton(MMDialog *d, LabelButton *b, short index, short left, short top, short width,
+                           short height, Boolean centered)
+{
+    static const unsigned char yellow[3] = { 0xff, 0xff, 0x5f };
+    SWRect rect;
+
+    memset(b, 0, sizeof(*b));
+    b->buttonP = CloneButtonSprite(gSpriteArray[222], index);
+    if (b->buttonP == NULL)
+        return;
+    SetUpButtonSprite(b->buttonP, 0, 1, 1, 0);
+    InstallButtonProc(b->buttonP, MMStandardButtonProc);
+    SetButtonColor(b->buttonP, 0xffff, 0xffff, 0x5fff);
+    SetButtonHighlightedColor(b->buttonP, 0x5fff, 0xffff, 0xffff);
+    SetButtonPushedColor(b->buttonP, 0x9fff, 0x9fff, 0x1fff);
+    SetButtonPushedOffset(b->buttonP, 1, 1);
+    SWSetSpriteScaledSize(b->buttonP, width, height);
+    SWSetSpriteDrawProc(b->buttonP, KeyCapDrawProc);
+    AddDialogSprite(d, b->buttonP);
+    SWSetSpriteLocation(b->buttonP, left, top);
+    ChangeButtonColor(b->buttonP, kButtonNormal);
+    if (SWCreateTextSprite(&b->labelP, " ", "Action Man", (short)(height * 0.5f), 0, yellow, true) == kNoError) {
+        rect.left = (short)(left + (centered ? 0 : height * 0.4f));
+        rect.right = (short)(left + width - (centered ? 0 : height * 0.3f));
+        rect.top = top;
+        rect.bottom = (short)(top + height * 0.7f);
+        SetTextSpriteRect(b->labelP, &rect, centered ? 2 : 0, false);
+        AddDialogSprite(d, b->labelP);
+    }
+}
+
+/// Its text (only redrawn when it changes) and colour: cyan under the highlight, green while
+/// lit (a controller in use), yellow otherwise; dimmed when it can't be chosen.
+static void SetLabelButton(LabelButton *b, const char *text, Boolean lit, Boolean dimmed)
+{
+    TextSpritePtr textP = (TextSpritePtr)b->labelP;
+    Boolean focused;
+
+    if (b->buttonP == NULL || textP == NULL)
+        return;
+    if (strcmp(text, b->text) != 0) {
+        snprintf(b->text, sizeof(b->text), "%s", text);
+        SetTextSpriteText(b->labelP, text);
+    }
+    focused = ((ButtonSpritePtr)b->buttonP)->state != kButtonNormal;
+    textP->color[0] = dimmed ? 0x90 : lit ? 0x80 : focused ? 0x5f : 0xff;
+    textP->color[1] = dimmed ? 0x88 : 0xff;
+    textP->color[2] = dimmed ? 0x60 : lit ? 0x80 : focused ? 0xff : 0x5f;
+}
+
+static void DescribeBinding(int action, char *text, size_t size)
+{
+    static const char *names[kNumPadActions] = { "Jump", "Action", "Map", "Jump left", "Jump right" };
+    int first = ControllerActionButton(action, 0), second = ControllerActionButton(action, 1);
+
+    if (first < 0)
+        snprintf(text, size, "%s:  none", names[action]);
+    else if (second < 0)
+        snprintf(text, size, "%s:  %s", names[action], ControllerButtonName(first));
+    else
+        snprintf(text, size, "%s:  %s, %s", names[action], ControllerButtonName(first), ControllerButtonName(second));
+}
+
+/// A key-box button with a centered label, in a layer of the Options dialog.
+SpritePtr AddKeyBoxButtonToLayer(SpriteLayerPtr layerP, const char *label, short index, short left, short top,
+                                 short width, short height)
+{
+    MMDialog d;
+    LabelButton b;
+
+    memset(&d, 0, sizeof(d));
+    d.layerP = layerP;
+    AddLabelButton(&d, &b, index, left, top, width, height, true);
+    SetLabelButton(&b, label, false, false);
+    return b.buttonP;
+}
+
+/// The Controllers menu (Options > Controls, and the Multiplayer screen).
+void DoControllersDialog(void)
+{
+    MMDialog d;
+    LabelButton pads[5], binds[kNumPadActions], rumble, defaults;
+    SpritePtr helpP;
+    SWRect panel;
+    SWPoint mouse;
+    Boolean mouseDown, done = false, savedRumble = gExtras.rumble;
+    unsigned char saved[256];
+    char text[200];
+    short button, colW, rowH, u;
+    int capturing = -1, i, b;
+    Uint32 captureUntil = 0, now;
+
+    if (ControllerSettingsSize() > sizeof(saved))
+        return;
+    ControllerSettingsSnapshot(saved, sizeof(saved), false);
+    if (!BeginDialog(&d, 0.74f)) {
+        EndDialog(&d);
+        return;
+    }
+    panel = d.panelP->destFrameRect;
+    u = (short)d.scale;
+    colW = (short)(280 * u);
+    rowH = (short)(25 * u);
+    SetDialogTextCentered(&d, AddDialogText(&d, "Controllers", 0.42f, (short)(panel.left + 30 * u),
+                                            (short)(panel.top + 14 * u), (short)(panel.right - panel.left - 60 * u)),
+                          "Controllers");
+    helpP = AddDialogText(&d, "", 0.22f, (short)(panel.left + 30 * u), (short)(panel.top + 46 * u),
+                          (short)(panel.right - panel.left - 60 * u));
+    AddDialogText(&d, "Runs the menus and plays alone", 0.24f, (short)(panel.left + 26 * u),
+                  (short)(panel.top + 72 * u), colW);
+    AddDialogText(&d, "Buttons for play", 0.24f, (short)(panel.left + 320 * u),
+                  (short)(panel.top + 72 * u), colW);
+    for (i = 0; i < 5; i++)
+        AddLabelButton(&d, &pads[i], (short)(kCtlPadRow + i), (short)(panel.left + 24 * u),
+                       (short)(panel.top + (94 + 30 * i) * u), colW, rowH, false);
+    for (i = 0; i < kNumPadActions; i++)
+        AddLabelButton(&d, &binds[i], (short)(kCtlBindRow + i), (short)(panel.left + 318 * u),
+                       (short)(panel.top + (94 + 30 * i) * u), colW, rowH, false);
+    AddLabelButton(&d, &rumble, kCtlRumble, (short)(panel.left + 318 * u), (short)(panel.top + (94 + 30 * 5) * u),
+                   colW, rowH, false);
+    AddLabelButton(&d, &defaults, kCtlDefaults, (short)(panel.left + 24 * u), (short)(panel.top + 300 * u),
+                   (short)(170 * u), rowH, true);
+    AddDialogButtons(&d, true);
+
+    while (!done && !gQuitGame) {
+        button = DialogFrame(&d, &mouse, &mouseDown);
+        now = SDL_GetTicks();
+        if (capturing >= 0) {
+                // waiting for the button to give to an action
+            b = ControllerTakeCapturedButton();
+            if (b == SDL_CONTROLLER_BUTTON_START || gKeyEscape || (Sint32)(now - captureUntil) >= 0 ||
+                button == kDialogCancel) {
+                capturing = -1;
+            } else if (b >= 0 && (b < SDL_CONTROLLER_BUTTON_DPAD_UP || b > SDL_CONTROLLER_BUTTON_DPAD_RIGHT)) {
+                ControllerBindButton(capturing, b);
+                capturing = -1;
+            }
+            if (capturing < 0) {
+                ControllerCaptureButtons(false);
+                MMPlaySound(0x0b, 8, 1);
+            }
+            gKeyEscape = gKeyReturn = false;
+            button = -1;
+        }
+        if (button >= kCtlPadRow && button < kCtlPadRow + 4 && button - kCtlPadRow < GetNumControllers()) {
+            ControllerSetMenuPad(button - kCtlPadRow + 1);
+            ControllerIdentify(button - kCtlPadRow);
+        } else if (button == kCtlAnyRow) {
+            ControllerSetMenuPad(0);
+        } else if (button >= kCtlBindRow && button < kCtlBindRow + kNumPadActions) {
+            capturing = button - kCtlBindRow;
+            captureUntil = now + 6000;
+            ControllerCaptureButtons(true);
+        } else if (button == kCtlRumble) {
+            gExtras.rumble = !gExtras.rumble;
+            if (gExtras.rumble)
+                ControllerIdentify(ControllerMenuPad() > 0 ? ControllerMenuPad() - 1 : 0);
+        } else if (button == kCtlDefaults) {
+            ControllerResetButtons();
+            ControllerSetMenuPad(1);
+            gExtras.rumble = true;
+        } else if (button == kDialogOK || (gKeyReturn && capturing < 0)) {
+            SaveControllerSettings();
+            SaveExtrasSettings();
+            done = true;
+        } else if (button == kDialogCancel || gKeyEscape) {
+            ControllerSettingsSnapshot(saved, sizeof(saved), true);
+            gExtras.rumble = savedRumble;
+            done = true;
+        }
+        gKeyReturn = gKeyEscape = false;
+
+            // the lines
+        for (i = 0; i < 4; i++) {
+            Boolean connected = i < GetNumControllers();
+            if (connected)
+                snprintf(text, sizeof(text), "%d  %.40s%s", i + 1, ControllerPadName(i),
+                         ControllerMenuPad() == i + 1 ? "   - menus" : "");
+            else
+                snprintf(text, sizeof(text), "%d  (not plugged in)", i + 1);
+            SetLabelButton(&pads[i], text, connected && now - ControllerLastActivity(i) < 300, !connected);
+        }
+        SetLabelButton(&pads[4], ControllerMenuPad() == 0 ? "Any controller   - menus" : "Any controller", false,
+                       false);
+        for (i = 0; i < kNumPadActions; i++) {
+            if (capturing == i)
+                snprintf(text, sizeof(text), "Press a button...");
+            else
+                DescribeBinding(i, text, sizeof(text));
+            SetLabelButton(&binds[i], text, capturing == i, false);
+        }
+        SetLabelButton(&rumble, gExtras.rumble ? "Rumble:  on" : "Rumble:  off", false, false);
+        SetLabelButton(&defaults, "Restore defaults", false, false);
+        if (capturing >= 0)
+            snprintf(text, sizeof(text), "Press the button for it (Start: leave it as it was).");
+        else if (GetNumControllers() == 0)
+            snprintf(text, sizeof(text), "No controller is plugged in.");
+        else
+            snprintf(text, sizeof(text), "Press a button on a controller: its line lights up.");
+        SetDialogTextCentered(&d, helpP, text);
+    }
+    ControllerCaptureButtons(false);
+    AnimateOneFrame(gSpriteWorldP);
+    EndDialog(&d);
+}
+
 /// Picks a player profile other than the ones in exclude (making a new one is offered), for
 /// another player in a multiplayer game. The current profile stays loaded.
 Boolean DoChooseOtherPlayerDialog(const char *title, char exclude[][64], int numExclude, char *nameOut,

@@ -207,7 +207,7 @@ void MyHandleSDLEvent(SDL_Event *event)
             scancode = ConvertKeyScanCode(event->key.keysym.scancode);
                 // Cmd-key combinations are menu shortcuts, not game input
             if ((event->key.keysym.mod & KMOD_GUI) == 0) {
-                if (!event->key.repeat)
+                if (!event->key.repeat && KeyboardDrivesHero())     // co-op: not on a controller player's turn
                     UpdateMovementKeys(scancode, event->key.keysym.sym, true, event->key.repeat);
                 if (!event->key.repeat &&
                     HandleKeyUpDownEvent(scancode, event->key.keysym.sym, true, event->key.repeat))

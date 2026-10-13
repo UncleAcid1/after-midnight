@@ -193,6 +193,10 @@ int  GetNumPlayers(void);
 Boolean IsMultiplayerGame(void);
 Boolean IsRelayGame(void);
 void SetMultiplayerPlayers(int numPlayers, char profiles[][64], const int *characters, Boolean split);
+/// Co-op on one computer: each player's controls (kSplitInput...); only theirs plays their turn.
+void SetMultiplayerInputs(const int *inputs);
+int  GetPlayerInput(int player);
+Boolean IsLocalRelayGame(void);
 void MultiplayerSplitPlayerStarting(int player);
 void MultiplayerSplitEnded(void);
 int  GetActivePlayer(void);
@@ -217,6 +221,31 @@ void EnterMultiplayerScreenAgain(void);
 void HandleMultiplayerScreenCallback(void);
 Boolean IsMultiplayerScreenActive(void);
 SDL_JoystickID ControllerLastPadID(void);
+// The Controllers menu (MMController.c and MMDialogs.c): which controller runs the menus (and
+// plays alone), and the buttons for play. Menus keep A / Cross to choose and B / Circle to go back;
+// Start always pauses.
+enum { kPadActionJump, kPadActionAction, kPadActionMap, kPadActionJumpLeft, kPadActionJumpRight,
+       kNumPadActions };
+void LoadControllerSettings(void);
+void SaveControllerSettings(void);
+void ControllerSettingsSnapshot(void *buffer, size_t size, Boolean restore);
+size_t ControllerSettingsSize(void);
+int  ControllerMenuPad(void);                   ///< 0 any controller, 1-4 that one
+void ControllerSetMenuPad(int pad);
+int  ControllerActionButton(int action, int which);     ///< SDL button, -1 none (which: 0 or 1)
+void ControllerBindButton(int action, int button);
+void ControllerResetButtons(void);
+const char *ControllerButtonName(int button);
+const char *ControllerPadName(int pad);          ///< "Xbox Wireless Controller", "" if none
+Uint32 ControllerLastActivity(int pad);         ///< SDL_GetTicks of its last button or stick move
+void ControllerIdentify(int pad);
+void ControllerCaptureButtons(Boolean on);
+int  ControllerTakeCapturedButton(void);        ///< -1 none yet
+Boolean KeyboardDrivesHero(void);
+void ControllerTurnChanged(void);
+void DoControllersDialog(void);
+SpritePtr AddKeyBoxButtonToLayer(SpriteLayerPtr layerP, const char *label, short index, short left, short top,
+                                 short width, short height);
 void MultiplayerGameStarted(void);
 void MultiplayerGameEnded(void);
 void MultiplayerNextTurn(void);

@@ -1422,7 +1422,7 @@ short MMDoCustomDialog(SpriteWorldPtr spriteWorldP, const char *text, short dial
 
 enum {
     kOptionsOK = 0, kOptionsCancel = 1, kOptionsMusic = 5, kOptionsSofterMusic = 6, kOptionsSound = 7,
-    kOptionsFullscreen = 8, kOptionsStretch = 9, kOptionsGamepad = 0x17,
+    kOptionsFullscreen = 8, kOptionsStretch = 9, kOptionsGamepad = 0x17, kOptionsControllers = 0x18,
     kOptionsTabOptions = 0xdf, kOptionsTabControls = 0xe0, kOptionsTabFun = 0xe3, kOptionsTabExtras = 0xe4
 };
 
@@ -1466,6 +1466,7 @@ void MMDoOptionsDialog(void)
     SWPoint mouse;
     float saveZoomH, saveZoomV, saveOffsetH, saveOffsetV, scaleH, scaleV;
     Boolean fadeLayerWasVisible, mouseDown, done, musicWasOn, wasFullscreenWindow, wasStretched;
+    Boolean openControllers = false;
     short button = -1;
     SWError err;
 
@@ -1554,6 +1555,11 @@ void MMDoOptionsDialog(void)
                 SetMusicVolume(GetMusicVolume());
             if (button == kOptionsGamepad && !IsGamepadInitialized())
                 InitGamePad();
+            if (button == kOptionsControllers) {
+                    // keeps what's set here, then the Controllers menu, then back here
+                openControllers = true;
+                button = kOptionsOK;
+            }
             if (gControllerTabStep != 0) {      // L1 / R1: the tab before or after
                 ShowOptionsPane((gCurOptionsDialogPane - 1 + gControllerTabStep + 4) % 4 + 1);
                 gControllerTabStep = 0;
@@ -1611,6 +1617,10 @@ void MMDoOptionsDialog(void)
 #endif
     }
     SetMMEventCallback(NULL);
+    if (openControllers && !gQuitGame) {
+        DoControllersDialog();
+        MMDoOptionsDialog();
+    }
 }
 
 /// OK/Cancel buttons and the two tabs.
@@ -1744,6 +1754,10 @@ void AddControlsItemsToOptionsDialog(SpriteLayerPtr layerP, SWRect *dialogRectP)
         AddKeyInputBoxToOptionsDialog(rightColumn[i].label, 0x12 + i, &gKeyPrefs.primaryKeys[key],
                                       &gKeyPrefs.secondaryKeys[key], gKeyPrefs.gamepadNames[key], layerP, h, v);
     }
+
+        // this version: the Controllers menu, under Map
+    AddKeyBoxButtonToLayer(layerP, "Controllers...", kOptionsControllers, (short)(h - scale * 232.0f),
+                           (short)(v + scale * 60.0f), (short)(scale * 440.0f), (short)(scale * 50.0f));
 
     h = (short)(scale * 110.0f + dialogRectP->left);
     v = (short)(scale * 90.0f + (short)(scale * 60.0f + v));

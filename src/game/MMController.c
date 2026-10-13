@@ -3,10 +3,15 @@
  * most others), added by this version.
  *
  * In play the left stick / d-pad move, A (Cross) jumps, X (Square) is the action button,
- * Y (Triangle) or Back shows the map, Start pauses and the shoulders zoom the map.
+ * Y (Triangle) or Back shows the map, Start pauses and the shoulders zoom the map; the buttons
+ * for jumping, the action and the map can be changed in the Controllers menu.
  * In menus the d-pad / stick moves a highlight between the on-screen buttons (the mouse
  * cursor is hidden and the game sees the highlighted button as pointed at), A presses it
  * and B goes back.
+ *
+ * One controller runs the menus and plays alone (the Controllers menu: controller 1 unless
+ * changed, or any). In co-op on one computer only the controller of the player whose turn it
+ * is plays (and rumbles); in split screen each player's controller reaches only their game.
  */
 
 #include "MMGame.h"
@@ -35,6 +40,265 @@ Boolean gControllerMenuAlt2 = false;
 int gControllerTabStep = 0;     // L1 / R1 outside a list: -1 / +1 (the Options dialog's tabs)
 static Boolean gListMode = false;
 
+// ---------------------------------------------------------------------------
+// Settings ("Midnight Mansion HD Controllers.txt" next to the preferences)
+
+typedef struct PadSettings {
+    int     menuPad;                            ///< 0 any controller, 1-4 that one
+    Sint8   buttons[kNumPadActions][2];         ///< SDL_GameControllerButton, -1 none
+} PadSettings;
+
+static const Sint8 kDefaultButtons[kNumPadActions][2] = {
+    { SDL_CONTROLLER_BUTTON_A, -1 },
+    { SDL_CONTROLLER_BUTTON_X, SDL_CONTROLLER_BUTTON_B },
+    { SDL_CONTROLLER_BUTTON_Y, SDL_CONTROLLER_BUTTON_BACK },
+    { -1, -1 },
+    { -1, -1 },
+};
+static const char *kActionKeys[kNumPadActions] = { "jump", "action", "map", "jump_left", "jump_right" };
+
+static PadSettings gPads = { 1, { { 0 } } };
+static Uint32 gPadActivity[4];                  ///< when each controller was last used
+static Boolean gCapturing = false;
+static int gCaptured = -1;
+
+static const char *ControllerSettingsPath(void)
+{
+    return GetAppSupportPath("Midnight Mansion HD Controllers.txt");
+}
+
+void ControllerResetButtons(void)
+{
+    memcpy(gPads.buttons, kDefaultButtons, sizeof(gPads.buttons));
+}
+
+void LoadControllerSettings(void)
+{
+    char line[200], key[40], value[160], *word;
+    FILE *file;
+    int a, n;
+
+    gPads.menuPad = 1;
+    ControllerResetButtons();
+    file = fopen(ControllerSettingsPath(), "r");
+    if (file == NULL)
+        return;
+    while (fgets(line, sizeof(line), file) != NULL) {
+        value[0] = 0;
+        if (sscanf(line, " %39[a-z_] = %159[^\n]", key, value) < 1)
+            continue;
+        if (strcmp(key, "menu_controller") == 0) {
+            gPads.menuPad = SDL_clamp(atoi(value), 0, 4);
+            continue;
+        }
+        for (a = 0; a < kNumPadActions && strcmp(key, kActionKeys[a]) != 0; a++)
+            ;
+        if (a == kNumPadActions)
+            continue;
+        gPads.buttons[a][0] = gPads.buttons[a][1] = -1;
+        for (n = 0, word = strtok(value, " \t\r"); word != NULL && n < 2; word = strtok(NULL, " \t\r")) {
+            SDL_GameControllerButton b = SDL_GameControllerGetButtonFromString(word);
+            if (b != SDL_CONTROLLER_BUTTON_INVALID && b != SDL_CONTROLLER_BUTTON_START)
+                gPads.buttons[a][n++] = (Sint8)b;
+        }
+    }
+    fclose(file);
+}
+
+void SaveControllerSettings(void)
+{
+    FILE *file = fopen(ControllerSettingsPath(), "w");
+    int a, n;
+
+    if (file == NULL)
+        return;
+    fputs("# Midnight Mansion HD: controllers (menu_controller 0 = any; buttons by SDL's names)\n", file);
+    fprintf(file, "menu_controller = %d\n", gPads.menuPad);
+    for (a = 0; a < kNumPadActions; a++) {
+        fprintf(file, "%s =", kActionKeys[a]);
+        for (n = 0; n < 2; n++)
+            if (gPads.buttons[a][n] >= 0)
+                fprintf(file, " %s", SDL_GameControllerGetStringForButton((SDL_GameControllerButton)gPads.buttons[a][n]));
+        fputc('\n', file);
+    }
+    fclose(file);
+}
+
+/// The Controllers menu keeps a copy to go back to on Cancel.
+size_t ControllerSettingsSize(void)
+{
+    return sizeof(gPads);
+}
+
+void ControllerSettingsSnapshot(void *buffer, size_t size, Boolean restore)
+{
+    if (size < sizeof(gPads))
+        return;
+    if (restore)
+        memcpy(&gPads, buffer, sizeof(gPads));
+    else
+        memcpy(buffer, &gPads, sizeof(gPads));
+}
+
+int ControllerMenuPad(void)
+{
+    return gPads.menuPad;
+}
+
+void ControllerSetMenuPad(int pad)
+{
+    gPads.menuPad = SDL_clamp(pad, 0, 4);
+}
+
+int ControllerActionButton(int action, int which)
+{
+    return action >= 0 && action < kNumPadActions && which >= 0 && which < 2 ? gPads.buttons[action][which] : -1;
+}
+
+/// The button goes to this action (first), and from any other; pressing the action's first
+/// button again leaves it the only one.
+void ControllerBindButton(int action, int button)
+{
+    int a;
+
+    if (action < 0 || action >= kNumPadActions || button < 0 || button >= SDL_CONTROLLER_BUTTON_MAX ||
+        button == SDL_CONTROLLER_BUTTON_START)
+        return;
+    if (gPads.buttons[action][0] == button) {
+        gPads.buttons[action][1] = -1;
+        return;
+    }
+    for (a = 0; a < kNumPadActions; a++) {
+        if (gPads.buttons[a][1] == button)
+            gPads.buttons[a][1] = -1;
+        if (gPads.buttons[a][0] == button) {
+            gPads.buttons[a][0] = gPads.buttons[a][1];
+            gPads.buttons[a][1] = -1;
+        }
+    }
+    gPads.buttons[action][1] = gPads.buttons[action][0];
+    gPads.buttons[action][0] = (Sint8)button;
+}
+
+/// The play action a button does, or -1.
+static int ActionForButton(int button)
+{
+    int a;
+
+    for (a = 0; a < kNumPadActions; a++)
+        if (gPads.buttons[a][0] == button || gPads.buttons[a][1] == button)
+            return a;
+    return -1;
+}
+
+static Boolean UsesPlayStationNames(void)
+{
+#ifdef MM_PS3
+    return true;
+#elif SDL_VERSION_ATLEAST(2, 0, 12)
+    int pad = gPads.menuPad >= 1 && gPads.menuPad <= gNumControllers ? gPads.menuPad - 1 : 0;
+    SDL_GameControllerType type;
+
+    if (gNumControllers == 0)
+        return false;
+    type = SDL_GameControllerGetType(gControllers[pad]);
+    return type == SDL_CONTROLLER_TYPE_PS3 || type == SDL_CONTROLLER_TYPE_PS4 || type == SDL_CONTROLLER_TYPE_PS5;
+#else
+    return false;
+#endif
+}
+
+/// "A", "Cross", "LB"... as printed on the menu controller.
+const char *ControllerButtonName(int button)
+{
+    static const char *xbox[] = { "A", "B", "X", "Y", "Back", "Guide", "Start", "Left stick", "Right stick", "LB", "RB",
+                                  "Up", "Down", "Left", "Right", "Share", "Paddle 1", "Paddle 2", "Paddle 3",
+                                  "Paddle 4", "Touchpad" };
+    static const char *ps[] = { "Cross", "Circle", "Square", "Triangle", "Select", "PS", "Start", "L3", "R3", "L1",
+                                "R1", "Up", "Down", "Left", "Right", "Mic", "Paddle 1", "Paddle 2", "Paddle 3",
+                                "Paddle 4", "Touchpad" };
+
+    if (button < 0 || button >= (int)SDL_arraysize(xbox))
+        return "";
+    return UsesPlayStationNames() ? ps[button] : xbox[button];
+}
+
+const char *ControllerPadName(int pad)
+{
+    const char *name;
+
+    if (pad < 0 || pad >= gNumControllers)
+        return "";
+    name = SDL_GameControllerName(gControllers[pad]);
+    return name != NULL ? name : "Controller";
+}
+
+Uint32 ControllerLastActivity(int pad)
+{
+    return pad >= 0 && pad < 4 ? gPadActivity[pad] : 0;
+}
+
+void ControllerIdentify(int pad)
+{
+    if (pad >= 0 && pad < gNumControllers)
+        SDL_GameControllerRumble(gControllers[pad], 0x6000, 0xa000, 250);
+}
+
+/// The Controllers menu waits for a button to give to an action: the next press (any controller's,
+/// Start and the d-pad aside) is kept for it instead of doing anything.
+void ControllerCaptureButtons(Boolean on)
+{
+    gCapturing = on;
+    gCaptured = -1;
+}
+
+int ControllerTakeCapturedButton(void)
+{
+    int button = gCaptured;
+    gCaptured = -1;
+    return button;
+}
+
+/// Co-op on one computer: the controller of the player whose turn it is, -1 if they play on
+/// the keyboard (or theirs isn't plugged in).
+static int TurnPad(void)
+{
+    int input = GetPlayerInput(GetActivePlayer());
+
+    if (input < kSplitInputPad1 || input - kSplitInputPad1 >= gNumControllers)
+        return -1;
+    return input - kSplitInputPad1;
+}
+
+/// The keyboard moves Jack, unless it's another player's turn in co-op on one computer.
+Boolean KeyboardDrivesHero(void)
+{
+    int input;
+
+    if (!IsLocalRelayGame())
+        return true;
+    input = GetPlayerInput(GetActivePlayer());
+    return input < kSplitInputPad1 || TurnPad() < 0;
+}
+
+static Boolean IsInGameplay(void);
+
+/// Whether a controller's buttons and stick count now.
+static Boolean PadIsAllowed(int pad)
+{
+    int menuPad = gPads.menuPad - 1;
+
+    if (pad < 0 || SplitScreenActive())
+        return true;            // split screen routes each controller to its player
+    if (IsLocalRelayGame() && TurnPad() >= 0) {
+        if (pad == TurnPad())
+            return true;
+        if (IsInGameplay())
+            return false;       // the others don't play
+    }
+    return menuPad < 0 || menuPad >= gNumControllers || pad == menuPad;
+}
+
 /// In a scrolling list, up/down (and the shoulders) move through the list as the arrow
 /// (and page) keys do; left/right still move between the buttons.
 void ControllerSetListMode(Boolean on)
@@ -61,6 +325,7 @@ void InitControllers(void)
 
     if (!SDL_WasInit(SDL_INIT_GAMECONTROLLER))
         SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
+    LoadControllerSettings();
         // testing aid: MM_DEBUG_VIRTUAL_PADS=<n> plugs in n pretend controllers (DebugVirtualPadKey)
     for (i = 0; virtualPads != NULL && i < atoi(virtualPads) && i < 4; i++) {
         int device = SDL_JoystickAttachVirtual(SDL_JOYSTICK_TYPE_GAMECONTROLLER, SDL_CONTROLLER_AXIS_MAX,
@@ -147,16 +412,17 @@ void Rumble(int kind)
         { 0xd000, 0x2000, 420 },    // heavy: low rumble
         { 0xffff, 0xffff, 160 },    // jolt
     };
-    int i;
+    int i = 0, pad;
 
     if (!gExtras.rumble || kind < 0 || kind > 2 || NetIsFollower())     // only for the player who has the turn
         return;
-    for (i = 0; i < gNumControllers; i++) {
-        if (gLastPadID != -1 &&
-            SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(gControllers[i])) != gLastPadID)
-            continue;
-        SDL_GameControllerRumble(gControllers[i], kinds[kind].low, kinds[kind].high, kinds[kind].ms);
-    }
+        // the controller of whoever is playing: the turn's in co-op on one computer, else the
+        // last one used (none before any was)
+    pad = IsLocalRelayGame() ? TurnPad() : ControllerIndexForInstanceID(gLastPadID);
+    if (pad < 0 || pad >= gNumControllers)
+        return;
+    (void)i;
+    SDL_GameControllerRumble(gControllers[pad], kinds[kind].low, kinds[kind].high, kinds[kind].ms);
 }
 
 // ---------------------------------------------------------------------------
@@ -281,45 +547,27 @@ static void HandlePadButton(int button, Boolean down)
         return;
     }
     if (gameplay) {
-        switch (button) {
-            case SDL_CONTROLLER_BUTTON_A:
-                if (gCurrentGameMode == kInGameMapMode) {
-                    if (down && !gIsEnteringMapScreen)
-                        ExitInGameMapScreen(true);
-                } else {
-                    UpdateMovementKeys(gKeyPrefs.primaryKeys[4], gKeyPrefs.secondaryKeys[4], down, false);
-                }
-                break;
-            case SDL_CONTROLLER_BUTTON_X:
-            case SDL_CONTROLLER_BUTTON_B:
-                if (gCurrentGameMode == kInGameMapMode) {
-                    if (down && !gIsEnteringMapScreen)
-                        ExitInGameMapScreen(true);
-                } else {
-                    UpdateMovementKeys(gKeyPrefs.primaryKeys[7], gKeyPrefs.secondaryKeys[7], down, false);
-                }
-                break;
-            case SDL_CONTROLLER_BUTTON_Y:
-            case SDL_CONTROLLER_BUTTON_BACK:
-                if (down) {
-                    if (gCurrentGameMode == kInGameMapMode && !gIsEnteringMapScreen)
-                        ExitInGameMapScreen(true);
-                    else if (gCurrentGameMode == kPlayingGameMode)
-                        SetUpInGameMapScreen();
-                }
-                break;
-            case SDL_CONTROLLER_BUTTON_START:
-                if (down)
-                    PushKey(SDLK_ESCAPE, SDL_SCANCODE_ESCAPE);
-                break;
-            case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-                gKeys[kKeyZoomOut] = down && gCurrentGameMode == kInGameMapMode;
-                break;
-            case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-                gKeys[kKeyZoomIn] = down && gCurrentGameMode == kInGameMapMode;
-                break;
-            default:
-                break;
+            // the game's keys for each action (gKeyPrefs.primaryKeys order)
+        static const int kActionKeyIndex[kNumPadActions] = { 4, 7, -1, 5, 6 };
+        int action = ActionForButton(button);
+
+        if (button == SDL_CONTROLLER_BUTTON_START) {
+            if (down)
+                PushKey(SDLK_ESCAPE, SDL_SCANCODE_ESCAPE);
+        } else if (gCurrentGameMode == kInGameMapMode) {
+                // the shoulders zoom; the play buttons close the map
+            if (button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
+                gKeys[kKeyZoomOut] = down;
+            else if (button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
+                gKeys[kKeyZoomIn] = down;
+            else if (action >= 0 && down && !gIsEnteringMapScreen)
+                ExitInGameMapScreen(true);
+        } else if (action == kPadActionMap) {
+            if (down && gCurrentGameMode == kPlayingGameMode)
+                SetUpInGameMapScreen();
+        } else if (action >= 0) {
+            int key = kActionKeyIndex[action];
+            UpdateMovementKeys(gKeyPrefs.primaryKeys[key], gKeyPrefs.secondaryKeys[key], down, false);
         }
         return;
     }
@@ -404,6 +652,38 @@ static Boolean HandleDebugPadKey(SDL_Event *event)
     return true;
 }
 
+/// Notes the controller's activity, and whether its event counts now (PadIsAllowed). When a
+/// different controller takes over, the last one's held buttons are let go.
+static Boolean AcceptPadEvent(SDL_JoystickID id, Boolean active)
+{
+    int pad = ControllerIndexForInstanceID(id);
+
+    if (active && pad >= 0 && pad < 4)
+        gPadActivity[pad] = SDL_GetTicks() | 1;
+    if (!PadIsAllowed(pad))
+        return false;
+    if (id != gLastPadID && !active && gLastPadID != -1)
+        return false;           // a release or a resting stick from one that isn't in use
+    if (id != gLastPadID && gLastPadID != -1) {
+        memset(gPadHeld, 0, sizeof(gPadHeld));
+        gHeldDir = 0;
+        if (IsInGameplay())
+            SetMovementFromPad();
+    }
+    gLastPadID = id;
+    return true;
+}
+
+/// Co-op on one computer: a new turn starts with nothing held.
+void ControllerTurnChanged(void)
+{
+    memset(gPadHeld, 0, sizeof(gPadHeld));
+    gHeldDir = 0;
+    gLastPadID = -1;
+    if (IsLocalRelayGame())
+        ResetKeys();
+}
+
 /// Returns true if the event was a controller event (handled here).
 Boolean HandleControllerEvent(SDL_Event *event)
 {
@@ -418,11 +698,23 @@ Boolean HandleControllerEvent(SDL_Event *event)
             return true;
         case SDL_CONTROLLERBUTTONDOWN:
         case SDL_CONTROLLERBUTTONUP:
-            gLastPadID = event->cbutton.which;
+            if (gCapturing) {
+                    // the Controllers menu takes the next press, from any controller
+                if (event->type == SDL_CONTROLLERBUTTONDOWN) {
+                    int pad = ControllerIndexForInstanceID(event->cbutton.which);
+                    if (pad >= 0 && pad < 4)
+                        gPadActivity[pad] = SDL_GetTicks() | 1;
+                    gCaptured = event->cbutton.button;
+                }
+                return true;
+            }
+            if (!AcceptPadEvent(event->cbutton.which, event->type == SDL_CONTROLLERBUTTONDOWN))
+                return true;
             HandlePadButton(event->cbutton.button, event->type == SDL_CONTROLLERBUTTONDOWN);
             return true;
         case SDL_CONTROLLERAXISMOTION:
-            gLastPadID = event->caxis.which;
+            if (!AcceptPadEvent(event->caxis.which, abs(event->caxis.value) > kStickDeadZone))
+                return true;
             if (event->caxis.axis == SDL_CONTROLLER_AXIS_LEFTX || event->caxis.axis == SDL_CONTROLLER_AXIS_LEFTY)
                 HandleStick();
             else if (event->caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT && IsInGameplay())
