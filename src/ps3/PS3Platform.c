@@ -92,6 +92,19 @@ static void FindUSBDrive(void)
     gUSBFolder[0] = '\0';
 }
 
+/// Custom mansions on any USB drive: "/dev_usbNNN/Midnight Mansion HD Custom Mansions" (index
+/// 0 to 7), or NULL. Looked at whenever the list of custom mansions is made, so a drive can
+/// be plugged in while the game runs.
+const char *PS3USBCustomMansionsFolder(int index)
+{
+    static char path[96];
+
+    if (index < 0 || index > 7)
+        return NULL;
+    snprintf(path, sizeof(path), "/dev_usb%03d/Midnight Mansion HD Custom Mansions", index);
+    return FolderExists(path) ? path : NULL;
+}
+
 static void StartLog(void)
 {
     char path[256], old[256];

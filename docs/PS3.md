@@ -7,7 +7,9 @@ The PS3 version is being built step by step (the roadmap is in `CLAUDE.md`). Whe
 | Builds automatically | Every push to GitHub builds an installable `.pkg` (GitHub Actions, about 2 minutes). |
 | Real PS3 | Runs: menus, mansions, sound, controllers (tested by Thom on a PS3 Slim). |
 | RPCS3 | Runs without flickering, with RPCS3's default settings. |
-| Split screen | 2 and 4 players start and draw in RPCS3; not played through yet. |
+| Split screen | 2 to 4 players, each with their own controller, in RPCS3 (players 3 and 4 were pretend controllers). Memory was the limit for 4 players: fixed. Not yet tried on a real PS3 with more than one controller. |
+| Co-op with computers | Relay co-op keeps the PS3 and a computer in step (the same maths on both), and checks it once a second: if the two games ever differ, both stop with a message instead of playing on in different games. |
+| Custom mansions | The 89 bundled ones, and any you put on the flash drive (below). |
 | LAN and online | Work: in RPCS3 the PS3 hosted an online co-op game a Linux computer joined (both played the same mansion), and found and joined a game a computer hosted on the local network. Not yet tried on a real PS3. |
 | Installing | The package holds about 640 files (each mansion is packed into one), so it installs quickly. |
 
@@ -52,6 +54,16 @@ button (and reads signs), **Triangle** the map, **Start** pauses, the d-pad or l
 the highlight. Any of Cross, Circle, Square, Triangle or Start closes a sign. In the list of
 players, **Square** makes a new player and **Triangle** deletes the highlighted one.
 
+**Split screen**: player *n* plays with controller *n*. On the Multiplayer screen choose
+**Arcade Split Screen** or **Ghost Race**, then **New Game**; press Cross on a controller that
+isn't playing yet to add its player. Each player needs a player profile (Square makes one).
+
+**Your own custom mansions**: on the flash drive (FAT32), make a folder named exactly
+`Midnight Mansion HD Custom Mansions` at the top, and copy mansion folders into it (each
+mansion is a folder with folders like `'ROOM'` and `'TMAP'` inside, as they come from the
+Mac version or the internet). They show up in **Custom Mansions** and **Random Mansion** along
+with the bundled ones, as long as the drive is plugged in.
+
 **Options → Extras → Fit the picture on a TV** shows the picture a little smaller, for a TV
 that cuts off its edges (most older and CRT TVs).
 
@@ -83,6 +95,9 @@ run before is kept as `After Midnight log previous.txt`).
 - **A photo or screenshot** of the screen helps (RPCS3: F12 saves one; on the PS3 a phone
   photo is fine), and a sentence on what you did just before.
 
+The log also says how much memory is free (at startup, then every 30 seconds or so) and the
+frame rate every 10 seconds: useful when something is slow or a picture doesn't load.
+
 If the game stops moving, after 3 seconds the log says what it was doing (`No new frame for
 3000 ms ...`), with the last graphics operations. If it keeps drawing but stops reading the
 controller, the log gets a line `The game hasn't read its input ... called from: ...` with
@@ -100,6 +115,7 @@ folder) can switch on the same testing aids as on the computer, one per line:
     MM_PS3_DEBUG_FRAMES=1          # log the time of every frame
     MM_PS3_OVERSCAN=10             # "Fit the picture on a TV" makes it 10% smaller (7 if not set)
     MM_LOBBY=192.168.1.20:47480    # another lobby server (a test one on your network)
+    MM_DEBUG_CHECKSUM=1            # relay co-op: log what is compared between the computers
 
 Lines starting with `#` are ignored. The log lists the settings it read at the top. Delete
 the file (or empty it) to play normally.
@@ -152,8 +168,14 @@ Deleting the game from the XMB deletes its saves too.
   package went from 122,000 files to about 640.
 - **Network**: `src/ps3/PS3Net.c` fills in what PSL1GHT's network library lacks (select,
   fcntl, getaddrinfo, getifaddrs); the network starts with the first socket. The build uses
-  `-ffp-contract=off` so a PS3 computes relay co-op's frames as a PC does. Still to do (roadmap
-  step 6): the same sin/cos/atan on every platform, and a checksum that reports a desync.
+  `-ffp-contract=off` (the desktop builds too), sine and cosine are the game's own
+  (`SWSinDegrees` in `src/swx/SpriteWorldUtils.c`), and so is `GetRandom`'s generator, so a
+  PS3 computes relay co-op's frames as a PC does. Every 60 frames the driver sends a checksum
+  of the game state with the keys (`GameStateChecksum` in `MMNet.c`).
+- **Memory**: the PS3 has 214 MB for the game. Sprite frames and textures no longer keep a
+  copy of their pixels in main memory once the RSX has them (the controller highlight uses
+  the visible part measured when a texture is made): the title screen takes 55 MB, 4-player
+  split screen about 76 MB.
 - **Big-endian files**: the settings file wrote 4 bytes of 8-byte variables, which on the PS3
   were the empty half (the player was forgotten at every start); folder listings report the
   system's own file types, which PS3Files.c turns into the standard ones.

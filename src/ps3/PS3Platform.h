@@ -30,6 +30,8 @@ const char *PS3SaveFolder(void);
 /// Reads the controllers into SDL's virtual game controllers. Called (through the macros
 /// below) whenever the game asks SDL for events, so all of SDL stays on the game's thread.
 void PS3ReadControllers(void);
+/// A USB drive's folder of custom mansions (index 0 to 7), or NULL if that drive has none.
+const char *PS3USBCustomMansionsFolder(int index);
 /// Free memory and the heap in use, in the log.
 void PS3LogMemory(const char *when);
 

@@ -1138,6 +1138,11 @@ static int GatherCustomMansions(ListItem *items)
         count = AddFolderToList(items, count, bundled, "", true, true);
     snprintf(folder, sizeof(folder), "%s", GetCustomMansionsFolderPath(""));
     count = AddFolderToList(items, count, folder, "", true, true);
+#ifdef MM_PS3
+    for (i = 0; i < 8; i++)         // and on USB drives (docs/PS3.md)
+        if (PS3USBCustomMansionsFolder(i) != NULL)
+            count = AddFolderToList(items, count, PS3USBCustomMansionsFolder(i), "", true, true);
+#endif
     for (i = 0, kept = 0; i < count; i++) {
         size_t len = strlen(items[i].name);
         struct stat info;

@@ -58,12 +58,15 @@ settings file next to the log sets testing aids (docs/PS3.md). It runs at ~25 fp
 
 ## Roadmap (agreed). The owner's priority is the PS3; Windows comes later.
 
-Status: steps 1–4 and 7 done, see docs/PS3.md. The game runs on the owner's real PS3 (no
-flicker: the RPCS3 flicker was emulator render-target caching, fixed in `PS3GL.c` with a separate
+Status: steps 1–7 done and most of 8, see docs/PS3.md. The game runs on the owner's real PS3
+(the RPCS3 flicker was emulator render-target caching, fixed in `PS3GL.c` with a separate
 render-target arena). Mansions are packed one file each in the `.pkg` (`pack_mansions.py`,
-`src/ps3/PS3Files.c`). LAN and online work PS3 <-> Linux in RPCS3 (`src/ps3/PS3Net.c`; RPCS3 needs
-Network "Connected"). Next: step 5 (4 controllers on the real PS3), step 6 (shared maths functions
-and a desync checksum: the PS3 already builds with `-ffp-contract=off`), step 8.
+`src/ps3/PS3Files.c`); custom mansions also load from the USB drive. LAN and online work
+PS3 <-> Linux in RPCS3 (`src/ps3/PS3Net.c`; RPCS3 needs Network "Connected"), and relay co-op
+stays in step (own sin/cos and GetRandom, `-ffp-contract=off`, a checksum every 60 frames).
+4-player split screen fits in memory. Left for step 8: the 1.1 version number (CHANGELOG, the
+owner's call) and tests on the real PS3. The Multiplayer screen remembers its mode in
+`Saves/Multiplayer.txt` (set `mode = 0` for Co-op before scripted tests).
 
 The owner has a PS3 Slim on the latest **Evilnat** CFW, multiMAN, moves files by **USB flash drive**
 (FAT32), and tests in **RPCS3** on the Mac. Only one or two real controllers: 4-player tests are

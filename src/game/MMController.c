@@ -39,6 +39,8 @@ static Boolean gListMode = false;
 void ControllerSetListMode(Boolean on)
 {
     gListMode = on;
+    if (on)
+        gFocusP = NULL;         // a new list: the highlight starts on Okay (button index 0)
 }
 
 Boolean IsControllerConnected(void)
@@ -547,6 +549,15 @@ Boolean ControllerOverridesMouse(SWPoint *pointP, Boolean *buttonP)
             PushKey(SDLK_ESCAPE, SDL_SCANCODE_ESCAPE);
         gFocusP = NULL;
         return false;
+    }
+    for (i = 0; i < count && buttons[i] != gFocusP; i++)
+        ;
+    if (i == count && gListMode) {
+            // a list: Cross chooses the highlighted entry (Okay), Circle cancels
+        for (i = 0; i < count && ((ButtonSpritePtr)buttons[i])->buttonIndex != 0; i++)
+            ;
+        if (i < count)
+            gFocusP = buttons[i];
     }
     for (i = 0; i < count && buttons[i] != gFocusP; i++)
         ;
