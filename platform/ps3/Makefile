@@ -38,14 +38,16 @@ SHADERS     := ps3gl_vp.vpo ps3gl_color_fp.fpo ps3gl_texture_fp.fpo ps3gl_repeat
 OBJECTS     := $(OBJ)/GameDataBegin.o $(patsubst $(ROOT)/src/%.c,$(OBJ)/%.o,$(GAMESOURCES)) $(OBJ)/GameDataEnd.o \
                $(patsubst $(ROOT)/src/%.c,$(OBJ)/%.o,$(PS3SOURCES)) $(patsubst %,$(OBJ)/shaders/%.o,$(SHADERS))
 
-CFLAGS      := -O2 -g -std=gnu99 -mcpu=cell $(MACHDEP) -fsigned-char -DMM_PS3=1 \
+# -ffp-contract=off: no fused multiply-adds (PowerPC has them, a PC's game doesn't use them),
+# so a PS3 and a PC in the same relay co-op game compute the same numbers
+CFLAGS      := -O2 -g -std=gnu99 -mcpu=cell $(MACHDEP) -fsigned-char -ffp-contract=off -DMM_PS3=1 \
                -Wall -Wno-unused-function -Wno-multichar -Wno-missing-braces -Wno-unused-variable \
                -Wno-pointer-sign -Wno-format-truncation \
                -I$(ROOT)/src/ps3 -I$(ROOT)/src/swx -I$(ROOT)/src/game -I$(OBJ)/shaders \
                -I$(ROOT)/third_party/stb -I$(ROOT)/third_party/dr_libs \
                $(LIBPSL1GHT_INC) -I$(PORTLIBS)/include -I$(PORTLIBS)/include/SDL2
 LDFLAGS     := $(MACHDEP) -Wl,--gc-sections -Wl,-Map,$(OUT)/EBOOT.map
-LIBS        := -L$(PORTLIBS)/lib $(LIBPSL1GHT_LIB) -lSDL2 -lgcm_sys -lrsx -lsysutil -lio -laudio -lrt -llv2 -lnet -lsysmodule -lm
+LIBS        := -L$(PORTLIBS)/lib $(LIBPSL1GHT_LIB) -lSDL2 -lgcm_sys -lrsx -lsysutil -lio -laudio -lrt -llv2 -lnet -lnetctl -lsysmodule -lm
 
 .PHONY: all elf pkg gltest clean
 .SECONDARY:

@@ -433,6 +433,21 @@ static void RepeatHeldDirections(void)
 // Menus: a highlight that moves between the screen's buttons
 
 static int gRawMenuUsers = 0;
+static int gDialogDepth = 0;
+
+/// While a dialog is open on top of a screen that reads the controller itself, the dialog's
+/// buttons get the highlight.
+void ControllerDialogOpened(Boolean open)
+{
+    gDialogDepth += open ? 1 : -1;
+    if (gDialogDepth < 0)
+        gDialogDepth = 0;
+}
+
+static Boolean RawMenuInput(void)
+{
+    return gRawMenuUsers > 0 && gDialogDepth == 0 && !gCustomDialogIsVisible;
+}
 
 /// Screens that read TakeControllerMenuPresses themselves turn the button highlight off.
 void ControllerUseRawMenuInput(Boolean raw)
@@ -487,7 +502,7 @@ Boolean ControllerOverridesMouse(SWPoint *pointP, Boolean *buttonP)
     float h, v, bestDist = 1e9f;
 
     RepeatHeldDirections();
-    if (!gVirtualActive || gRawMenuUsers > 0 || IsInGameplay())
+    if (!gVirtualActive || RawMenuInput() || IsInGameplay())
         return false;
     count = GetActiveButtonSprites(buttons, 64);
     presses = TakeControllerMenuPresses();
@@ -558,7 +573,7 @@ SpritePtr GetControllerFocusSprite(void)
     SpritePtr buttons[64];
     int count, i;
 
-    if (!gVirtualActive || !gControllerHidesCursor || gFocusP == NULL || gRawMenuUsers > 0 || IsInGameplay())
+    if (!gVirtualActive || !gControllerHidesCursor || gFocusP == NULL || RawMenuInput() || IsInGameplay())
         return NULL;
     count = GetActiveButtonSprites(buttons, 64);
     for (i = 0; i < count; i++)

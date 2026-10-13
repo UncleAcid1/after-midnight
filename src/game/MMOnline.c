@@ -21,7 +21,7 @@
 #include "MMGame.h"
 #include "MMProtos.h"
 
-#if !defined(_WIN32) && !defined(MM_PS3)    // the PS3 joins in at roadmap step 7 (docs/PS3.md)
+#if !defined(_WIN32) && !defined(MM_PS3)
 #include <fcntl.h>
 #include <netdb.h>
 #include <unistd.h>
@@ -29,6 +29,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+#define MM_HAVE_SOCKETS 1
+#elif defined(MM_PS3)
+#include "PS3Net.h"                          // the PS3's sockets, with what PSL1GHT lacks
 #define MM_HAVE_SOCKETS 1
 #endif
 

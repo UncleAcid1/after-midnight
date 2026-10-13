@@ -114,6 +114,7 @@ static Boolean BeginDialog(MMDialog *d, float panelScale)
     SWError err;
 
     memset(d, 0, sizeof(*d));
+    ControllerDialogOpened(true);       // (EndDialog follows even when this fails)
     d->layerP = gOptionsDialogPane2LayerP;
     d->scale = (float)(gSpriteWorldP->designWidth / 640);
     d->parentP = gCurDialogP;
@@ -158,6 +159,7 @@ static void EndDialog(MMDialog *d)
 {
     int i;
 
+    ControllerDialogOpened(false);
     for (i = 0; i < d->numSprites; i++) {
         SWRemoveSprite(d->sprites[i]);
         SWDisposeSprite(&d->sprites[i]);
