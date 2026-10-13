@@ -1631,6 +1631,7 @@ void SetUpSelectMansionScreenMM1(short side)
             continue;
         }
         InstallButtonProc(spriteP, SelectMansionScreenButtonProc);
+        ((ButtonSpritePtr)spriteP)->showsWhenHovered = true;
         if (i < 5)
             SWSetSpriteLocation(spriteP, gMapSpriteLocLeftSide[i][0], gMapSpriteLocLeftSide[i][1]);
         else

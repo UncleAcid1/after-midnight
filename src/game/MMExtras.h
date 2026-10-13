@@ -174,6 +174,7 @@ void ExtrasPostDraw(SpriteWorldPtr w);
 extern Boolean gSuppressExtrasOverlay;
 /// Set when X (Square) is pressed in a menu; screens with a secondary action clear it.
 extern Boolean gControllerMenuAlt;
+extern Boolean gControllerMenuAlt2;     // Y (Triangle) in a menu
 
 // Multiplayer (MMMultiplayer.c)
 int  GetNumPlayers(void);

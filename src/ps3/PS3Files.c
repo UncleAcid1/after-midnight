@@ -513,8 +513,16 @@ struct dirent *PS3_readdir(PS3Dir *dir)
     size_t len;
 
     while (dir->real != NULL && (real = readdir(dir->real)) != NULL) {
-        if (dir->pack == NULL || strcmp(real->d_name, kPackName) != 0)
-            return real;
+        if (dir->pack != NULL && strcmp(real->d_name, kPackName) == 0)
+            continue;
+            // PSL1GHT passes on the system's own types (1 folder, 2 file, 3 link), and the
+            // game compares with DT_DIR and DT_REG: a player's profile was never "a file"
+        switch (real->d_type) {
+            case 1: real->d_type = DT_DIR; break;
+            case 2: real->d_type = DT_REG; break;
+            case 3: real->d_type = DT_LNK; break;
+        }
+        return real;
     }
     if (dir->pack == NULL)
         return NULL;

@@ -575,17 +575,27 @@ static int RunListDialog(const char *title, ListItem *items, int count, int *sel
     SetDialogTextCentered(&d, moreDownP, "...");
     if (manageItems) {
         v = (short)((SWGetSpriteHeight(d.panelP) - (GetButtonHeight(0xda) + 6) * d.scale) + SWGetSpriteVertLoc(d.panelP));
+#ifdef MM_PS3
+            // the buttons' names are long: one above the other, left of Cancel and Okay
+        newP = AddDialogText(&d, "New Player (Square)", 0.33f, h, (short)(v - 14 * d.scale), width);
+        if (!gListWithoutDelete)
+            deleteP = AddDialogText(&d, "Delete (Triangle)", 0.33f, h, (short)(v + 14 * d.scale), width);
+#else
         newP = AddDialogText(&d, IsControllerConnected() ? "New Player (X)" : "New Player", 0.4f, h, v, width);
         if (!gListWithoutDelete)
-            deleteP = AddDialogText(&d, "Delete", 0.4f, h, v, width);
+            deleteP = AddDialogText(&d, IsControllerConnected() ? "Delete (Y)" : "Delete", 0.4f, h, v, width);
+#endif
+#ifndef MM_PS3
         if (newP != NULL && deleteP != NULL)
             SWSetSpriteLocation(deleteP, h + GetWidthOfBMText(newP, GetTextSpriteText(newP)) + 30 * d.scale, v);
+#endif
     }
     AddDialogButtons(&d, true);
     if (count == 0 && rowSprites[0] != NULL)
         SetDialogTextCentered(&d, rowSprites[0], emptyText);
     if (selected >= count)
         selected = count - 1;
+    gControllerMenuAlt = gControllerMenuAlt2 = false;   // only presses made in this list
 
     while (!done && !gQuitGame) {
         button = DialogFrame(&d, &mouse, &mouseDown);
@@ -635,8 +645,10 @@ static int RunListDialog(const char *title, ListItem *items, int count, int *sel
                 result = kListDelete, done = true;
             if (gControllerMenuAlt)
                 result = kListNew, done = true;
+            if (gControllerMenuAlt2 && selected >= 0 && !gListWithoutDelete)
+                result = kListDelete, done = true;
         }
-        gControllerMenuAlt = false;
+        gControllerMenuAlt = gControllerMenuAlt2 = false;
         gTypedText[0] = 0;
         gKeyDelete = gKeyBackspace = false;
 

@@ -29,6 +29,7 @@ static SWPoint gVirtualPoint;
 static Boolean gVirtualButton = false;
 static SpritePtr gFocusP = NULL;
 Boolean gControllerMenuAlt = false;
+Boolean gControllerMenuAlt2 = false;
 static Boolean gListMode = false;
 
 /// In a scrolling list, up/down (and the shoulders) move through the list as the arrow
@@ -198,6 +199,16 @@ static void HandlePadButton(int button, Boolean down)
         return;
     gPadHeld[button] = down;
 
+        // a sign: any key closes it, and so does any button (as Return; nothing reads menu
+        // presses while it's open, and they would be left over for the next screen)
+    if (gCurrentGameMode == kReadingSignMode && !gGameIsPaused && !gCustomDialogIsVisible) {
+        if (down && (button == SDL_CONTROLLER_BUTTON_A || button == SDL_CONTROLLER_BUTTON_B ||
+                     button == SDL_CONTROLLER_BUTTON_X || button == SDL_CONTROLLER_BUTTON_Y ||
+                     button == SDL_CONTROLLER_BUTTON_START))
+            PushKey(SDLK_RETURN, SDL_SCANCODE_RETURN);
+        return;
+    }
+
     if (button >= SDL_CONTROLLER_BUTTON_DPAD_UP && button <= SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
         if (gameplay) {
             SetMovementFromPad();
@@ -307,7 +318,7 @@ static void HandleStick(void)
     gHeldDir = dir;
     if (IsInGameplay()) {
         SetMovementFromPad();
-    } else if (newDirs != 0) {
+    } else if (newDirs != 0 && gCurrentGameMode != kReadingSignMode) {
         MenuPress(newDirs);
         for (i = 0; i < 4; i++)
             gRepeatAt[i] = SDL_GetTicks() + kMenuRepeatDelay;
@@ -514,6 +525,8 @@ Boolean ControllerOverridesMouse(SWPoint *pointP, Boolean *buttonP)
         PushKey(SDLK_ESCAPE, SDL_SCANCODE_ESCAPE);
     if (presses & kPadAlt)
         gControllerMenuAlt = true;
+    if (presses & kPadAlt2)
+        gControllerMenuAlt2 = true;
 
     ButtonCenter(gFocusP, &h, &v);
         // button rects are in scrolled world coordinates; callers convert the pointer to those
