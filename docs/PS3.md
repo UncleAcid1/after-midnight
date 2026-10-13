@@ -64,8 +64,9 @@ mansion is a folder with folders like `'ROOM'` and `'TMAP'` inside, as they come
 Mac version or the internet). They show up in **Custom Mansions** and **Random Mansion** along
 with the bundled ones, as long as the drive is plugged in.
 
-**Options → Extras → Fit the picture on a TV** shows the picture a little smaller, for a TV
-that cuts off its edges (most older and CRT TVs).
+**Options → Extras → Picture size**: press Cross to make the picture smaller step by step,
+for a TV that cuts off its edges (most older and CRT TVs); **Larger text** makes small print
+bigger. L1 / R1 switch the tabs.
 
 ## 3. Play it on the PS3
 

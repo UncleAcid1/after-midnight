@@ -189,7 +189,7 @@ Linux versions.
 Leave the flash drive in while playing: the game writes its log there
 (`After Midnight log.txt`), and plays any custom mansions you put in a folder named
 `Midnight Mansion HD Custom Mansions` at its top. On an older TV that cuts off the edges, turn
-on **Options → Extras → Fit the picture on a TV**. Saves live in the game's own folder
+on **Options → Extras → Picture size** (press Cross until the edges show), and **Larger text** for small print. Saves live in the game's own folder
 (`/dev_hdd0/game/AMHD00001/USRDIR/Saves/`). Everything else, including building the package
 yourself, is in **[docs/PS3.md](docs/PS3.md)**.
 

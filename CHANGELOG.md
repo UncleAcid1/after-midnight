@@ -14,7 +14,10 @@ the RPCS3 emulator), and plays together with the Mac and Linux versions.
   `Midnight Mansion HD Custom Mansions` at the top of the drive.
 - **Multiplayer**: Arcade Split Screen and Ghost Race for 2–4 players (one controller each), and
   Co-op and Ghost Race on the local network and online, with Macs and PCs too.
-- **Fit the picture on a TV** (Options → Extras): a little smaller, for TVs that cut off the edges.
+- **Picture size** (Options → Extras): Cross makes the picture smaller step by step (3% to 20%),
+  for TVs that cut off the edges; a TV set to 4:3 gets the picture across its whole width, and
+  **Stretch to fit** (Options) fills the screen. L1 / R1 switch the Options tabs.
+- Watching a computer play in relay co-op, the PS3 keeps up instead of falling behind.
 - The menus name the PS3's buttons (Cross, Circle, Square, Triangle).
 - A log on the USB flash drive (`After Midnight log.txt`) for reporting problems.
 - See [docs/PS3.md](docs/PS3.md) for installing it, in RPCS3 and on a PS3.
@@ -26,6 +29,8 @@ the RPCS3 emulator), and plays together with the Mac and Linux versions.
 - Controllers: signs close with any button; the map's mansions can be chosen; the Multiplayer
   screen and the Extras checkboxes can be reached; B goes back everywhere; lists start on Okay;
   Y deletes in the player list.
+- **Larger text** (Options → Extras): bigger small print on the title and Multiplayer screens and
+  for whose turn it is, and signs whose text fills the board.
 - Random Mansion: a long name is drawn smaller to stay on the sign.
 - Less memory: pictures are no longer kept twice once they are on the graphics card.
 
