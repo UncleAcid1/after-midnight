@@ -126,10 +126,19 @@ void Rumble(int kind)
 // ---------------------------------------------------------------------------
 // Input
 
+static SDL_Event gPendingKeyUp;
+static Uint32 gPendingKeyUpAt;
+
+/// A key press, released a little later (ControllerFrame): screens that look at whether a
+/// key is down once a frame (Escape on most of them) missed a press released at once.
 static void PushKey(SDL_Keycode sym, SDL_Scancode scancode)
 {
     SDL_Event e;
 
+    if (gPendingKeyUpAt != 0) {         // the previous key goes up first
+        SDL_PushEvent(&gPendingKeyUp);
+        gPendingKeyUpAt = 0;
+    }
     memset(&e, 0, sizeof(e));
     e.type = SDL_KEYDOWN;
     e.key.state = SDL_PRESSED;
@@ -139,7 +148,10 @@ static void PushKey(SDL_Keycode sym, SDL_Scancode scancode)
     SDL_PushEvent(&e);
     e.type = SDL_KEYUP;
     e.key.state = SDL_RELEASED;
-    SDL_PushEvent(&e);
+    gPendingKeyUp = e;
+    gPendingKeyUpAt = SDL_GetTicks() + 50;
+    if (gPendingKeyUpAt == 0)
+        gPendingKeyUpAt = 1;
 }
 
 /// Play (and the in-game map) read the movement keys directly; menus get highlight moves.
@@ -457,7 +469,7 @@ static SpritePtr FindButtonInDirection(SpritePtr *buttons, int count, SpritePtr 
         }
         if (along <= 2.0f)
             continue;
-        score = along + across * 2.5f;
+        score = along + across * 1.2f;     // (2.5 skipped the Extras tab's checkboxes for Cancel)
         if (score < best) {
             best = score;
             bestP = buttons[i];
@@ -555,9 +567,13 @@ SpritePtr GetControllerFocusSprite(void)
     return NULL;
 }
 
+/// After each round of events (ProcessSDLEvents).
 void ControllerFrame(void)
 {
-    RepeatHeldDirections();
+    if (gPendingKeyUpAt != 0 && (Sint32)(SDL_GetTicks() - gPendingKeyUpAt) >= 0) {
+        SDL_PushEvent(&gPendingKeyUp);
+        gPendingKeyUpAt = 0;
+    }
 }
 
 /// Split screen: the controllers are opened once; each player's game sees only its own

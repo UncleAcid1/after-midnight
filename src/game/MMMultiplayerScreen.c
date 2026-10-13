@@ -354,6 +354,7 @@ void EnterMultiplayerScreen(void)
     snprintf(gMP.profiles[0], sizeof(gMP.profiles[0]), "%s", name);
     FillMissingProfiles();
     SetMMEventCallback(MPEventCallback);
+    ControllerUseRawMenuInput(true);    // this screen reads the controller itself (HandleMenuInput)
     NetBrowseStart();
     gMP.nextBird = SDL_GetTicks() + 1200;
     gCurrentGameMode = kMultiplayerScreenMode;
@@ -379,6 +380,8 @@ static void ShutDownScreen(void)
         gCurrentGameMode = kTitleScreenMode;    // what's left is the title screen's world
     SWSetPostDrawCallBack(gSpriteWorldP, gMP.savedPostDraw);
     SetMMEventCallback(NULL);
+    if (gMP.active)
+        ControllerUseRawMenuInput(false);
     NetBrowseStop();
     OnlineDisconnect();
     gMP.active = false;
@@ -1307,6 +1310,7 @@ void EnterMultiplayerScreenAgain(void)
     gMP.savedPostDraw = gSpriteWorldP->postDrawCallBack;
     SWSetPostDrawCallBack(gSpriteWorldP, MultiplayerScreenPostDraw);
     SetMMEventCallback(MPEventCallback);
+    ControllerUseRawMenuInput(true);
     NetBrowseStart();
     gCurrentGameMode = kMultiplayerScreenMode;
 }

@@ -782,7 +782,7 @@ void LoadPreferences(void)
 int WritePreferencesFile(void)
 {
     SDL_RWops *rw = SDL_RWFromFile(GetPrefsFilePath("Midnight Mansion HD Prefs"), "wb");
-    long version = kPrefsVersion, marker = kPrefsEndMarker;
+    Sint32 version = kPrefsVersion, marker = kPrefsEndMarker;     // 4 bytes in the file
     int err;
 
     if (rw == NULL)
@@ -817,7 +817,7 @@ int WritePreferencesFile(void)
 int ReadPreferencesFile(void)
 {
     SDL_RWops *rw = SDL_RWFromFile(GetPrefsFilePath("Midnight Mansion HD Prefs"), "rb");
-    long version = 0, marker = 0;
+    Sint32 version = 0, marker = 0;
     Boolean unused;
     int err;
 
