@@ -1,0 +1,58 @@
+# Builds After Midnight on every push: Linux (to check it still builds) and the PS3 package.
+# The PS3 package is on the run's page under "Artifacts" (see docs/PS3.md).
+# The Mac DMG stays a local build (platform/macos/make_dmg.sh): macOS runners cost ten times
+# the free minutes.
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# A newer push to the same branch replaces a build still running (it saves minutes)
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    name: Linux
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SDL2 and OpenGL headers
+        run: sudo apt-get update && sudo apt-get install -y cmake libsdl2-dev libgl1-mesa-dev
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j"$(nproc)"
+
+  ps3:
+    name: PS3 package
+    runs-on: ubuntu-24.04
+    # The ps3dev toolchain (PSL1GHT, GCC 13 for the Cell's PPU, SDL2 for PSL1GHT, cgcomp),
+    # pinned to the exact image the PS3 version was made and tested with
+    container:
+      image: hldtux/ps3dev-sdl2@sha256:2b6154588148336d559fbd37f4f52a3418fa96a86906b5019160baef22c75e55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the program and the package
+        run: make -f platform/ps3/Makefile -j"$(nproc)"
+      - name: Name the package after the commit
+        id: name
+        run: echo "name=After-Midnight-PS3-$(echo $GITHUB_SHA | cut -c1-7)" >> "$GITHUB_OUTPUT"
+      - name: Upload the package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.name.outputs.name }}
+          path: build/ps3/*.pkg
+          compression-level: 0      # the game data is already compressed
+          retention-days: 3         # the package is big: GitHub keeps it three days
+      - name: Upload the program with its debug information (for crash reports)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.name.outputs.name }}-debug
+          path: |
+            build/ps3/EBOOT.elf
+            build/ps3/EBOOT.map
+          retention-days: 14
