@@ -297,6 +297,12 @@ void CoopPostSwitchPressed(SpritePtr switchP);
 void CoopPostDoorUnlocked(SpritePtr doorP);
 void CoopPostEnemyKilled(SpritePtr enemyP);
 void CoopPostPlatformFalling(SpritePtr platformP);
+// Arcade Split Screen: everyone in a room sees the same room (MMRoomSync.c)
+void RoomSyncShareState(void (*share)(void *, size_t));
+void RoomSyncReset(void);
+void RoomSyncFrameBegin(void);
+void RoomSyncBeforeFrame(void);
+void RoomSyncAfterFrame(void);
 short GetMapPlayerLevel(void);
 SpritePtr GetCharacterHeroMaster(int character);
 int  ControllerIndexForInstanceID(SDL_JoystickID id);

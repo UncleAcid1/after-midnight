@@ -403,6 +403,7 @@ static void RegisterSharedState(Split *s)
             // Lives are each player's own: whoever runs out sits out, the rest play on.
         GameArraysShareState(Share);
         CoopSyncShareState(Share);
+        RoomSyncShareState(Share);
         SHARE(gScore);
         SHARE(gOldScore);
         SHARE(gObjects);
@@ -1106,12 +1107,16 @@ static void PlayerMain(void *arg)
             p->debugAction = 0;
         }
         switch (gCurrentGameMode) {
-            case kPlayingGameMode:  RunAnimationCore(); break;
+            case kPlayingGameMode:
+                RoomSyncBeforeFrame();          // co-op: the room as its keeper has it
+                RunAnimationCore();
+                break;
             case kInGameMapMode:    RunInGameMapScreen(); break;
             case kReadingSignMode:  HandleReadingSignCallback(); break;
             default:                break;
         }
         CoopSyncApply();
+        RoomSyncAfterFrame();
         SyncSharedStatusBar(p);
         SyncCollectedObjects();
         PublishHero(p);
@@ -1630,6 +1635,7 @@ void SplitScreenBegin(short levelNumber)
     ComputeLayout(s);
     gHeroSpriteLayerP->preDrawCallBack = DrawOtherPlayersBeforeHero;
     CoopSyncReset();
+    RoomSyncReset();
     s->active = true;               // before the images are taken: every game sees split screen on
     for (i = 0; i < s->numPlayers; i++) {
         SplitPlayer *p = &s->players[i];
@@ -1814,6 +1820,7 @@ void SplitRunFrame(void)
         return;
     }
     if (!s->paused) {
+        RoomSyncFrameBegin();
         gSWForceFrames = true;
         for (i = 0, playing = 0; i < s->numPlayers; i++) {
             SplitPlayer *p = &s->players[i];

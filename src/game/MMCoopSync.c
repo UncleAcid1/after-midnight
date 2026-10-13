@@ -122,7 +122,8 @@ static SpritePtr FindEventSprite(const CoopEvent *e)
         if (layerP == gHeroSpriteLayerP || layerP == gDeadHeroSpriteLayerP)
             continue;
         for (spriteP = SWGetNextSprite(layerP, NULL); spriteP != NULL; spriteP = SWGetNextSprite(layerP, spriteP)) {
-            if (spriteP->userData != e->type || spriteP->spriteRemoval != kDontRemoveSprite)
+            if (spriteP->userData != e->type || spriteP->spriteRemoval != kDontRemoveSprite ||
+                (size_t)spriteP->spriteRecSize < sizeof(GameSpriteRec))
                 continue;
             if (e->objectID != -1 && e->objectID != 0) {
                 if (GAME_SPRITE(spriteP)->objectID == e->objectID)
