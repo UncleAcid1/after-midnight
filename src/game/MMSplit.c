@@ -756,6 +756,19 @@ Boolean SplitPumpPlayerEvents(void)
         p->queueHead = (p->queueHead + 1) % kEventQueueSize;
         MyHandleSDLEvent(&e);
     }
+    ControllerFrame();              // a made-up key press goes up again
+    return true;
+}
+
+/// An event made up inside a player's game (a controller button standing in for a key): it
+/// goes to that player's own queue. False outside split screen (it goes to SDL's).
+Boolean SplitPostEvent(const SDL_Event *e)
+{
+    SplitPlayer *p = RunningPlayer();
+
+    if (p == NULL)
+        return false;
+    Enqueue(p, e);
     return true;
 }
 

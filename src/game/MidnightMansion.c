@@ -1000,12 +1000,13 @@ void StartGameNoEditor(void)
         Boolean relay = strncmp(split, "relay", 5) == 0;
         SetMultiplayerPlayers(n, NULL, NULL, !relay);
         if (!relay) {
-#ifdef MM_PS3
             static const int kPads[] = { kSplitInputPad1, kSplitInputPad2, kSplitInputPad3, kSplitInputPad4 };
-            SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, kPads);
+#ifdef MM_PS3
+            Boolean pads = true;
 #else
-            SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, NULL);
+            Boolean pads = strstr(split, ":pads") != NULL;     // "coop:2:pads": controllers 1, 2...
 #endif
+            SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, pads ? kPads : NULL);
         }
     }
 

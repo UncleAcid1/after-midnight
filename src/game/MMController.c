@@ -165,6 +165,13 @@ void Rumble(int kind)
 static SDL_Event gPendingKeyUp;
 static Uint32 gPendingKeyUpAt;
 
+/// Split screen: into the running player's own queue (SDL's queue goes to the keyboard's player).
+static void PostEvent(SDL_Event *e)
+{
+    if (!SplitPostEvent(e))
+        SDL_PushEvent(e);
+}
+
 /// A key press, released a little later (ControllerFrame): screens that look at whether a
 /// key is down once a frame (Escape on most of them) missed a press released at once.
 static void PushKey(SDL_Keycode sym, SDL_Scancode scancode)
@@ -172,7 +179,7 @@ static void PushKey(SDL_Keycode sym, SDL_Scancode scancode)
     SDL_Event e;
 
     if (gPendingKeyUpAt != 0) {         // the previous key goes up first
-        SDL_PushEvent(&gPendingKeyUp);
+        PostEvent(&gPendingKeyUp);
         gPendingKeyUpAt = 0;
     }
     memset(&e, 0, sizeof(e));
@@ -181,7 +188,7 @@ static void PushKey(SDL_Keycode sym, SDL_Scancode scancode)
     e.key.keysym.sym = sym;
     e.key.keysym.scancode = scancode;
     e.key.windowID = SDL_GetWindowID(gSpriteWorldP->mainWindow);
-    SDL_PushEvent(&e);
+    PostEvent(&e);
     e.type = SDL_KEYUP;
     e.key.state = SDL_RELEASED;
     gPendingKeyUp = e;
@@ -635,7 +642,7 @@ SpritePtr GetControllerFocusSprite(void)
 void ControllerFrame(void)
 {
     if (gPendingKeyUpAt != 0 && (Sint32)(SDL_GetTicks() - gPendingKeyUpAt) >= 0) {
-        SDL_PushEvent(&gPendingKeyUp);
+        PostEvent(&gPendingKeyUp);
         gPendingKeyUpAt = 0;
     }
 }

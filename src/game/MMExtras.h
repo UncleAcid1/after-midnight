@@ -250,6 +250,7 @@ int  SplitCurrentPlayer(void);
 void SplitScreenBegin(short levelNumber);
 void SplitRunFrame(void);
 Boolean SplitPumpPlayerEvents(void);
+Boolean SplitPostEvent(const SDL_Event *e);
 Boolean SplitGiveOSTime(void);
 Boolean SplitTakeGameEnd(void);
 void SplitNoteDeath(void);
