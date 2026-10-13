@@ -83,8 +83,14 @@ void LoadSprites(void)
     gCurrentGameMode = kNoGameMode;
     puts("\nLoading non-pixel-mask sprites... ");
     LoadNonPixelMaskSprites();
+#ifdef MM_PS3
+    PS3LogMemory("non-pixel-mask sprites");
+#endif
     puts("\nLoading pixel mask sprites...");
     LoadPixelMaskPICTSprites();
+#ifdef MM_PS3
+    PS3LogMemory("pixel-mask sprites");
+#endif
     gCurrentGameMode = saveGameMode;
     WriteCStringToFile("Loading Completed. About to lock sprites...");
     WriteCarriageReturn(2);

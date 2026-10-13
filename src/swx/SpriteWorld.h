@@ -272,6 +272,8 @@ struct SpriteWorldRec {
 
 /// Set while every SWProcessSpriteWorld must start a frame (split screen paces frames itself).
 extern SWBoolean gSWForceFrames;
+extern SWBoolean gSWSkipDrawing;
+extern float gSWPixelAspect;
 /// A new main SpriteWorld drawing into mainWorldP's window, with its size and settings.
 SWError SWCreateSpriteWorldSharingWindow(SpriteWorldPtr *spriteWorldPP, SpriteWorldPtr mainWorldP);
 
@@ -585,6 +587,10 @@ void    SWOffsetRect(SWRect *rectP, short horizOffset, short vertOffset);
 void    SWInsetRect(SWRect *rectP, short horizInset, short vertInset);
 SWBoolean SWEqualRect(SWRect *rectA, SWRect *rectB);
 void    Randomize(void);
+void    SWSeedRandom(unsigned long seed);     ///< GetRandom's numbers, the same on every computer
+unsigned int SWRandomState(void);
+double  SWSinDegrees(double degrees);         ///< the same result on every system
+double  SWCosDegrees(double degrees);
 int     GetRandom(int min, int max);
 float   GetRandomFloat(float min, float max);
 void    SWCopyPascalString(const unsigned char *sourceString, unsigned char *targetString);

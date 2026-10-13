@@ -184,6 +184,7 @@ extern SpritePtr gCurBackgroundSprite;
 void      MyDrawText(const char *text, MMTextStyleRec *style, short h, short v, SWRGBColor *color);
 SpritePtr MyDrawPascalTextJustified(ConstStringPtr text, MMTextStyleRec *style, SWRect *rectP, SWRGBColor *color);
 SpritePtr MyDrawCTextJustified(const char *text, MMTextStyleRec *style, SWRect *rectP, SWRGBColor *color);
+short MeasureTextBox(const char *text, const MMTextStyleRec *style, const SWRect *rectP);
 SpritePtr MyDrawTextBox(SpriteWorldPtr spriteWorldP, const char *text, MMTextStyleRec *style, SWRect *rectP,
                         SWRGBColor *color, SpriteLayerPtr layerP, Boolean renderToSprite);
 void      MMRenderSceneForWorkAreaSprite(SpriteWorldPtr spriteWorldP);
@@ -486,6 +487,8 @@ typedef struct ButtonSpriteRec {
     long        savedKeycode;               ///< 0x184
     char       *linkedKeyNameP;             ///< 0x188
     ButtonProcPtr buttonProc;               ///< 0x18c called on state changes
+    Boolean     showsWhenHovered;           ///< hidden until pointed at (the map's mansions): a
+                                            ///< controller can still move to it while on screen
 } ButtonSpriteRec, *ButtonSpritePtr;
 
 SWError   LoadStandardButtonSprite(SpritePtr *spritePP, short pictID, MaskType maskType);

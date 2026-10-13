@@ -38,10 +38,10 @@ static SDL_Surface *BKCopyToRGBA(SDL_Surface *surface, const SDL_Rect *rect)
     SDL_Surface *converted, *out;
     SDL_bool hadKey = SDL_HasColorKey(surface);
 
-    converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+    converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
     if (converted == NULL)
         return NULL;
-    out = SDL_CreateRGBSurfaceWithFormat(0, src.w, src.h, 32, SDL_PIXELFORMAT_ABGR8888);
+    out = SDL_CreateRGBSurfaceWithFormat(0, src.w, src.h, 32, SDL_PIXELFORMAT_RGBA32);
     if (out != NULL) {
         int y;
         SDL_Rect clipped = src;
@@ -62,6 +62,35 @@ static SDL_Surface *BKCopyToRGBA(SDL_Surface *surface, const SDL_Rect *rect)
     return out;
 }
 
+/// Notes the visible part of the pixels (for the controller's highlight box), so the pixels
+/// themselves needn't be kept in memory once they are in the texture.
+static void BKMeasureOpaque(BKGLSurface *gls, SDL_Surface *rgba)
+{
+    int x, y, minX = rgba->w, minY = rgba->h, maxX = -1, maxY = -1;
+
+    for (y = 0; y < rgba->h; y++) {
+        const Uint8 *row = (const Uint8 *)rgba->pixels + y * rgba->pitch;
+        for (x = 0; x < rgba->w; x++) {
+            if (row[x * 4 + 3] > 96) {      // RGBA32: the bytes are R, G, B, A
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+            }
+        }
+    }
+    if (maxX >= minX && maxY >= minY) {
+        gls->opaqueX = minX;
+        gls->opaqueY = minY;
+        gls->opaqueW = maxX - minX + 1;
+        gls->opaqueH = maxY - minY + 1;
+    } else {
+        gls->opaqueX = gls->opaqueY = 0;
+        gls->opaqueW = rgba->w;
+        gls->opaqueH = rgba->h;
+    }
+}
+
 BKGLSurface *BKCreateNewGLSurface(SDL_Surface *surface, const SDL_Rect *rect)
 {
     BKGLSurface *gls;
@@ -78,18 +107,18 @@ BKGLSurface *BKCreateNewGLSurface(SDL_Surface *surface, const SDL_Rect *rect)
         SDL_SetError("Out of memory");
         return NULL;
     }
-    gls->surface = rgba;
-    gls->ownsSurface = 1;
     gls->width = rgba->w;
     gls->height = rgba->h;
     gls->needsBlend = BKSurfaceHasAlpha(surface) || SDL_HasColorKey(surface);
     gls->texture = BKUploadTexture(rgba);
+    BKMeasureOpaque(gls, rgba);
+    SDL_FreeSurface(rgba);
     return gls;
 }
 
 BKGLSurface *BKCreateBlankGLSurface(int w, int h, int depth, SDL_bool alpha)
 {
-    SDL_Surface *s = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_ABGR8888);
+    SDL_Surface *s = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
     BKGLSurface *gls;
     SW_UNUSED(depth);
 
@@ -97,12 +126,17 @@ BKGLSurface *BKCreateBlankGLSurface(int w, int h, int depth, SDL_bool alpha)
         return NULL;
     SDL_FillRect(s, NULL, alpha ? 0 : SDL_MapRGBA(s->format, 0, 0, 0, 255));
     gls = calloc(1, sizeof(BKGLSurface));
-    gls->surface = s;
-    gls->ownsSurface = 1;
+    if (gls == NULL) {
+        SDL_FreeSurface(s);
+        return NULL;
+    }
     gls->width = w;
     gls->height = h;
+    gls->opaqueW = w;
+    gls->opaqueH = h;
     gls->needsBlend = alpha;
     gls->texture = BKUploadTexture(s);
+    SDL_FreeSurface(s);
     return gls;
 }
 
@@ -114,6 +148,8 @@ BKGLSurface *BKCreateFramebufferGLSurface(int texW, int texH, int width, int hei
         return NULL;
     gls->width = width;
     gls->height = height;
+    gls->opaqueW = width;
+    gls->opaqueH = height;
     gls->flipV = 1;
     glGenTextures(1, &gls->texture);
     glBindTexture(GL_TEXTURE_2D, gls->texture);

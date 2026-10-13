@@ -17,6 +17,8 @@
 #define kMenuRepeatRate     110
 
 static SDL_GameController *gControllers[4];
+static SDL_JoystickID gPretendIDs[4];       // MM_DEBUG_VIRTUAL_PADS's controllers
+static int gNumPretend = 0;
 static int gNumControllers = 0;
 static int gMenuPresses = 0;
 static Boolean gPadHeld[16];
@@ -29,6 +31,8 @@ static SWPoint gVirtualPoint;
 static Boolean gVirtualButton = false;
 static SpritePtr gFocusP = NULL;
 Boolean gControllerMenuAlt = false;
+Boolean gControllerMenuAlt2 = false;
+int gControllerTabStep = 0;     // L1 / R1 outside a list: -1 / +1 (the Options dialog's tabs)
 static Boolean gListMode = false;
 
 /// In a scrolling list, up/down (and the shoulders) move through the list as the arrow
@@ -36,6 +40,8 @@ static Boolean gListMode = false;
 void ControllerSetListMode(Boolean on)
 {
     gListMode = on;
+    if (on)
+        gFocusP = NULL;         // a new list: the highlight starts on Okay (button index 0)
 }
 
 Boolean IsControllerConnected(void)
@@ -56,9 +62,12 @@ void InitControllers(void)
     if (!SDL_WasInit(SDL_INIT_GAMECONTROLLER))
         SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
         // testing aid: MM_DEBUG_VIRTUAL_PADS=<n> plugs in n pretend controllers (DebugVirtualPadKey)
-    for (i = 0; virtualPads != NULL && i < atoi(virtualPads) && i < 4; i++)
-        SDL_JoystickAttachVirtual(SDL_JOYSTICK_TYPE_GAMECONTROLLER, SDL_CONTROLLER_AXIS_MAX,
-                                  SDL_CONTROLLER_BUTTON_MAX, 0);
+    for (i = 0; virtualPads != NULL && i < atoi(virtualPads) && i < 4; i++) {
+        int device = SDL_JoystickAttachVirtual(SDL_JOYSTICK_TYPE_GAMECONTROLLER, SDL_CONTROLLER_AXIS_MAX,
+                                               SDL_CONTROLLER_BUTTON_MAX, 0);
+        if (device >= 0)
+            gPretendIDs[gNumPretend++] = SDL_JoystickGetDeviceInstanceID(device);
+    }
     for (i = 0; i < SDL_NumJoysticks() && gNumControllers < 4; i++) {
         if (SDL_IsGameController(i)) {
             SDL_GameController *pad = SDL_GameControllerOpen(i);
@@ -70,12 +79,25 @@ void InitControllers(void)
         SWSetPostDrawCallBack(gSpriteWorldP, ExtrasPostDraw);
 }
 
+static Boolean IsPretend(SDL_GameController *pad)
+{
+    SDL_JoystickID id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad));
+    int i;
+
+    for (i = 0; i < gNumPretend; i++)
+        if (gPretendIDs[i] == id)
+            return true;
+    return false;
+}
+
+/// A controller plugged in. A real one goes before the pretend ones (MM_DEBUG_VIRTUAL_PADS),
+/// taking the last one's place when all four are in use: the pretend ones fill idle players.
 static void AddController(int deviceIndex)
 {
     SDL_GameController *pad;
-    int i;
+    int i, at;
 
-    if (!SDL_IsGameController(deviceIndex) || gNumControllers >= 4)
+    if (!SDL_IsGameController(deviceIndex))
         return;
     pad = SDL_GameControllerOpen(deviceIndex);
     if (pad == NULL)
@@ -83,7 +105,22 @@ static void AddController(int deviceIndex)
     for (i = 0; i < gNumControllers; i++)
         if (gControllers[i] == pad)
             return;
-    gControllers[gNumControllers++] = pad;
+    if (IsPretend(pad)) {
+        if (gNumControllers < 4)
+            gControllers[gNumControllers++] = pad;
+        return;
+    }
+    for (at = 0; at < gNumControllers && !IsPretend(gControllers[at]); at++)
+        ;
+    if (gNumControllers >= 4) {
+        if (at >= 4)
+            return;                     // four real ones already
+        gNumControllers--;              // the last pretend one makes room
+    }
+    for (i = gNumControllers; i > at; i--)
+        gControllers[i] = gControllers[i - 1];
+    gControllers[at] = pad;
+    gNumControllers++;
 }
 
 static void RemoveController(SDL_JoystickID id)
@@ -125,10 +162,19 @@ void Rumble(int kind)
 // ---------------------------------------------------------------------------
 // Input
 
+static SDL_Event gPendingKeyUp;
+static Uint32 gPendingKeyUpAt;
+
+/// A key press, released a little later (ControllerFrame): screens that look at whether a
+/// key is down once a frame (Escape on most of them) missed a press released at once.
 static void PushKey(SDL_Keycode sym, SDL_Scancode scancode)
 {
     SDL_Event e;
 
+    if (gPendingKeyUpAt != 0) {         // the previous key goes up first
+        SDL_PushEvent(&gPendingKeyUp);
+        gPendingKeyUpAt = 0;
+    }
     memset(&e, 0, sizeof(e));
     e.type = SDL_KEYDOWN;
     e.key.state = SDL_PRESSED;
@@ -138,7 +184,10 @@ static void PushKey(SDL_Keycode sym, SDL_Scancode scancode)
     SDL_PushEvent(&e);
     e.type = SDL_KEYUP;
     e.key.state = SDL_RELEASED;
-    SDL_PushEvent(&e);
+    gPendingKeyUp = e;
+    gPendingKeyUpAt = SDL_GetTicks() + 50;
+    if (gPendingKeyUpAt == 0)
+        gPendingKeyUpAt = 1;
 }
 
 /// Play (and the in-game map) read the movement keys directly; menus get highlight moves.
@@ -197,6 +246,16 @@ static void HandlePadButton(int button, Boolean down)
     if (button < 0 || button >= 16)
         return;
     gPadHeld[button] = down;
+
+        // a sign: any key closes it, and so does any button (as Return; nothing reads menu
+        // presses while it's open, and they would be left over for the next screen)
+    if (gCurrentGameMode == kReadingSignMode && !gGameIsPaused && !gCustomDialogIsVisible) {
+        if (down && (button == SDL_CONTROLLER_BUTTON_A || button == SDL_CONTROLLER_BUTTON_B ||
+                     button == SDL_CONTROLLER_BUTTON_X || button == SDL_CONTROLLER_BUTTON_Y ||
+                     button == SDL_CONTROLLER_BUTTON_START))
+            PushKey(SDLK_RETURN, SDL_SCANCODE_RETURN);
+        return;
+    }
 
     if (button >= SDL_CONTROLLER_BUTTON_DPAD_UP && button <= SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
         if (gameplay) {
@@ -307,7 +366,7 @@ static void HandleStick(void)
     gHeldDir = dir;
     if (IsInGameplay()) {
         SetMovementFromPad();
-    } else if (newDirs != 0) {
+    } else if (newDirs != 0 && gCurrentGameMode != kReadingSignMode) {
         MenuPress(newDirs);
         for (i = 0; i < 4; i++)
             gRepeatAt[i] = SDL_GetTicks() + kMenuRepeatDelay;
@@ -410,6 +469,21 @@ static void RepeatHeldDirections(void)
 // Menus: a highlight that moves between the screen's buttons
 
 static int gRawMenuUsers = 0;
+static int gDialogDepth = 0;
+
+/// While a dialog is open on top of a screen that reads the controller itself, the dialog's
+/// buttons get the highlight.
+void ControllerDialogOpened(Boolean open)
+{
+    gDialogDepth += open ? 1 : -1;
+    if (gDialogDepth < 0)
+        gDialogDepth = 0;
+}
+
+static Boolean RawMenuInput(void)
+{
+    return gRawMenuUsers > 0 && gDialogDepth == 0 && !gCustomDialogIsVisible;
+}
 
 /// Screens that read TakeControllerMenuPresses themselves turn the button highlight off.
 void ControllerUseRawMenuInput(Boolean raw)
@@ -446,7 +520,7 @@ static SpritePtr FindButtonInDirection(SpritePtr *buttons, int count, SpritePtr 
         }
         if (along <= 2.0f)
             continue;
-        score = along + across * 2.5f;
+        score = along + across * 1.2f;     // (2.5 skipped the Extras tab's checkboxes for Cancel)
         if (score < best) {
             best = score;
             bestP = buttons[i];
@@ -464,7 +538,7 @@ Boolean ControllerOverridesMouse(SWPoint *pointP, Boolean *buttonP)
     float h, v, bestDist = 1e9f;
 
     RepeatHeldDirections();
-    if (!gVirtualActive || gRawMenuUsers > 0 || IsInGameplay())
+    if (!gVirtualActive || RawMenuInput() || IsInGameplay())
         return false;
     count = GetActiveButtonSprites(buttons, 64);
     presses = TakeControllerMenuPresses();
@@ -476,6 +550,15 @@ Boolean ControllerOverridesMouse(SWPoint *pointP, Boolean *buttonP)
             PushKey(SDLK_ESCAPE, SDL_SCANCODE_ESCAPE);
         gFocusP = NULL;
         return false;
+    }
+    for (i = 0; i < count && buttons[i] != gFocusP; i++)
+        ;
+    if (i == count && gListMode) {
+            // a list: Cross chooses the highlighted entry (Okay), Circle cancels
+        for (i = 0; i < count && ((ButtonSpritePtr)buttons[i])->buttonIndex != 0; i++)
+            ;
+        if (i < count)
+            gFocusP = buttons[i];
     }
     for (i = 0; i < count && buttons[i] != gFocusP; i++)
         ;
@@ -514,6 +597,12 @@ Boolean ControllerOverridesMouse(SWPoint *pointP, Boolean *buttonP)
         PushKey(SDLK_ESCAPE, SDL_SCANCODE_ESCAPE);
     if (presses & kPadAlt)
         gControllerMenuAlt = true;
+    if (presses & kPadAlt2)
+        gControllerMenuAlt2 = true;
+    if (!gListMode && (presses & kPadPageUp))
+        gControllerTabStep = -1;
+    if (!gListMode && (presses & kPadPageDown))
+        gControllerTabStep = 1;
 
     ButtonCenter(gFocusP, &h, &v);
         // button rects are in scrolled world coordinates; callers convert the pointer to those
@@ -533,7 +622,7 @@ SpritePtr GetControllerFocusSprite(void)
     SpritePtr buttons[64];
     int count, i;
 
-    if (!gVirtualActive || !gControllerHidesCursor || gFocusP == NULL || gRawMenuUsers > 0 || IsInGameplay())
+    if (!gVirtualActive || !gControllerHidesCursor || gFocusP == NULL || RawMenuInput() || IsInGameplay())
         return NULL;
     count = GetActiveButtonSprites(buttons, 64);
     for (i = 0; i < count; i++)
@@ -542,9 +631,13 @@ SpritePtr GetControllerFocusSprite(void)
     return NULL;
 }
 
+/// After each round of events (ProcessSDLEvents).
 void ControllerFrame(void)
 {
-    RepeatHeldDirections();
+    if (gPendingKeyUpAt != 0 && (Sint32)(SDL_GetTicks() - gPendingKeyUpAt) >= 0) {
+        SDL_PushEvent(&gPendingKeyUp);
+        gPendingKeyUpAt = 0;
+    }
 }
 
 /// Split screen: the controllers are opened once; each player's game sees only its own

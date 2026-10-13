@@ -432,6 +432,16 @@ short ProcessButtonSprites(SpriteLayerPtr firstLayerP, SpriteLayerPtr lastLayerP
 
 /// The enabled, visible buttons of the screen that is currently processing its buttons (for
 /// moving a controller highlight between them). Returns how many were stored.
+/// Is (the middle of) the sprite in the visible part of the world?
+static Boolean IsSpriteOnScreen(SpritePtr spriteP)
+{
+    const SWRect *vis = &gSpriteWorldP->visScrollRect;
+    float h = (spriteP->destFrameRect.left + spriteP->destFrameRect.right) / 2.0f;
+    float v = (spriteP->destFrameRect.top + spriteP->destFrameRect.bottom) / 2.0f;
+
+    return h >= vis->left && h < vis->right && v >= vis->top && v < vis->bottom;
+}
+
 int GetActiveButtonSprites(SpritePtr *buttons, int max)
 {
     SpriteLayerPtr layerP;
@@ -444,8 +454,10 @@ int GetActiveButtonSprites(SpritePtr *buttons, int max)
         if (SWGetSpriteLayerVisible(layerP)) {
             for (spriteP = SWGetNextSprite(layerP, NULL); spriteP != NULL && count < max;
                  spriteP = SWGetNextSprite(layerP, spriteP)) {
-                if (spriteP->userData != kButtonSpriteSignature || !spriteP->isVisible ||
-                    ((ButtonSpritePtr)spriteP)->isDimmed)
+                if (spriteP->userData != kButtonSpriteSignature || ((ButtonSpritePtr)spriteP)->isDimmed)
+                    continue;
+                if (!spriteP->isVisible && !(((ButtonSpritePtr)spriteP)->showsWhenHovered &&
+                                             IsSpriteOnScreen(spriteP)))
                     continue;
                 buttons[count++] = spriteP;
             }

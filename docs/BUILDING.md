@@ -57,6 +57,15 @@ Open (or System Settings → Privacy & Security → Open Anyway). Its background
 (`MM_RESOURCES_DIR` is the folder that contains `Game Data`; by default the game looks next to
 the executable.)
 
+## PS3
+
+GitHub Actions builds the PS3 package on every push (`.github/workflows/build.yml`); how to
+download, install and test it is in [PS3.md](PS3.md). To build it yourself you need Docker:
+
+    docker run --rm -v "$PWD":/src -w /src hldtux/ps3dev-sdl2 make -f platform/ps3/Makefile -j4
+
+It leaves `build/ps3/After-Midnight-<version>-PS3.pkg`.
+
 ## Controls
 
 Arrow keys (or keypad 4/6/8/2) to walk and climb, Space to jump, keypad 7/9 to jump left/right,

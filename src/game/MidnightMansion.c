@@ -183,6 +183,9 @@ int main(int argc, char *argv[])
 {
     SW_UNUSED(argc);
     SW_UNUSED(argv);
+#ifdef MM_PS3
+    PS3PlatformInit(argc, argv);    // folders, the log on the USB drive
+#endif
     InitVariables();
     Randomize();
     CreateAppSupportDirectories();
@@ -599,6 +602,9 @@ void StartUpGameCarbon(void)
     StartOpeningMusic(true);
     SetUpActionSoftScreen();
     LoadAndSetupSounds(0x10, 7, 0x4f, GetSoundsFolderPath());
+#ifdef MM_PS3
+    PS3LogMemory("sounds loaded");
+#endif
     gOpeningMusicRefNum = GetCurrentMusicReference();
     StartMicrosecTimer();
     DoGameFadeToNormal(0);
@@ -619,6 +625,9 @@ void StartUpGameCarbon(void)
     SWSetCleanUpSpriteWorld(gSpriteWorldP);
     ChangeSplashScreenLoadingText(0);
     SetUpTiling();
+#ifdef MM_PS3
+    PS3LogMemory("tiles set up");
+#endif
     if (WasGameQuit())
         return;
     ChangeSplashScreenLoadingText(1);
@@ -637,6 +646,9 @@ void StartUpGameCarbon(void)
     InitGamePad();
     InitControllers();
     printf("About to show title screen.\n");
+#ifdef MM_PS3
+    PS3LogMemory("title screen");
+#endif
     SetUpTitleScreen();
     UpdateMenuBar();
     DebugAutoStart();
@@ -779,7 +791,7 @@ void LoadPreferences(void)
 int WritePreferencesFile(void)
 {
     SDL_RWops *rw = SDL_RWFromFile(GetPrefsFilePath("Midnight Mansion HD Prefs"), "wb");
-    long version = kPrefsVersion, marker = kPrefsEndMarker;
+    Sint32 version = kPrefsVersion, marker = kPrefsEndMarker;     // 4 bytes in the file
     int err;
 
     if (rw == NULL)
@@ -814,7 +826,7 @@ int WritePreferencesFile(void)
 int ReadPreferencesFile(void)
 {
     SDL_RWops *rw = SDL_RWFromFile(GetPrefsFilePath("Midnight Mansion HD Prefs"), "rb");
-    long version = 0, marker = 0;
+    Sint32 version = 0, marker = 0;
     Boolean unused;
     int err;
 
@@ -987,8 +999,14 @@ void StartGameNoEditor(void)
         int n = strchr(split, ':') != NULL ? atoi(strchr(split, ':') + 1) : 2;
         Boolean relay = strncmp(split, "relay", 5) == 0;
         SetMultiplayerPlayers(n, NULL, NULL, !relay);
-        if (!relay)
+        if (!relay) {
+#ifdef MM_PS3
+            static const int kPads[] = { kSplitInputPad1, kSplitInputPad2, kSplitInputPad3, kSplitInputPad4 };
+            SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, kPads);
+#else
             SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, NULL);
+#endif
+        }
     }
 
     if (startRoom != NULL && levelResID != -1)
@@ -1009,6 +1027,9 @@ void StartGame(short levelResID, short levelNumber, Boolean unused)
 {
     SW_UNUSED(levelResID);
     SW_UNUSED(unused);
+#ifdef MM_PS3
+    PS3LogMemory("a game starts");
+#endif
     LoadRestOfGAMEResource();
     DisposeTitleScreenSprites();
     StopAndDisposeMusic();
@@ -2210,7 +2231,7 @@ static void HWCursorNoDrawProc(SpritePtr srcSpriteP, FramePtr curFrameP, float h
 /// Bilinear resample of an RGBA image (premultiplying so edges stay clean).
 static SDL_Surface *ScaleCursorImage(SDL_Surface *src, int size)
 {
-    SDL_Surface *dst = SDL_CreateRGBSurfaceWithFormat(0, size, size, 32, SDL_PIXELFORMAT_ABGR8888);
+    SDL_Surface *dst = SDL_CreateRGBSurfaceWithFormat(0, size, size, 32, SDL_PIXELFORMAT_RGBA32);
     int x, y, c;
 
     if (dst == NULL)

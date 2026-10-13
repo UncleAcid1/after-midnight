@@ -281,7 +281,7 @@ static GLuint LoadTexture(const char *path, int *w, int *h)
 
     if (surface == NULL)
         return 0;
-    rgba = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+    rgba = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
     SDL_FreeSurface(surface);
     if (rgba == NULL)
         return 0;
@@ -345,6 +345,10 @@ void EnterMultiplayerScreen(void)
         gMP.inputs[2] = kSplitInputPad2;
         gMP.inputs[3] = kSplitInputPad3;
         LoadLobby();
+#ifdef MM_PS3
+        for (i = 0; i < kMaxPlayers; i++)       // no keyboard: player n has controller n
+            gMP.inputs[i] = kSplitInputPad1 + i;
+#endif
     }
         // player 1 is whoever is signed in
     SWCopyPascalStringToCString((ConstStringPtr)gCurrentPlayerName, name);
@@ -354,6 +358,7 @@ void EnterMultiplayerScreen(void)
     snprintf(gMP.profiles[0], sizeof(gMP.profiles[0]), "%s", name);
     FillMissingProfiles();
     SetMMEventCallback(MPEventCallback);
+    ControllerUseRawMenuInput(true);    // this screen reads the controller itself (HandleMenuInput)
     NetBrowseStart();
     gMP.nextBird = SDL_GetTicks() + 1200;
     gCurrentGameMode = kMultiplayerScreenMode;
@@ -379,6 +384,8 @@ static void ShutDownScreen(void)
         gCurrentGameMode = kTitleScreenMode;    // what's left is the title screen's world
     SWSetPostDrawCallBack(gSpriteWorldP, gMP.savedPostDraw);
     SetMMEventCallback(NULL);
+    if (gMP.active)
+        ControllerUseRawMenuInput(false);
     NetBrowseStop();
     OnlineDisconnect();
     gMP.active = false;
@@ -496,6 +503,10 @@ static int NextFreeInput(int player, int from)
 
     for (tries = 0, input = from; tries < kNumSplitInputs; tries++) {
         input = (input + 1) % kNumSplitInputs;
+#ifdef MM_PS3
+        if (input < kSplitInputPad1)            // no keyboard on the PS3
+            continue;
+#endif
         for (i = 0; i < gMP.numPlayers && (i == player || gMP.inputs[i] != input); i++)
             ;
         if (i == gMP.numPlayers)
@@ -1307,6 +1318,7 @@ void EnterMultiplayerScreenAgain(void)
     gMP.savedPostDraw = gSpriteWorldP->postDrawCallBack;
     SWSetPostDrawCallBack(gSpriteWorldP, MultiplayerScreenPostDraw);
     SetMMEventCallback(MPEventCallback);
+    ControllerUseRawMenuInput(true);
     NetBrowseStart();
     gCurrentGameMode = kMultiplayerScreenMode;
 }
@@ -1377,8 +1389,25 @@ static void WoodPanel(float x0, float y0, float x1, float y1, float brightness, 
 }
 
 /// Text with its baseline at y: justify 0 left, 1 centered, 2 right. Returns its width.
+/// "Larger text" (Extras): the small print grows (the titles stay as they are).
+static float Big(float size)
+{
+    if (!gExtras.largeText || size >= 20)
+        return size;
+    return size * 1.4f > 22 ? 22 : size * 1.4f;
+}
+
+static float TextAt(MMFont *font, float size, const char *text, float x, float y, int justify, float r, float g,
+                    float b, float a);
+
 static float Text(MMFont *font, float size, const char *text, float x, float y, int justify, float r, float g, float b,
                   float a)
+{
+    return TextAt(font, Big(size), text, x, y, justify, r, g, b, a);
+}
+
+static float TextAt(MMFont *font, float size, const char *text, float x, float y, int justify, float r, float g,
+                    float b, float a)
 {
     int face = (int)(size * gScale + 0.5f);
     float unit, width;
@@ -1407,8 +1436,13 @@ static float WrappedText(MMFont *font, float size, const char *text, float x, fl
 {
     char line[256], word[128];
     const char *p = text;
-    int face = (int)(size * gScale + 0.5f);
-    float unit = size / (float)(face < 6 ? 6 : face);
+    int face;
+    float unit;
+
+    lineHeight *= Big(size) / size;
+    size = Big(size);
+    face = (int)(size * gScale + 0.5f);
+    unit = size / (float)(face < 6 ? 6 : face);
 
     line[0] = 0;
     MMFontFaceSize(font, face < 6 ? 6 : face);
@@ -1424,7 +1458,7 @@ static float WrappedText(MMFont *font, float size, const char *text, float x, fl
             break;
         snprintf(trial, sizeof(trial), "%s%s%s", line, line[0] ? " " : "", word);
         if (line[0] && MMFontRenderWidth(font, trial) * unit > width) {
-            Text(font, size, line, x, y, 0, r, g, b, a);
+            TextAt(font, size, line, x, y, 0, r, g, b, a);
             y += lineHeight;
             snprintf(line, sizeof(line), "%s", word);
             MMFontFaceSize(font, face < 6 ? 6 : face);
@@ -1433,7 +1467,7 @@ static float WrappedText(MMFont *font, float size, const char *text, float x, fl
         }
     }
     if (line[0]) {
-        Text(font, size, line, x, y, 0, r, g, b, a);
+        TextAt(font, size, line, x, y, 0, r, g, b, a);
         y += lineHeight;
     }
     return y;
@@ -1484,10 +1518,14 @@ static void DrawModeCards(float alpha)
                   alpha * (selected || hovered ? 1.0f : 0.75f));
         Text(gMP.font, 19, kModes[i].tagline, kCardLeft + 28, top + 78, 0, 0.95f, 0.93f, 0.85f,
              alpha * (selected ? 1.0f : 0.7f));
-        WrappedText(gMP.font, 15, kModes[i].details, kCardLeft + 28, top + 104, kCardRight - kCardLeft - 56, 19,
-                    0.85f, 0.80f, 0.70f, alpha * (selected ? 0.95f : 0.55f));
-        Text(gMP.font, 14, kModes[i].badges, kCardRight - 22, bottom - 14, 2, 0.75f, 0.9f, 1.0f,
-             alpha * (selected ? 0.9f : 0.5f));
+            // with "Larger text" a card has room for the details or the badges, not both:
+            // the chosen card explains itself, the others say how many can play where
+        if (!gExtras.largeText || selected)
+            WrappedText(gMP.font, 15, kModes[i].details, kCardLeft + 28, top + 104, kCardRight - kCardLeft - 56, 19,
+                        0.85f, 0.80f, 0.70f, alpha * (selected ? 0.95f : 0.55f));
+        if (!gExtras.largeText || !selected)
+            Text(gMP.font, 14, kModes[i].badges, kCardRight - 22, bottom - 14, 2, 0.75f, 0.9f, 1.0f,
+                 alpha * (selected ? 0.9f : 0.5f));
     }
 }
 
@@ -1521,7 +1559,11 @@ static void DrawPlayerRow(const Row *r, Boolean focused, float alpha)
              alpha * (gMP.profiles[p][0] || f > 0 ? 1.0f : 0.6f));
     }
     if (focused && gMP.field > 0)
+#ifdef MM_PS3
+        Text(gMP.font, 12, "Cross: change", kWindowRight - 36, r->top + 12, 2, 0.8f, 0.8f, 0.7f, alpha * 0.7f);
+#else
         Text(gMP.font, 12, "Return / A: change", kWindowRight - 36, r->top + 12, 2, 0.8f, 0.8f, 0.7f, alpha * 0.7f);
+#endif
 }
 
 static void DrawWindow(float alpha)
@@ -1578,8 +1620,12 @@ static void DrawWindow(float alpha)
     }
     if (gMP.view == kViewLobby && ModeIsSplit())
         WrappedText(gMP.font, 13,
+#ifdef MM_PS3
+                    "Press Cross on a controller that isn't playing to add a player.",
+#else
                     "Controllers: press A on one that isn't playing to add a player. Keyboards: arrows, Space, Return "
                     "and M; or W A S D, F to jump, G for action and Tab for the map.",
+#endif
                     kWindowLeft + 40, kWindowBottom - 62, kWindowRight - kWindowLeft - 80, 17, 0.75f, 0.72f, 0.64f,
                     alpha * 0.8f);
 }
@@ -1633,7 +1679,11 @@ static void MultiplayerScreenPostDraw(SpriteWorldPtr w)
         Frame(kBackLeft - 3, kBackTop - 3, kBackRight + 3, kBackBottom + 3, 3, 0.86f, 0.68f, 0.30f,
               alpha * (0.65f + 0.35f * Pulse()));
     Text(gMP.font, 24, "Back", (kBackLeft + kBackRight) / 2, kBackTop + 39, 1, 1.0f, 0.95f, 0.8f, alpha);
+#ifdef MM_PS3
+    Text(gMP.font, 14, "D-pad to move    Cross to choose    Circle to go back", 640, 930, 1, 0.8f,
+#else
     Text(gMP.font, 14, "Arrows / D-pad to move    Return / A to choose    Escape / B to go back", 640, 930, 1, 0.8f,
+#endif
          0.82f, 0.9f, alpha * 0.75f);
     if (gMP.message[0] && SDL_GetTicks() < gMP.messageUntil)
         Text(gMP.font, 18, gMP.message, (kWindowLeft + kWindowRight) / 2, kWindowBottom + 36, 1, 1.0f, 0.75f, 0.5f,

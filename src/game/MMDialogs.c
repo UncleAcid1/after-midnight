@@ -114,6 +114,7 @@ static Boolean BeginDialog(MMDialog *d, float panelScale)
     SWError err;
 
     memset(d, 0, sizeof(*d));
+    ControllerDialogOpened(true);       // (EndDialog follows even when this fails)
     d->layerP = gOptionsDialogPane2LayerP;
     d->scale = (float)(gSpriteWorldP->designWidth / 640);
     d->parentP = gCurDialogP;
@@ -158,6 +159,7 @@ static void EndDialog(MMDialog *d)
 {
     int i;
 
+    ControllerDialogOpened(false);
     for (i = 0; i < d->numSprites; i++) {
         SWRemoveSprite(d->sprites[i]);
         SWDisposeSprite(&d->sprites[i]);
@@ -231,6 +233,23 @@ static void SetDialogTextCentered(MMDialog *d, SpritePtr textP, const char *text
     left = ((float)panel->left + (float)panel->right - width) / 2.0f;
     if (width < (float)(panel->right - panel->left) - 40.0f * d->scale)
         SWSetSpriteLocation(textP, left, SWGetSpriteVertLoc(textP));
+}
+
+/// One line that must fit the panel (a mansion's name: one without spaces can't wrap, and
+/// ran off the wood): drawn smaller when it's too wide, and centered.
+static void SetDialogTextFitted(MMDialog *d, SpritePtr textP, const char *text, float scale)
+{
+    float room = (float)(d->panelP->destFrameRect.right - d->panelP->destFrameRect.left) - 60.0f * d->scale;
+    float width;
+
+    if (textP == NULL)
+        return;
+    SWSetSpriteScaledFactor(textP, d->scale * scale, d->scale * scale);
+    SetBMTextSpriteText(textP, text);
+    width = GetWidthOfBMText(textP, text);
+    if (width > room && width > 0)
+        SWSetSpriteScaledFactor(textP, d->scale * scale * room / width, d->scale * scale * room / width);
+    SetDialogTextCentered(d, textP, text);
 }
 
 /// Okay (and Cancel) at the lower right of the panel, like MMDoCustomDialog.
@@ -575,17 +594,27 @@ static int RunListDialog(const char *title, ListItem *items, int count, int *sel
     SetDialogTextCentered(&d, moreDownP, "...");
     if (manageItems) {
         v = (short)((SWGetSpriteHeight(d.panelP) - (GetButtonHeight(0xda) + 6) * d.scale) + SWGetSpriteVertLoc(d.panelP));
+#ifdef MM_PS3
+            // the buttons' names are long: one above the other, left of Cancel and Okay
+        newP = AddDialogText(&d, "New Player (Square)", 0.33f, h, (short)(v - 14 * d.scale), width);
+        if (!gListWithoutDelete)
+            deleteP = AddDialogText(&d, "Delete (Triangle)", 0.33f, h, (short)(v + 14 * d.scale), width);
+#else
         newP = AddDialogText(&d, IsControllerConnected() ? "New Player (X)" : "New Player", 0.4f, h, v, width);
         if (!gListWithoutDelete)
-            deleteP = AddDialogText(&d, "Delete", 0.4f, h, v, width);
+            deleteP = AddDialogText(&d, IsControllerConnected() ? "Delete (Y)" : "Delete", 0.4f, h, v, width);
+#endif
+#ifndef MM_PS3
         if (newP != NULL && deleteP != NULL)
             SWSetSpriteLocation(deleteP, h + GetWidthOfBMText(newP, GetTextSpriteText(newP)) + 30 * d.scale, v);
+#endif
     }
     AddDialogButtons(&d, true);
     if (count == 0 && rowSprites[0] != NULL)
         SetDialogTextCentered(&d, rowSprites[0], emptyText);
     if (selected >= count)
         selected = count - 1;
+    gControllerMenuAlt = gControllerMenuAlt2 = false;   // only presses made in this list
 
     while (!done && !gQuitGame) {
         button = DialogFrame(&d, &mouse, &mouseDown);
@@ -635,8 +664,10 @@ static int RunListDialog(const char *title, ListItem *items, int count, int *sel
                 result = kListDelete, done = true;
             if (gControllerMenuAlt)
                 result = kListNew, done = true;
+            if (gControllerMenuAlt2 && selected >= 0 && !gListWithoutDelete)
+                result = kListDelete, done = true;
         }
-        gControllerMenuAlt = false;
+        gControllerMenuAlt = gControllerMenuAlt2 = false;
         gTypedText[0] = 0;
         gKeyDelete = gKeyBackspace = false;
 
@@ -1107,6 +1138,11 @@ static int GatherCustomMansions(ListItem *items)
         count = AddFolderToList(items, count, bundled, "", true, true);
     snprintf(folder, sizeof(folder), "%s", GetCustomMansionsFolderPath(""));
     count = AddFolderToList(items, count, folder, "", true, true);
+#ifdef MM_PS3
+    for (i = 0; i < 8; i++)         // and on USB drives (docs/PS3.md)
+        if (PS3USBCustomMansionsFolder(i) != NULL)
+            count = AddFolderToList(items, count, PS3USBCustomMansionsFolder(i), "", true, true);
+#endif
     for (i = 0, kept = 0; i < count; i++) {
         size_t len = strlen(items[i].name);
         struct stat info;
@@ -1213,11 +1249,15 @@ int MMDoRandomMansionDialog(void)
                 if (elapsed > 1500) {
                     shown = pick;
                     rolling = false;
+#ifdef MM_PS3
+                    SetDialogTextCentered(&d, hintP, "Okay to play, Square to roll again.");
+#else
                     SetDialogTextCentered(&d, hintP, IsControllerConnected() ? "Okay to play, X to roll again."
                                                                               : "Okay to play, R to roll again.");
+#endif
                 }
                 MansionNameOfItem(&items[shown], name, sizeof(name));
-                SetDialogTextCentered(&d, nameP, name);
+                SetDialogTextFitted(&d, nameP, name, 0.36f);
                 SWSetSpriteColor(nameP, 0xffff, 0xffff, rolling ? 0xffff : 0x2000);
                 nextFlip = SDL_GetTicks() + interval;
             }

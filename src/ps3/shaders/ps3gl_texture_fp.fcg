@@ -1,0 +1,8 @@
+// PS3GL: texture * color (GL_MODULATE).
+void main(float2 texcoord : TEXCOORD0,
+          float4 color : TEXCOORD1,
+          uniform sampler2D texture,
+          out float4 oColor : COLOR0)
+{
+    oColor = tex2D(texture, texcoord) * color;
+}

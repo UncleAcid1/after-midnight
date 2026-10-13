@@ -281,6 +281,16 @@ void HeroSignCollideProc(SpritePtr srcSpriteP, SpritePtr dstSpriteP, SWRect *sec
                  "Error: The text for this sign could not be found. Please make sure there is a file in the "
                  "mansion's 'TEXT' folder that is named %05d.txt", signP->signTextResID);
     }
+    if (gExtras.largeText) {
+            // "Larger text": the biggest size at which all of it still fits on the sign
+        short size, original = style.size, room = (short)(textRect.bottom - textRect.top);
+        for (size = 34; size > original; size--) {
+            style.size = size;
+            if (MeasureTextBox(text != NULL ? text : errorText, &style, &textRect) <= room)
+                break;
+        }
+        style.size = size;
+    }
     textP = MyDrawTextBox(gSpriteWorldP, text != NULL ? text : errorText, &style, &textRect, &textColor,
                           gCustomDialogSpriteLayerP, true);
     signPictP->misc1.sprite = textP;

@@ -32,6 +32,7 @@ void ProcessSDLEvents(void)
         return;
     while (SDL_PollEvent(&event))
         MyHandleSDLEvent(&event);
+    ControllerFrame();
     MMSyncHardwareCursor();
 }
 

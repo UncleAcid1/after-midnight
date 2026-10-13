@@ -1365,6 +1365,7 @@ short MMDoCustomDialog(SpriteWorldPtr spriteWorldP, const char *text, short dial
         DoGameFadeToNormal(0);
         mouseDown = WasMouseClicked();
         done = false;
+        gControllerTabStep = 0;
         while (!done && !gQuitGame) {
             SWProcessSpriteWorld(spriteWorldP);
             SWAnimateSpriteWorld(spriteWorldP);
@@ -1487,6 +1488,9 @@ void MMDoOptionsDialog(void)
     musicWasOn = gMusicIsOn;
     wasFullscreenWindow = gFullScreenWindow;
     wasStretched = gStretchToFit;
+#ifdef MM_PS3
+    PS3ExtrasTVSizeDialogOpened();
+#endif
     SetMMEventCallback(HandleEventInKeyInputBox);
     saveTileChangeProc = gSpriteWorldP->tileChangeProc;
     SWSetTileChangeProc(gSpriteWorldP, NULL);
@@ -1542,10 +1546,18 @@ void MMDoOptionsDialog(void)
                 ToggleFullscreen();
             if (button == kOptionsStretch)
                 SetStretchToFit(!gStretchToFit);
+#ifdef MM_PS3
+            if (PS3ExtrasTVSizeOption() >= 0 && button == GetExtrasOptionButtonIndex(kExtrasTabExtras, PS3ExtrasTVSizeOption()))
+                PS3ExtrasTVSizeNext(OptionsPaneLayer(4), button);
+#endif
             if (button == kOptionsSofterMusic)
                 SetMusicVolume(GetMusicVolume());
             if (button == kOptionsGamepad && !IsGamepadInitialized())
                 InitGamePad();
+            if (gControllerTabStep != 0) {      // L1 / R1: the tab before or after
+                ShowOptionsPane((gCurOptionsDialogPane - 1 + gControllerTabStep + 4) % 4 + 1);
+                gControllerTabStep = 0;
+            }
             if (button == kOptionsTabControls)
                 ShowOptionsPane(1);
             else if (button == kOptionsTabOptions)
@@ -1593,6 +1605,10 @@ void MMDoOptionsDialog(void)
             ToggleFullscreen();
         if (wasStretched != gStretchToFit)
             SetStretchToFit(wasStretched);
+#ifdef MM_PS3
+        PS3ExtrasTVSizeCancelled();
+        LoadExtrasSettings();       // the picture size changed live; the rest wasn't saved
+#endif
     }
     SetMMEventCallback(NULL);
 }

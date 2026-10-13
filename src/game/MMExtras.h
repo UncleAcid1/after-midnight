@@ -15,6 +15,10 @@ typedef struct ExtrasSettings {
     // Extras tab
     Boolean arcadeMenu;         ///< title menu centered, arcade-cabinet style
     Boolean smoothRooms;        ///< slide between rooms instead of cutting
+    Boolean largeText;          ///< bigger small print (menus, multiplayer, signs)
+#ifdef MM_PS3
+    Boolean tvSafe;             ///< the picture a little smaller, for a TV that crops its edges
+#endif
     Boolean rumble;             ///< controller rumble
     Boolean multiplayerSmoke;   ///< multiplayer: a cloud of smoke where a player dies
     // Fun tab
@@ -45,6 +49,13 @@ enum { kExtrasTabFun = 0, kExtrasTabExtras = 1 };
 int  GetExtrasOptions(int tab, const ExtrasOption **optionsP);
 void LoadExtrasSettings(void);
 void SaveExtrasSettings(void);
+#ifdef MM_PS3
+float PS3ExtrasTVShrink(void);
+void PS3ExtrasTVSizeDialogOpened(void);
+void PS3ExtrasTVSizeCancelled(void);
+void PS3ExtrasTVSizeNext(SpriteLayerPtr layerP, short buttonIndex);
+int  PS3ExtrasTVSizeOption(void);
+#endif
 void ExtrasSettingsChanged(void);
 
 // MMExtrasUI.c
@@ -174,6 +185,8 @@ void ExtrasPostDraw(SpriteWorldPtr w);
 extern Boolean gSuppressExtrasOverlay;
 /// Set when X (Square) is pressed in a menu; screens with a secondary action clear it.
 extern Boolean gControllerMenuAlt;
+extern Boolean gControllerMenuAlt2;
+extern int gControllerTabStep;     // Y (Triangle) in a menu
 
 // Multiplayer (MMMultiplayer.c)
 int  GetNumPlayers(void);

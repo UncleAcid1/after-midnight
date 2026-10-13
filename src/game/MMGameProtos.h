@@ -354,6 +354,7 @@ short CompareSpriteBottom(SpritePtr a, SpritePtr b);
 
 // MMController.c
 void ControllerUseRawMenuInput(Boolean raw);
+void ControllerDialogOpened(Boolean open);
 void MMControllerShareState(void (*share)(void *, size_t));
 
 // MMCoroutine.c

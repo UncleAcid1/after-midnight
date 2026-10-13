@@ -414,16 +414,15 @@ double GetYFromAngleAndVelocity(double angle, double velocity)
     return MySin(angle) * velocity;
 }
 
-#define kMyDegToRad 0.017453292522222223
 
 double MyCos(double angle)
 {
-    return cos((360.0 - angle) * kMyDegToRad);
+    return SWCosDegrees(360.0 - angle);     // the same on every system (relay co-op)
 }
 
 double MySin(double angle)
 {
-    return sin((360.0 - angle) * kMyDegToRad);
+    return SWSinDegrees(360.0 - angle);
 }
 
 double MyATan(double n)

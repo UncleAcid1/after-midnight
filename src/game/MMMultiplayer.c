@@ -648,6 +648,7 @@ void MultiplayerDrawPlayArea(SpriteWorldPtr w)
     static const unsigned char white[3] = { 0xe8, 0xe8, 0xe8 };
     static const unsigned char yellow[3] = { 0xff, 0xff, 0x5f };
     static SpritePtr turnP = NULL, bannerP = NULL;
+    static Boolean turnIsLarge = false;
     char text[160];
     const char *who;
     Uint32 elapsed;
@@ -657,8 +658,14 @@ void MultiplayerDrawPlayArea(SpriteWorldPtr w)
 
     if (!IsRelayGame() || gCurrentGameMode != kPlayingGameMode || gBeatTheMansion || gGameOver)
         return;
-    if (turnP == NULL)
-        turnP = MakeLabel("Action Man", 9, white);
+    if (turnP != NULL && turnIsLarge != gExtras.largeText) {        // "Larger text" changed
+        SWDisposeSprite(&turnP);
+        turnP = NULL;
+    }
+    if (turnP == NULL) {
+        turnP = MakeLabel("Action Man", gExtras.largeText ? 15 : 9, white);
+        turnIsLarge = gExtras.largeText;
+    }
     if (bannerP == NULL)
         bannerP = MakeLabel("Action Man", 30, yellow);
     who = GetPlayerDisplayName(gMulti.active);
@@ -666,7 +673,8 @@ void MultiplayerDrawPlayArea(SpriteWorldPtr w)
         snprintf(text, sizeof(text), "Waiting for %s...", who);
     else
         snprintf(text, sizeof(text), "It is %s's turn", who);
-    DrawLabel(turnP, text, 0, (short)(height - 14), (short)(width - 6), (short)(height - 4), 1, 0xd000);
+    DrawLabel(turnP, text, 0, (short)(height - (turnIsLarge ? 22 : 14)), (short)(width - 6), (short)(height - 4), 1,
+              0xd000);
 
     elapsed = SDL_GetTicks() - gMulti.bannerStart;
     if (elapsed < 2600) {

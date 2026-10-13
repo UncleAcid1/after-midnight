@@ -667,7 +667,7 @@ void DrawTitleScreenBackgroundMM1(SWRect *rectP)
         MM_FATAL(err);
     SetBackgroundToDesignSize(spriteP);
 
-    SetTextStyle(&style, "\012Action Man", 0, (short)(scale * 16.0f), 0);
+    SetTextStyle(&style, "\012Action Man", 0, (short)(scale * (gExtras.largeText ? 20.0f : 16.0f)), 0);
         // beside the Change Player tab (a long name gets smaller rather than run into the
         // credit in the other corner)
     *rectP = gSpriteWorldP->workAreaRect;
@@ -685,12 +685,12 @@ void DrawTitleScreenBackgroundMM1(SWRect *rectP)
 
         // (the original showed its version number here)
         // small, in the top right corner, a little in from the edges
-    SetTextStyle(&style, "\012Action Man", 0, (short)(scale * 9.0f), 1);
+    SetTextStyle(&style, "\012Action Man", 0, (short)(scale * (gExtras.largeText ? 13.0f : 9.0f)), 1);
     *rectP = gSpriteWorldP->workAreaRect;
     rectP->right -= (short)(scale * 10.0f);
     rectP->left = rectP->right - (short)(scale * 300.0f);
     rectP->top += (short)(scale * 8.0f);
-    rectP->bottom = rectP->top + (short)(scale * 10.0f);
+    rectP->bottom = rectP->top + (short)(scale * (gExtras.largeText ? 14.0f : 10.0f));
     spriteP = MyDrawCTextJustified("After Midnight - An UncleAcid1 Project", &style, rectP, &gray);
     MakeTitleScreenSpriteFadeIn(spriteP);
 
@@ -718,11 +718,11 @@ static void TitleScreenEditionAndCredit(float scale)
     }
     MakeTitleScreenSpriteFadeIn(spriteP);
 
-    SetTextStyle(&style, "\012Action Man", 0, (short)(scale * 10.0f), 1);
+    SetTextStyle(&style, "\012Action Man", 0, (short)(scale * (gExtras.largeText ? 13.0f : 10.0f)), 1);
     r.right = (short)(area.right - scale * 8.0f);
-    r.left = (short)(r.right - w * 0.4f);
+    r.left = (short)(r.right - w * 0.45f);
     r.bottom = (short)(area.bottom - scale * 6.0f);
-    r.top = (short)(r.bottom - scale * 16.0f);
+    r.top = (short)(r.bottom - scale * (gExtras.largeText ? 20.0f : 16.0f));
     spriteP = MyDrawCTextJustified("Midnight Mansion created by Vern Jensen", &style, &r, &gray);
     MakeTitleScreenSpriteFadeIn(spriteP);
 }
@@ -1631,6 +1631,7 @@ void SetUpSelectMansionScreenMM1(short side)
             continue;
         }
         InstallButtonProc(spriteP, SelectMansionScreenButtonProc);
+        ((ButtonSpritePtr)spriteP)->showsWhenHovered = true;
         if (i < 5)
             SWSetSpriteLocation(spriteP, gMapSpriteLocLeftSide[i][0], gMapSpriteLocLeftSide[i][1]);
         else

@@ -33,10 +33,40 @@ for the details.
 Build with CMake, run under Xvfb (`MM_RESOURCES_DIR=".../original/Midnight Mansion HD.app/Contents/Resources"`),
 drive with xdotool, screenshot with ImageMagick `import`. Testing aids: `MM_DEBUG_AUTOSTART=<n>`,
 `MM_DEBUG_SPLIT=coop:4` / `race:2`, `MM_DEBUG_CHEATS=1` (F6 loses a life), `MM_DEBUG_START_ROOM`,
-`MM_LOBBY=127.0.0.1:<port>` with a local `server/mmhd_lobby.py`. Separate `HOME`s give separate
+`MM_LOBBY=127.0.0.1:<port>` with a local `server/mmhd_lobby.py`. In RPCS3, drive the pad one
+step at a time with a screenshot after each: keys sent during a fade are lost. Separate `HOME`s give separate
 profiles for several instances.
 
-## Roadmap (agreed; nothing started yet). The owner's priority is the PS3; Windows comes later.
+## Testing the PS3 version in a cloud session
+
+Build in the ps3dev container (`sudo dockerd &` first if `docker info` fails):
+`docker run --rm -v "$PWD":/src -w /src hldtux/ps3dev-sdl2 make -f platform/ps3/Makefile -j4`
+(`elf` for the program alone, `gltest` for the drawing test picture). RPCS3 runs under Xvfb:
+the AppImage (URL from `https://update.rpcs3.net/?api=v3&os_type=linux&os_arch=x64`), extracted
+with `--appimage-extract`, needs `libxcb-cursor0` and `mesa-vulkan-drivers`; firmware
+`PS3UPDAT.PUP` (URL in `http://fus01.ps3.update.playstation.net/update/ps3/list/us/ps3-updatelist.txt`)
+installs with `--installfw` (click Yes). In `~/.config/rpcs3/config.yml` set `Renderer: Vulkan`,
+`Shader Mode: Legacy Recompiler (single-threaded)`, audio `Renderer: "Null"`; tick the welcome
+dialog away once. Install the package with `--installpkg`, or copy `build/ps3/pkg/*` to
+`~/.config/rpcs3/dev_hdd0/game/AMHD00001/`, then `AppRun --no-gui .../USRDIR/EBOOT.BIN`. The
+keyboard is pad 1 (arrows, X = Cross, C = Circle, Z = Square, V = Triangle, Return = Start; send
+keys with `xdotool keydown --window`). For network tests set `Internet enabled: Connected` in
+the config's `Net:` section, and run the Linux build on a second Xvfb display.
+The game's log is `~/.config/rpcs3/dev_usb000/After Midnight log.txt`, RPCS3's
+`~/.cache/rpcs3/RPCS3.log` (RSX/FIFO errors show there), the TTY `~/.cache/rpcs3/TTY.log`. A
+settings file next to the log sets testing aids (docs/PS3.md). It runs at ~25 fps here.
+
+## Roadmap (agreed). The owner's priority is the PS3; Windows comes later.
+
+Status: steps 1–7 done and most of 8, see docs/PS3.md. The game runs on the owner's real PS3
+(the RPCS3 flicker was emulator render-target caching, fixed in `PS3GL.c` with a separate
+render-target arena). Mansions are packed one file each in the `.pkg` (`pack_mansions.py`,
+`src/ps3/PS3Files.c`); custom mansions also load from the USB drive. LAN and online work
+PS3 <-> Linux in RPCS3 (`src/ps3/PS3Net.c`; RPCS3 needs Network "Connected"), and relay co-op
+stays in step (own sin/cos and GetRandom, `-ffp-contract=off`, a checksum every 60 frames).
+4-player split screen fits in memory. Left for step 8: the 1.1 version number (CHANGELOG, the
+owner's call) and tests on the real PS3. The Multiplayer screen remembers its mode in
+`Saves/Multiplayer.txt` (set `mode = 0` for Co-op before scripted tests).
 
 The owner has a PS3 Slim on the latest **Evilnat** CFW, multiMAN, moves files by **USB flash drive**
 (FAT32), and tests in **RPCS3** on the Mac. Only one or two real controllers: 4-player tests are
