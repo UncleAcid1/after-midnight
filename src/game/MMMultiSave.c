@@ -120,12 +120,45 @@ Boolean MultiSaveWrite(int mode, const char *saveName)
     return true;
 }
 
+static Boolean EndsWith(const char *text, const char *end)
+{
+    size_t a = strlen(text), b = strlen(end);
+    return a >= b && strcmp(text + a - b, end) == 0;
+}
+
+/// A team save (one file, MMTeamSave.c): who played and when, from its INFO.
+static Boolean ReadTeamSaveInfo(const char *path, MultiSaveInfo *info)
+{
+    TeamSave t;
+    int p;
+
+    memset(info, 0, sizeof(*info));
+    if (!TeamSaveRead(path, &t, true))
+        return false;       // damaged, or half written: not offered
+    snprintf(info->path, sizeof(info->path), "%s", path);
+    snprintf(info->name, sizeof(info->name), "%s", t.name);
+    snprintf(info->mansion, sizeof(info->mansion), "%s", t.mansion);
+    info->savedAt = t.savedAt;
+    info->numPlayers = t.numPlayers;
+    for (p = 0; p < t.numPlayers; p++) {
+        snprintf(info->ids[p], sizeof(info->ids[p]), "%s", t.ids[p]);
+        snprintf(info->names[p], sizeof(info->names[p]), "%s", t.names[p]);
+        info->characters[p] = t.characters[p];
+    }
+    TeamSaveFree(&t);
+    return true;
+}
+
 static Boolean ReadInfo(const char *folder, const char *name, MultiSaveInfo *info)
 {
     char path[1600], line[400], *tab;
     FILE *file;
     struct stat st;
 
+    if (EndsWith(name, kTeamSaveExtension)) {
+        snprintf(path, sizeof(path), "%s/%s", folder, name);
+        return ReadTeamSaveInfo(path, info);
+    }
     memset(info, 0, sizeof(*info));
     snprintf(info->path, sizeof(info->path), "%s/%s", folder, name);
     snprintf(info->name, sizeof(info->name), "%s", name);
@@ -189,8 +222,9 @@ int MultiSaveList(int mode, char ids[][16], int count, MultiSaveInfo *out, int m
         return 0;
     while ((entry = readdir(dir)) != NULL && n < max) {
         len = strlen(entry->d_name);
-        if (entry->d_name[0] == '.' || (len > 4 && strcmp(entry->d_name + len - 4, ".txt") == 0))
-            continue;
+        if (entry->d_name[0] == '.' || (len > 4 && strcmp(entry->d_name + len - 4, ".txt") == 0) ||
+            EndsWith(entry->d_name, ".tmp"))
+            continue;       // (a .tmp is a save being written, or one that never finished)
         if (len > 15 && entry->d_name[len - 15] == '.' && entry->d_name[len - 10] == '-' && entry->d_name[len - 5] == '-')
             continue;       // one player's part of an Arcade Split Screen save ("<save>.<ID>")
         if (ReadInfo(folder, entry->d_name, &out[n]))
@@ -245,6 +279,58 @@ Boolean MultiSaveStoreReceived(int mode, const char *saveName, const Uint8 *data
     if (file != NULL) {
         fwrite(sidecar, 1, (size_t)sidecarLength, file);
         fclose(file);
+    }
+    return true;
+}
+
+/// Reads a team save to continue: one file (MMTeamSave.c), checked; or an Arcade Split Screen
+/// save from before, as it was: the team's game, "<save>.txt" (who played) and one file per
+/// player ("<save>.<ID>").
+Boolean MultiSaveLoadTeam(const char *path, TeamSave *t)
+{
+    MultiSaveInfo info;
+    char partPath[1600];
+    FILE *file;
+    long length;
+    int p;
+
+    memset(t, 0, sizeof(*t));
+    if (EndsWith(path, kTeamSaveExtension))
+        return TeamSaveRead(path, t, false);
+    if (!MultiSaveReadInfo(path, &info) || info.numPlayers < 2)
+        return false;
+    snprintf(t->name, sizeof(t->name), "%s", info.name);
+    snprintf(t->mansion, sizeof(t->mansion), "%s", info.mansion);
+    t->savedAt = info.savedAt;
+    t->numPlayers = info.numPlayers;
+    for (p = 0; p <= info.numPlayers; p++) {
+        Uint8 **dataP = p == 0 ? &t->team : &t->parts[p - 1];
+        int *lengthP = p == 0 ? &t->teamLength : &t->partLengths[p - 1];
+        if (p > 0) {
+            snprintf(t->ids[p - 1], sizeof(t->ids[p - 1]), "%s", info.ids[p - 1]);
+            snprintf(t->names[p - 1], sizeof(t->names[p - 1]), "%s", info.names[p - 1]);
+            t->characters[p - 1] = info.characters[p - 1];
+            snprintf(partPath, sizeof(partPath), "%s.%s", path, info.ids[p - 1]);
+        } else {
+            snprintf(partPath, sizeof(partPath), "%s", path);
+        }
+        file = fopen(partPath, "rb");
+        if (file == NULL)
+            continue;           // (a part missing: that player starts where the save was made)
+        if (fseek(file, 0, SEEK_END) == 0 && (length = ftell(file)) > 0 && length < 16 * 1024 * 1024 &&
+            fseek(file, 0, SEEK_SET) == 0 && (*dataP = malloc((size_t)length)) != NULL) {
+            if (fread(*dataP, 1, (size_t)length, file) == (size_t)length)
+                *lengthP = (int)length;
+            else {
+                free(*dataP);
+                *dataP = NULL;
+            }
+        }
+        fclose(file);
+    }
+    if (t->team == NULL) {
+        TeamSaveFree(t);
+        return false;
     }
     return true;
 }

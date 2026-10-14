@@ -29,9 +29,10 @@ typedef struct Multiplayer {
     long    loot[kMaxPlayers];      ///< score earned on each player's turns
     long    scoreAtTurnStart;
     Uint32  bannerStart;            ///< "Henry's turn!" fades out from here
+    int     input[kMaxPlayers];     ///< co-op on one computer: each player's controls (kSplitInput...)
 } Multiplayer;
 
-static Multiplayer gMulti = { 1, 0, { "" }, { 0, 1, 2, 3 }, false };
+static Multiplayer gMulti = { 1, 0, { "" }, { 0, 1, 2, 3 }, false, { 0 }, 0, 0, { 0 } };
 static PlayerSprites gPlayerSprites[kNumCharacters];     ///< by character
 
 /// Spiders holding a player in their web: which player it was, so it looks right when the
@@ -75,6 +76,25 @@ void SetMultiplayerPlayers(int numPlayers, char profiles[][64], const int *chara
         if (p > 0)
             LoadLifetimeStats((short)p, gMulti.profiles[p]);
     }
+}
+
+void SetMultiplayerInputs(const int *inputs)
+{
+    int p;
+
+    for (p = 0; p < kMaxPlayers; p++)
+        gMulti.input[p] = inputs != NULL ? inputs[p] : kSplitInputKeyboard;
+}
+
+int GetPlayerInput(int player)
+{
+    return player >= 0 && player < kMaxPlayers ? gMulti.input[player] : kSplitInputKeyboard;
+}
+
+/// Taking turns on this computer: each player's own controls play their turn.
+Boolean IsLocalRelayGame(void)
+{
+    return IsRelayGame() && !NetGameActive();
 }
 
 int GetActivePlayer(void)
@@ -328,7 +348,7 @@ void MultiplayerSetUpNetworkRace(void)
     MultiplayerSetNetworkPlayers();
     gMulti.split = true;
     gMulti.active = me;
-    SplitConfigureNetworkRace(me, gMulti.numPlayers);
+    SplitConfigureNetworkGame(NetMode() == kNetModeArcade ? kSplitModeCoop : kSplitModeRace, me, gMulti.numPlayers);
 }
 
 /// The character sprites are loaded once for all players' games.
@@ -457,6 +477,7 @@ void MultiplayerNextTurn(void)
     CreditLoot();
     gMulti.active = (gMulti.active + 1) % gMulti.numPlayers;
     gActivePlayer = (short)gMulti.active;
+    ControllerTurnChanged();        // the last player's buttons aren't held by the next one
     UsePlayerSprites(gMulti.active);
     gMulti.bannerStart = SDL_GetTicks();
     NetTurnChanged();
@@ -537,7 +558,7 @@ static int AfterConnected(int netMode, Boolean host)
     (void)name;
     MultiplayerSetNetworkPlayers();
     if (host) {
-        if (netMode == kNetModeRace)
+        if (netMode == kNetModeRace || netMode == kNetModeArcade)
             MultiplayerSetUpNetworkRace();
         return kMultiplayerNewGame;
     }

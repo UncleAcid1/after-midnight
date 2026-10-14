@@ -119,6 +119,8 @@ typedef struct Split {
     char            notice[400];    ///< said once back at the title screen
     char            continuePath[1500]; ///< co-op: the team's saved game being continued
     Uint32          savedNoticeUntil[kMaxPlayers];  ///< "Team game saved" in that player's view
+    char            savedNotice[kMaxPlayers][160];  ///< (or how a save on several computers went)
+    TeamSave        continueSave;   ///< co-op: the team save being continued (its parts)
 } Split;
 
 static Split *gSplit = NULL;
@@ -160,12 +162,19 @@ void SplitConfigure(int mode, int numPlayers, const int *inputs)
 /// A race on several computers: one player here (localPlayer), the others elsewhere.
 void SplitConfigureNetworkRace(int localPlayer, int numPlayers)
 {
+    SplitConfigureNetworkGame(kSplitModeRace, localPlayer, numPlayers);
+}
+
+/// The race or Arcade Split Screen (kSplitModeCoop) on several computers.
+void SplitConfigureNetworkGame(int mode, int localPlayer, int numPlayers)
+{
     Split *s = GetSplit();
     int i;
 
     if (s == NULL || s->active)
         return;
-    s->mode = kSplitModeRace;
+    s->mode = mode == kSplitModeCoop ? kSplitModeCoop : kSplitModeRace;
+    s->continuePath[0] = 0;
     s->numPlayers = numPlayers < 2 ? 2 : numPlayers > kMaxPlayers ? kMaxPlayers : numPlayers;
     s->numLocal = 1;
     s->firstLocal = localPlayer >= 0 && localPlayer < s->numPlayers ? localPlayer : 0;
@@ -318,11 +327,23 @@ static void ComputeRanges(Split *s)
     s->imageSize = offset;
 }
 
+#if defined(__SANITIZE_ADDRESS__)
+/*  AddressSanitizer builds (for finding bugs): the globals are copied whole, the guard
+    bytes it puts between them too, which it would report. */
+__attribute__((no_sanitize_address)) static void CopyBytes(unsigned char *to, const unsigned char *from, size_t n)
+{
+    while (n-- > 0)
+        *to++ = *from++;
+}
+#else
+#define CopyBytes(to, from, n) memcpy((to), (from), (n))
+#endif
+
 static void SaveGlobals(unsigned char *image)
 {
     int i;
     for (i = 0; i < gSplit->numRanges; i++)
-        memcpy(image + gSplit->ranges[i].offset, gSplit->ranges[i].addr, gSplit->ranges[i].size);
+        CopyBytes(image + gSplit->ranges[i].offset, gSplit->ranges[i].addr, gSplit->ranges[i].size);
 }
 
 static void LoadGlobals(const unsigned char *image)
@@ -330,7 +351,7 @@ static void LoadGlobals(const unsigned char *image)
     Split *s = gSplit;      // the pointer itself is shared, but keep it in a register anyway
     int i;
     for (i = 0; i < s->numRanges; i++)
-        memcpy(s->ranges[i].addr, image + s->ranges[i].offset, s->ranges[i].size);
+        CopyBytes(s->ranges[i].addr, image + s->ranges[i].offset, s->ranges[i].size);
 }
 
 void MMMixerShareState(void (*share)(void *, size_t));
@@ -391,6 +412,7 @@ static void RegisterSharedState(Split *s)
             // Lives are each player's own: whoever runs out sits out, the rest play on.
         GameArraysShareState(Share);
         CoopSyncShareState(Share);
+        RoomSyncShareState(Share);
         SHARE(gScore);
         SHARE(gOldScore);
         SHARE(gObjects);
@@ -756,6 +778,19 @@ Boolean SplitPumpPlayerEvents(void)
         p->queueHead = (p->queueHead + 1) % kEventQueueSize;
         MyHandleSDLEvent(&e);
     }
+    ControllerFrame();              // a made-up key press goes up again
+    return true;
+}
+
+/// An event made up inside a player's game (a controller button standing in for a key): it
+/// goes to that player's own queue. False outside split screen (it goes to SDL's).
+Boolean SplitPostEvent(const SDL_Event *e)
+{
+    SplitPlayer *p = RunningPlayer();
+
+    if (p == NULL)
+        return false;
+    Enqueue(p, e);
     return true;
 }
 
@@ -858,14 +893,14 @@ static void SyncCollectedObjects(void)
 }
 
 // ---------------------------------------------------------------------------
-// Arcade Split Screen saves: the team's game at a save pedestal (MMMultiSave.c keeps it for
-// the group): what everyone shares, and each player's own room, place and lives, one file
-// each ("<save>.<player ID>") beside the save itself.
+// Arcade Split Screen saves: the team's game at a save pedestal, in one checked file
+// ("<name>.mmteam", MMTeamSave.c) in the group's folder (MMMultiSave.c): what everyone shares,
+// and each player's own part (their room, place and lives).
 
-/// The file with one player's part of a team save.
-static void PlayerSavePath(const char *base, int player, char *out, size_t size)
+/// A player's ID in a team save.
+static const char *PlayerSaveID(int player)
 {
-    snprintf(out, size, "%s.%s", base, OnlineProfileID(GetPlayerProfileName(player)));
+    return gSplit->network ? NetPlayerID(player) : OnlineProfileID(GetPlayerProfileName(player));
 }
 
 /// Runs fn with another player's game in the program's globals (from inside a player's game).
@@ -893,83 +928,96 @@ static void WithPlayerGlobals(SplitPlayer *q, void (*fn)(void *), void *context)
     free(mine);
 }
 
-/// One player's part: where they are (or will come back, if they're down), their lives...
-static void WritePlayerState(void *context)
-{
-    const char *path = (const char *)context;
-    SpritePtr heroP = NULL;
-    short saveLevel = gCurrentLevel;
-    float h = gStartingCol, v = gStartingRow;
-    SDL_RWops *file;
+typedef struct PartCapture {
+    Uint8  *data;
+    int     length;
+} PartCapture;
 
-    if (gCurrentGameMode == kInGameMapMode)
-        gCurrentLevel = GetMapPlayerLevel();
-    else if (gCurrentGameMode == kPlayingGameMode || gCurrentGameMode == kReadingSignMode)
-        heroP = GetHeroSprite();
-    if (heroP != NULL && !HERO(heroP)->isDead) {
-        h = SWGetSpriteHorizLoc(heroP);
-        v = SWGetSpriteVertLoc(heroP);
-    } else if (gCurrentGameMode != kInGameMapMode) {
-        gCurrentLevel = gLastLevelPositionWasSaved;     // down: back where they'd come back
-    }
-    file = SDL_RWFromFile(path, "wb");
-    if (file != NULL) {
-        WriteSaveDataToFile(file, h, v, false);
-        SDL_RWclose(file);
-    }
-    gCurrentLevel = saveLevel;
+/// One player's part, in their own globals.
+static void CapturePart(void *context)
+{
+    PartCapture *c = (PartCapture *)context;
+    c->data = TeamSaveCapture(true, &c->length);
+}
+
+/// What a save says in a player's view for a moment.
+static void ShowSavedNotice(int player, const char *text)
+{
+    if (player < 0 || player >= kMaxPlayers)
+        return;
+    snprintf(gSplit->savedNotice[player], sizeof(gSplit->savedNotice[player]), "%s", text);
+    gSplit->savedNoticeUntil[player] = SDL_GetTicks() + (strcmp(text, "Team game saved") == 0 ? 2500 : 5000);
+}
+
+/// How a team save on several computers went (MMTeamSave.c), in this computer's view.
+void SplitShowTeamSaveNotice(const char *text, Boolean ok)
+{
+    (void)ok;
+    if (gSplit != NULL && gSplit->active)
+        ShowSavedNotice(gSplit->firstLocal, text);
 }
 
 /// From a save pedestal in Arcade Split Screen: saves the team's game, named after the
-/// mansion ("Falcon Manor Normal 3"), and says so in the saver's view.
+/// mansion ("Falcon Manor Normal 3"), and says so in the saver's view. On several computers the
+/// host makes the save for everyone (MMTeamSave.c). (In a race the statue only gives the lives
+/// back and brings the player back there: "Saved".)
 void SplitSaveTeam(void)
 {
     Split *s = gSplit;
     SplitPlayer *me = RunningPlayer();
-    char mansion[255], base[1500], name[300], path[1600];
+    char ids[kMaxPlayers][16];
     const char *folder;
-    struct stat info;
-    int i, n;
+    TeamSave t;
+    int i;
 
-    if (me == NULL || s->mode != kSplitModeCoop || s->network)
+    if (me == NULL)
         return;
+    if (s->mode != kSplitModeCoop) {
+        ShowSavedNotice(me->index, "Saved");     // a race: lives back, a checkpoint
+        return;
+    }
+    if (s->network) {
+        TeamSaveNetRequest();
+        return;
+    }
     folder = MultiSaveFolderForCurrentGame(kMultiSaveArcade);
     if (folder == NULL)
         return;
-    snprintf(mansion, sizeof(mansion), "%s", gCurOpenMansionFileName);
-    StripStringFromEndOfCString(".zip", mansion, NULL);
-    StripStringFromEndOfCString(".ZIP", mansion, NULL);
-    for (n = 1; n < 10000; n++) {
-        snprintf(name, sizeof(name), "%s %d", mansion, n);
-        snprintf(base, sizeof(base), "%s/%s", folder, name);
-        if (stat(base, &info) != 0)
-            break;
-    }
+    memset(&t, 0, sizeof(t));
+    for (i = 0; i < s->numPlayers; i++)
+        snprintf(ids[i], sizeof(ids[i]), "%s", PlayerSaveID(i));
+    TeamSaveDescribeGroup(&t, ids, s->numPlayers);
+    TeamSaveNewName(folder, t.name, sizeof(t.name));
+    t.team = TeamSaveCapture(false, &t.teamLength);
     for (i = 0; i < s->numPlayers; i++) {
-        PlayerSavePath(base, i, path, sizeof(path));
-        WithPlayerGlobals(&s->players[i], WritePlayerState, path);
+        PartCapture c = { NULL, 0 };
+        WithPlayerGlobals(&s->players[i], CapturePart, &c);
+        t.parts[i] = c.data;
+        t.partLengths[i] = c.length;
     }
-    if (MultiSaveWrite(kMultiSaveArcade, name))
-        s->savedNoticeUntil[me->index] = SDL_GetTicks() + 2500;
+    ShowSavedNotice(me->index, t.team != NULL && TeamSaveStore(folder, &t) ? "Team game saved"
+                                                                         : "The team's game couldn't be saved");
+    TeamSaveFree(&t);
 }
 
 /// Continuing a team save: this player's part (in their own game). False if it's missing.
 static Boolean RestorePlayerState(SplitPlayer *p)
 {
-    char path[1600];
     float h, v;
     long version;
     Boolean isSaveFile;
     SpritePtr heroP;
-    SDL_RWops *file;
-    int err;
+    SDL_RWops *rw;
+    const Uint8 *part;
+    int err, length;
 
-    PlayerSavePath(gSplit->continuePath, p->index, path, sizeof(path));
-    file = SDL_RWFromFile(path, "rb");
-    if (file == NULL)
+    part = TeamSavePart(&gSplit->continueSave, PlayerSaveID(p->index), &length);
+    if (part == NULL)
         return false;
-    err = LoadSaveDataFromFile(file, &h, &v, &isSaveFile, &version);
-    SDL_RWclose(file);
+    rw = SDL_RWFromConstMem(part, length);
+    err = rw != NULL ? LoadSaveDataFromFile(rw, &h, &v, &isSaveFile, &version) : -1;
+    if (rw != NULL)
+        SDL_RWclose(rw);
     if (err != 0)
         return false;
     RestoreStatsFromObjectsCarried();
@@ -998,15 +1046,25 @@ int SplitContinueSave(const char *path)
     float h, v;
     long version;
     Boolean isSaveFile;
-    SDL_RWops *file = SDL_RWFromFile(path, "rb");
+    SDL_RWops *rw;
     int err;
 
-    if (file == NULL || GetSplit() == NULL)
+    if (GetSplit() == NULL)
         return -1;
-    err = LoadSaveDataFromFile(file, &h, &v, &isSaveFile, &version);
-    SDL_RWclose(file);
-    if (err != 0)
+    TeamSaveFree(&gSplit->continueSave);
+    if (!MultiSaveLoadTeam(path, &gSplit->continueSave)) {
+        MMDoCustomDialog(gSpriteWorldP, "This saved game is damaged or incomplete, so it can't be continued.", 3);
+        SplitCancel();
+        return -1;
+    }
+    rw = SDL_RWFromConstMem(gSplit->continueSave.team, gSplit->continueSave.teamLength);
+    err = rw != NULL ? LoadSaveDataFromFile(rw, &h, &v, &isSaveFile, &version) : -1;
+    if (rw != NULL)
+        SDL_RWclose(rw);
+    if (err != 0) {
+        TeamSaveFree(&gSplit->continueSave);
         return err;
+    }
     SetCurMansionAsCustomMansion(gCurrentMansionNumber == -1);
     snprintf(mansionName, sizeof(mansionName), "%s", gMansionFilename);
     StripStringFromEndOfCString(".zip", mansionName, NULL);
@@ -1027,6 +1085,7 @@ int SplitContinueSave(const char *path)
         snprintf(message, sizeof(message), "The mansion \"%s\" this game was saved in couldn't be found.", mansionName);
         MMDoCustomDialog(gSpriteWorldP, message, 3);
         SplitCancel();
+        TeamSaveFree(&gSplit->continueSave);
         return err;
     }
     snprintf(gSplit->continuePath, sizeof(gSplit->continuePath), "%s", path);
@@ -1076,12 +1135,16 @@ static void PlayerMain(void *arg)
             p->debugAction = 0;
         }
         switch (gCurrentGameMode) {
-            case kPlayingGameMode:  RunAnimationCore(); break;
+            case kPlayingGameMode:
+                RoomSyncBeforeFrame();          // co-op: the room as its keeper has it
+                RunAnimationCore();
+                break;
             case kInGameMapMode:    RunInGameMapScreen(); break;
             case kReadingSignMode:  HandleReadingSignCallback(); break;
             default:                break;
         }
         CoopSyncApply();
+        RoomSyncAfterFrame();
         SyncSharedStatusBar(p);
         SyncCollectedObjects();
         PublishHero(p);
@@ -1291,8 +1354,8 @@ static void DrawPlayerOverlay(Split *s, SplitPlayer *p, Uint32 now)
         DrawText(s->font, small, text, x1 - 8 * unit, y0 + 66 * unit, 2, 1, 1, 1, 0.9f);
     }
     if (now < s->savedNoticeUntil[p->index])
-        DrawText(s->titleFont, (int)(30 * unit), "Team game saved", (x0 + x1) / 2, y0 + h * 0.3f, 0, 1, 0.85f, 0.3f,
-                 (float)(s->savedNoticeUntil[p->index] - now) / 2500.0f);
+        DrawText(s->titleFont, (int)((strlen(s->savedNotice[p->index]) > 22 ? 19 : 30) * unit), s->savedNotice[p->index], (x0 + x1) / 2, y0 + h * 0.3f, 0, 1, 0.85f, 0.3f,
+                 SDL_min(1.0f, (float)(s->savedNoticeUntil[p->index] - now) / 2500.0f));
     if (p->status == kPlayerFinished || p->status == kPlayerOut) {
         static const char *places[] = { "", "1st", "2nd", "3rd", "4th" };
         FillRect(x0, y0, x1, y1, 0, 0, 0, 0.55f);
@@ -1323,6 +1386,8 @@ static void DrawRemotePlayerStatus(Split *s, SplitPlayer *p, int line, Uint32 no
         snprintf(text, sizeof(text), "%s finished in %s", GetPlayerDisplayName(p->index), timeText);
     } else if (p->status == kPlayerOut) {
         snprintf(text, sizeof(text), p->left ? "%s left the game" : "%s is out of lives", GetPlayerDisplayName(p->index));
+    } else if (s->mode == kSplitModeCoop) {
+        return;                 // playing on: their view says the rest
     } else {
         FormatRaceTime(timeText, sizeof(timeText), p->remoteElapsedMs);
         snprintf(text, sizeof(text), "%s  %s", GetPlayerDisplayName(p->index), timeText);
@@ -1600,6 +1665,7 @@ void SplitScreenBegin(short levelNumber)
     ComputeLayout(s);
     gHeroSpriteLayerP->preDrawCallBack = DrawOtherPlayersBeforeHero;
     CoopSyncReset();
+    RoomSyncReset();
     s->active = true;               // before the images are taken: every game sees split screen on
     for (i = 0; i < s->numPlayers; i++) {
         SplitPlayer *p = &s->players[i];
@@ -1670,6 +1736,7 @@ static void EndSplit(Split *s)
     s->active = false;
     s->running = -1;
     s->continuePath[0] = 0;
+    TeamSaveFree(&s->continueSave);
     StopAllChannels();
     MultiplayerSplitEnded();
 
@@ -1697,7 +1764,8 @@ static void EndSplit(Split *s)
     }
 }
 
-/// The network race: tells the other computers where this player is, and hears where theirs are.
+/// Several computers: tells the others where this player is, and hears where theirs are (and
+/// in Arcade Split Screen, the rooms they're running and whether the team has won).
 static void ExchangeWithOtherComputers(Split *s)
 {
     SplitPlayer *me = &s->players[s->firstLocal];
@@ -1721,6 +1789,8 @@ static void ExchangeWithOtherComputers(Split *s)
     st.place = (Uint8)me->place;
     st.elapsedMs = me->status == kPlayerFinished ? me->finishMs
                                                  : now - s->startTicks + (Uint32)me->deaths * kDeathPenaltyMs;
+    st.runningRoom = RoomSyncLocalRoom(me->index);
+    st.roomMs = RoomSyncLocalRoomMs(me->index);
     NetRaceSendState(&st);
     NetRacePump();
 
@@ -1743,13 +1813,19 @@ static void ExchangeWithOtherComputers(Split *s)
                 them->status = kPlayerFinished;
                 them->finishMs = st.elapsedMs;
                 them->place = st.place;
+                if (s->mode == kSplitModeCoop && s->end == kEndNone)
+                    s->end = kEndTeamWon;       // someone got out: the team has won
             } else if (st.status == kPlayerOut) {
                 them->status = kPlayerOut;
             }
+            if (s->mode == kSplitModeCoop)
+                RoomSyncSetRemotePlayer(i, them->status == kPlayerPlaying ? st.runningRoom : -1, st.roomMs);
         }
         if (gone && them->status != kPlayerFinished && them->status != kPlayerOut) {
             them->status = kPlayerOut;
             them->left = true;
+            if (s->mode == kSplitModeCoop)
+                RoomSyncSetRemotePlayer(i, -1, 0);
         }
     }
     if (NetPeerMissingMansion() != NULL && s->end == kEndNone) {
@@ -1784,6 +1860,7 @@ void SplitRunFrame(void)
         return;
     }
     if (!s->paused) {
+        RoomSyncFrameBegin();
         gSWForceFrames = true;
         for (i = 0, playing = 0; i < s->numPlayers; i++) {
             SplitPlayer *p = &s->players[i];
@@ -1794,6 +1871,12 @@ void SplitRunFrame(void)
             }
         }
         gSWForceFrames = false;
+        if (s->network && s->mode == kSplitModeCoop) {
+                // Arcade Split Screen on several computers: what happened here, to the others
+            CoopSyncNetFrame(s->players[s->firstLocal].status != kPlayerStarting);
+            RoomSyncNetFrame();
+            TeamSaveNetFrame();     // (after the changes went out: the host's save then has them)
+        }
         MMSoundsSplitFrameEnd();
         if (s->end == kEndNone && playing == 0)
             s->end = s->mode == kSplitModeRace ? kEndRaceOver : kEndTeamLost;

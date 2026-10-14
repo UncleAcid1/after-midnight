@@ -193,6 +193,10 @@ int  GetNumPlayers(void);
 Boolean IsMultiplayerGame(void);
 Boolean IsRelayGame(void);
 void SetMultiplayerPlayers(int numPlayers, char profiles[][64], const int *characters, Boolean split);
+/// Co-op on one computer: each player's controls (kSplitInput...); only theirs plays their turn.
+void SetMultiplayerInputs(const int *inputs);
+int  GetPlayerInput(int player);
+Boolean IsLocalRelayGame(void);
 void MultiplayerSplitPlayerStarting(int player);
 void MultiplayerSplitEnded(void);
 int  GetActivePlayer(void);
@@ -217,6 +221,31 @@ void EnterMultiplayerScreenAgain(void);
 void HandleMultiplayerScreenCallback(void);
 Boolean IsMultiplayerScreenActive(void);
 SDL_JoystickID ControllerLastPadID(void);
+// The Controllers menu (MMController.c and MMDialogs.c): which controller runs the menus (and
+// plays alone), and the buttons for play. Menus keep A / Cross to choose and B / Circle to go back;
+// Start always pauses.
+enum { kPadActionJump, kPadActionAction, kPadActionMap, kPadActionJumpLeft, kPadActionJumpRight,
+       kNumPadActions };
+void LoadControllerSettings(void);
+void SaveControllerSettings(void);
+void ControllerSettingsSnapshot(void *buffer, size_t size, Boolean restore);
+size_t ControllerSettingsSize(void);
+int  ControllerMenuPad(void);                   ///< 0 any controller, 1-4 that one
+void ControllerSetMenuPad(int pad);
+int  ControllerActionButton(int action, int which);     ///< SDL button, -1 none (which: 0 or 1)
+void ControllerBindButton(int action, int button);
+void ControllerResetButtons(void);
+const char *ControllerButtonName(int button);
+const char *ControllerPadName(int pad);          ///< "Xbox Wireless Controller", "" if none
+Uint32 ControllerLastActivity(int pad);         ///< SDL_GetTicks of its last button or stick move
+void ControllerIdentify(int pad);
+void ControllerCaptureButtons(Boolean on);
+int  ControllerTakeCapturedButton(void);        ///< -1 none yet
+Boolean KeyboardDrivesHero(void);
+void ControllerTurnChanged(void);
+void DoControllersDialog(void);
+SpritePtr AddKeyBoxButtonToLayer(SpriteLayerPtr layerP, const char *label, short index, short left, short top,
+                                 short width, short height);
 void MultiplayerGameStarted(void);
 void MultiplayerGameEnded(void);
 void MultiplayerNextTurn(void);
@@ -242,6 +271,7 @@ typedef struct SplitOtherPlayer {
 } SplitOtherPlayer;
 void SplitConfigure(int mode, int numPlayers, const int *inputs);
 void SplitConfigureNetworkRace(int localPlayer, int numPlayers);
+void SplitConfigureNetworkGame(int mode, int localPlayer, int numPlayers);
 void SplitCancel(void);
 Boolean SplitScreenPending(void);
 Boolean SplitScreenActive(void);
@@ -250,6 +280,7 @@ int  SplitCurrentPlayer(void);
 void SplitScreenBegin(short levelNumber);
 void SplitRunFrame(void);
 Boolean SplitPumpPlayerEvents(void);
+Boolean SplitPostEvent(const SDL_Event *e);
 Boolean SplitGiveOSTime(void);
 Boolean SplitTakeGameEnd(void);
 void SplitNoteDeath(void);
@@ -267,14 +298,21 @@ void CoopPostSwitchPressed(SpritePtr switchP);
 void CoopPostDoorUnlocked(SpritePtr doorP);
 void CoopPostEnemyKilled(SpritePtr enemyP);
 void CoopPostPlatformFalling(SpritePtr platformP);
+// Arcade Split Screen: everyone in a room sees the same room (MMRoomSync.c)
+void RoomSyncShareState(void (*share)(void *, size_t));
+void RoomSyncReset(void);
+void RoomSyncFrameBegin(void);
+void RoomSyncBeforeFrame(void);
+void RoomSyncAfterFrame(void);
 short GetMapPlayerLevel(void);
 SpritePtr GetCharacterHeroMaster(int character);
 int  ControllerIndexForInstanceID(SDL_JoystickID id);
 Boolean DebugVirtualPadKey(const SDL_Event *event);
 
 // Two computers (MMNet.c)
-enum { kNetModeRelay = 0, kNetModeRace = 1 };
-/// The race: where a player is and how they're doing (sent every frame).
+enum { kNetModeRelay = 0, kNetModeRace = 1, kNetModeArcade = 2 };
+/// Split screen's machinery on several computers (the race, Arcade Split Screen): where a
+/// player is and how they're doing (sent every frame).
 typedef struct NetRaceState {
     short   room, mapRoom;
     float   x, y, scaleW, scaleH;
@@ -283,7 +321,33 @@ typedef struct NetRaceState {
     Uint8   status;             ///< kSplitPlayer... (MMSplit.c): starting, playing, finished, out
     Uint8   deaths, place;
     Uint32  elapsedMs;
+    short   runningRoom;        ///< Arcade: the room their game is running, -1 none
+    Uint32  roomMs;             ///< Arcade: how long they've been running it
 } NetRaceState;
+Boolean NetArcadeActive(void);
+/// Arcade Split Screen on several computers: what one player did to the team's game, and the
+/// room snapshots (MMCoopSync.c, MMRoomSync.c).
+void NetSendTeamOps(const Uint8 *ops, int length);
+void NetSendRoomSnapshot(const Uint8 *data, int length);
+void CoopSyncReceiveOps(int from, const Uint8 *ops, int length);
+void RoomSyncReceive(int from, const Uint8 *data, int length);
+void CoopSyncNetFrame(Boolean playing);
+enum { kCoopOpObjectAdd = 1, kCoopOpObjectRemove, kCoopOpDoOnceAdd, kCoopOpDoOnceRemove, kCoopOpRoom,
+       kCoopOpLitRoom, kCoopOpMapRoom };
+void CoopNoteArrayChange(int op, long value);
+void RoomSyncSetRemotePlayer(int player, short room, Uint32 roomMs);
+void RoomSyncNetFrame(void);
+Uint32 RoomSyncLocalRoomMs(int player);
+short RoomSyncLocalRoom(int player);
+/// Little-endian numbers in messages (the PS3 is big-endian).
+void NetPutU16(Uint8 *p, Uint16 v);
+void NetPutU32(Uint8 *p, Uint32 v);
+void NetPutF32(Uint8 *p, float v);
+void NetPutF64(Uint8 *p, double v);
+Uint16 NetGetU16(const Uint8 *p);
+Uint32 NetGetU32(const Uint8 *p);
+float NetGetF32(const Uint8 *p);
+double NetGetF64(const Uint8 *p);
 /// A game found on the local network.
 typedef struct NetFoundGame {
     char    hostName[64];
@@ -314,7 +378,7 @@ int  NetBrowseGames(NetFoundGame *games, int max);
 Boolean NetBrowsing(void);
 const char *NetMissingMansion(void);
 const char *NetPeerMissingMansion(void);
-void MultiplayerSetUpNetworkRace(void);
+void MultiplayerSetUpNetworkRace(void);      ///< the race or Arcade Split Screen (NetMode)
 Boolean NetHostGameOnline(Boolean isPublic);
 Boolean NetJoinGameOnline(const char *code, const char *hostID);
 Boolean NetIsOnline(void);
@@ -327,7 +391,7 @@ typedef struct OnlineGame {
     char    code[32];
     char    hostName[64];
     char    hostID[16];
-    int     mode;               ///< kNetModeRelay or kNetModeRace
+    int     mode;               ///< kNetModeRelay, kNetModeRace or kNetModeArcade
     Boolean isPublic, isFriend;
     int     character;
     int     numPlayers;         ///< in the host's waiting room so far
@@ -410,6 +474,43 @@ Boolean MultiSaveWrite(int mode, const char *saveName);
 int  MultiSaveList(int mode, char ids[][16], int count, MultiSaveInfo *out, int max);
 int  MultiSaveListForCurrentGroup(int mode, MultiSaveInfo *out, int max);
 Boolean MultiSaveReadInfo(const char *path, MultiSaveInfo *info);
+// Arcade Split Screen team saves: one checked file (MMTeamSave.c)
+#define kTeamSaveExtension ".mmteam"
+typedef struct TeamSave {
+    char    name[128];
+    char    mansion[256];
+    Uint32  savedAt;
+    int     numPlayers;
+    char    ids[kMaxPlayers][16];
+    char    names[kMaxPlayers][64];
+    int     characters[kMaxPlayers];
+    Uint8  *team;               ///< the team's game, as a save file holds it
+    int     teamLength;
+    Uint8  *parts[kMaxPlayers]; ///< each player's part (where they are, their lives), by ids[]
+    int     partLengths[kMaxPlayers];
+} TeamSave;
+Uint8 *TeamSaveCapture(Boolean part, int *lengthOut);
+Boolean MultiSaveLoadTeam(const char *path, TeamSave *t);   ///< a team save, or an older one
+Uint8 *TeamSaveEncode(const TeamSave *t, int *lengthOut);
+Boolean TeamSaveDecode(const Uint8 *data, int length, TeamSave *t, Boolean infoOnly);
+Boolean TeamSaveRead(const char *path, TeamSave *t, Boolean infoOnly);
+Boolean TeamSaveWriteBytes(const char *path, const Uint8 *data, int length);
+Boolean TeamSaveStore(const char *folder, const TeamSave *t);
+void TeamSaveFree(TeamSave *t);
+void TeamSaveNewName(const char *folder, char *name, size_t size);
+void TeamSaveDescribeGroup(TeamSave *t, char ids[][16], int numPlayers);
+const Uint8 *TeamSavePart(const TeamSave *t, const char *id, int *lengthOut);
+// several computers
+enum { kMsgSaveRequest = 15, kMsgSaveCollect = 16, kMsgSaveData = 17, kMsgSaveAck = 18, kMsgSaveDone = 19 };
+void TeamSaveNetRequest(void);
+void TeamSaveNetFrame(void);
+void TeamSaveNetMessage(int type, int from, const Uint8 *p, int length);
+Boolean TeamSaveNetSendContinue(const char *path);
+const char *TeamSaveNetContinuePath(void);
+void TeamSaveNetReset(void);
+void TeamSaveNetForgetContinue(void);
+void NetSendSaveMessage(int type, const void *payload, int length);
+void SplitShowTeamSaveNotice(const char *text, Boolean ok);
 Boolean MultiSaveStoreReceived(int mode, const char *saveName, const Uint8 *data, int length, const Uint8 *sidecar,
                                int sidecarLength, char *pathOut, size_t size);
 void MultiSaveDescribe(const MultiSaveInfo *info, char *text, size_t size);

@@ -62,7 +62,8 @@ off, it plays exactly as the original did.** Turn them on and the house has some
 - **Co-op**: take turns and share the lives. When the player whose turn it is dies, the
   next one comes in. Doors, keys and treasure are shared.
 - **Arcade Split Screen**: everyone plays at once, each in their own view of one mansion.
-  A lever one player pulls is pulled for everybody. Every player has their own lives.
+  A lever one player pulls is pulled for everybody, and everyone in a room sees the same
+  platforms and enemies. Every player has their own lives.
 - **Ghost Race**: everyone gets their own copy of the mansion, and the others show as ghosts.
   Fastest out wins, and each life lost adds 15 seconds.
 - On **one computer** (keyboards and controllers), across your **local network**, or **online**.
@@ -179,7 +180,7 @@ Linux versions.
 
 1. **Get the package.** On GitHub, open the **Actions** tab, then the newest **Build** run with
    a green check, and download **After-Midnight-PS3-…** under **Artifacts**. Inside the `.zip`
-   is `After-Midnight-1.1-PS3.pkg`.
+   is `After-Midnight-1.2-PS3.pkg`.
 2. **On a PS3:** copy the `.pkg` to the top of a FAT32 USB flash drive, plug it in, and choose
    **Game → Package Manager → Install Package Files → Standard** on the XMB (or install it with
    multiMAN). **After Midnight** appears in the Game column.
@@ -206,8 +207,9 @@ yourself, is in **[docs/PS3.md](docs/PS3.md)**.
 
 In menus, A (Cross) chooses and B (Circle) goes back; any button closes a sign.
 In split screen, a second keyboard player uses **W A S D**, **F** to jump, **G** for action
-and **Tab** for the map. Every controller that's plugged in can join with **A**. All keys can
-be changed under **Options → Controls**.
+and **Tab** for the map. All keys can be changed under **Options → Controls**, and the
+controller's buttons under **Options → Controls → Controllers...**, which also picks the
+controller that runs the menus.
 
 ## Playing together
 
@@ -216,11 +218,11 @@ From the title screen, choose **Multiplayer**, then a game type:
 | | One computer | Local network | Online |
 |---|:---:|:---:|:---:|
 | **Co-op**: take turns, share the lives | ✅ | ✅ | ✅ |
-| **Arcade Split Screen**: everyone at once, one mansion | ✅ | | |
+| **Arcade Split Screen**: everyone at once, one mansion | ✅ | ✅ | ✅ |
 | **Ghost Race**: twin mansions, fastest out wins | ✅ | ✅ | ✅ |
 
-- **One computer:** add players with keyboards and controllers, choose who is who, and press
-  start.
+- **One computer:** **Add a player**, choose their controls (the keyboard or a controller) and
+  their profile, then choose a mansion.
 - **Local network:** one computer hosts and the others find the game in their list (or use
   **Join by address**).
 - **Online:** **Play online...** lists public games and your friends' private ones. Host a

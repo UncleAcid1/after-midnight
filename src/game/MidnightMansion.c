@@ -896,12 +896,17 @@ int MyOpenStandardMansion(ConstStringPtr mansionName, short mansionNumber)
     return err;
 }
 
-int OpenMansionUsingFilePath(const char *filePath, const char *mansionName)
+int OpenMansionUsingFilePath(const char *filePath, const char *mansionNameIn)
 {
     Boolean needsMM2 = false;
     long version;
     Uint32 start;
     int err = 0;
+    char mansionName[255];
+
+        // (callers pass gMansionFilename itself, which is written below: copying a string onto
+        // itself with snprintf left it empty, so a game saved after loading one had no mansion)
+    snprintf(mansionName, sizeof(mansionName), "%s", mansionNameIn);
 
     printf("Attempting to open mansion at path: %s\n", filePath);
     printf("...with name: %s\n", mansionName);
@@ -976,10 +981,65 @@ void StartTutorialMansion(void)
 void DebugAutoStart(void)
 {
     const char *autoStart = getenv("MM_DEBUG_AUTOSTART");
+    const char *net = getenv("MM_DEBUG_NET");       // testing aid: "host:<net mode>" or "join:<address>"
     unsigned char mansionName[256] = { 0 };
     short n;
 
+    if (net != NULL && strncmp(net, "join:", 5) == 0) {
+        if (MultiplayerConnect(kNetModeRelay, false, net + 5) == kMultiplayerJoined) {
+            if (NetContinuedSavePath() != NULL && NetMode() == kNetModeArcade)
+                SplitContinueSave(NetContinuedSavePath());
+            else if (NetContinuedSavePath() != NULL)
+                MultiplayerContinueSave(NetContinuedSavePath());
+            else
+                StartCustomMansion();
+        }
+        return;
+    }
+    if (net != NULL && strncmp(net, "host:", 5) == 0 && getenv("MM_DEBUG_NET_CONTINUE") != NULL) {
+            // testing aid: the host carries on with the group's newest save (Arcade Split Screen, or
+            // with host:0 Co-op)
+        MultiSaveInfo saves[1];
+        if (MultiplayerConnect(atoi(net + 5), true, NULL) != kMultiplayerNewGame)
+            return;
+        if (atoi(net + 5) == kNetModeRelay && MultiSaveListForCurrentGroup(kMultiSaveCoop, saves, 1) == 1) {
+            NetSetContinueSave(saves[0].path);      // (Co-op: the newest of these players' saves)
+            MultiplayerContinueSave(saves[0].path);
+            return;
+        }
+        if (MultiSaveListForCurrentGroup(kMultiSaveArcade, saves, 1) == 1) {
+            NetSetContinueSave(saves[0].path);
+            SplitContinueSave(saves[0].path);
+            return;
+        }
+        net = NULL;     // nothing saved: a new game
+    }
+    if (getenv("MM_DEBUG_SPLIT_CONTINUE") != NULL && getenv("MM_DEBUG_PROFILES") != NULL) {
+            // testing aid: split screen carries on with these players' newest Arcade Split Screen save
+        static const int kPads[] = { kSplitInputPad1, kSplitInputPad2, kSplitInputPad3, kSplitInputPad4 };
+        const char *names = getenv("MM_DEBUG_PROFILES");
+        char profiles[kMaxPlayers][64];
+        MultiSaveInfo saves[1];
+        int k;
+
+        memset(profiles, 0, sizeof(profiles));
+        for (k = 0; k < kMaxPlayers && *names; k++) {
+            size_t len = strcspn(names, ",");
+            snprintf(profiles[k], sizeof(profiles[k]), "%.*s", (int)(len < 63 ? len : 63), names);
+            names += len + (names[len] == ',');
+        }
+        SetMultiplayerPlayers(k, profiles, NULL, true);
+        SetMultiplayerInputs(kPads);
+        if (MultiSaveListForCurrentGroup(kMultiSaveArcade, saves, 1) == 1) {
+            SplitConfigure(kSplitModeCoop, k, kPads);
+            SplitContinueSave(saves[0].path);
+        }
+        return;
+    }
     if (autoStart == NULL)
+        return;
+    if (net != NULL && strncmp(net, "host:", 5) == 0 &&
+        MultiplayerConnect(atoi(net + 5), true, NULL) != kMultiplayerNewGame)     // (MM_DEBUG_NET_START)
         return;
     n = (short)atoi(autoStart);
     SWConcatPascalStrings(mansionName, GetMansionNameFromIndex(n));
@@ -998,14 +1058,26 @@ void StartGameNoEditor(void)
     if (split != NULL && !SplitScreenPending()) {
         int n = strchr(split, ':') != NULL ? atoi(strchr(split, ':') + 1) : 2;
         Boolean relay = strncmp(split, "relay", 5) == 0;
-        SetMultiplayerPlayers(n, NULL, NULL, !relay);
-        if (!relay) {
+        static const int kPads[] = { kSplitInputPad1, kSplitInputPad2, kSplitInputPad3, kSplitInputPad4 };
 #ifdef MM_PS3
-            static const int kPads[] = { kSplitInputPad1, kSplitInputPad2, kSplitInputPad3, kSplitInputPad4 };
-            SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, kPads);
+        Boolean pads = true;
 #else
-            SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, NULL);
+        Boolean pads = strstr(split, ":pads") != NULL;     // "coop:2:pads": controllers 1, 2...
 #endif
+        const char *names = getenv("MM_DEBUG_PROFILES");    // "Ann,Bob": the players' profiles
+        char profiles[kMaxPlayers][64];
+        int k;
+
+        memset(profiles, 0, sizeof(profiles));
+        for (k = 0; names != NULL && k < kMaxPlayers && *names; k++) {
+            size_t len = strcspn(names, ",");
+            snprintf(profiles[k], sizeof(profiles[k]), "%.*s", (int)(len < 63 ? len : 63), names);
+            names += len + (names[len] == ',');
+        }
+        SetMultiplayerPlayers(n, getenv("MM_DEBUG_PROFILES") != NULL ? profiles : NULL, NULL, !relay);
+        SetMultiplayerInputs(pads ? kPads : NULL);
+        if (!relay) {
+            SplitConfigure(strncmp(split, "race", 4) == 0 ? kSplitModeRace : kSplitModeCoop, n, pads ? kPads : NULL);
         }
     }
 
@@ -1373,6 +1445,10 @@ void SetStartingNumLives(void)
 /// 90 lives in the first mansion on the easiest difficulty, otherwise 6.
 short GetStartingNumLives(char difficulty)
 {
+    const char *lives = getenv("MM_DEBUG_LIVES");      // testing aid: start with this many
+
+    if (lives != NULL && atoi(lives) > 0)
+        return (short)atoi(lives);
     if (gCurrentMansionNumber == 0 && difficulty == 0)
         return 90;
     return 6;

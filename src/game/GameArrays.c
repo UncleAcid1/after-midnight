@@ -63,6 +63,50 @@ static void ReadLongArray(SDL_RWops *file, long *array, long count)
         array[i] = ReadLong(file);
 }
 
+/*  The short arrays (rooms explored, lit, on the map) were written as raw memory, in the
+    computer's own byte order (and one or two of them through the 16- and 32-bit writers). These
+    write and read exactly the bytes a Mac or PC has always written, on any computer, so saves
+    made on a PS3 and a computer (Arcade Split Screen sends them between the two) read the same.
+    (A PS3's own saves from before this read their room lists wrong: the map forgets them.) */
+static void WriteShortArray(SDL_RWops *file, const short *array, Sint32 size)
+{
+    Uint8 bytes[2];
+    int i, count = size / 2;
+
+    if (count == 1) {
+        MyWriteDataToFile(file, 2, (void *)&array[0]);
+    } else if (count == 2) {
+        MyWriteDataToFile(file, 2, (void *)&array[1]);     // (a 32-bit value of the two, little-endian)
+        MyWriteDataToFile(file, 2, (void *)&array[0]);
+    } else {
+        for (i = 0; i < count; i++) {
+            bytes[0] = (Uint8)(array[i] & 0xff);
+            bytes[1] = (Uint8)((Uint16)array[i] >> 8);
+            MyWriteDataToFile(file, 1, &bytes[0]);
+            MyWriteDataToFile(file, 1, &bytes[1]);
+        }
+    }
+}
+
+static void ReadShortArray(SDL_RWops *file, short *array, Sint32 size)
+{
+    Uint8 bytes[2];
+    int i, count = size / 2;
+
+    if (count == 1) {
+        MyReadDataFromFile(file, 2, &array[0]);
+    } else if (count == 2) {
+        MyReadDataFromFile(file, 2, &array[1]);
+        MyReadDataFromFile(file, 2, &array[0]);
+    } else {
+        for (i = 0; i < count; i++) {
+            MyReadDataFromFile(file, 1, &bytes[0]);
+            MyReadDataFromFile(file, 1, &bytes[1]);
+            array[i] = (short)(bytes[0] | bytes[1] << 8);
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Objects collected/destroyed (by objectID)
 
@@ -88,6 +132,7 @@ void RemoveSpriteFromObjectArray(SpritePtr spriteP)
 void AddObjectToArray(long objectID)
 {
     if (!IsObjectInArray(objectID)) {
+        CoopNoteArrayChange(kCoopOpObjectAdd, objectID);
         gObjectArray[gNextFreeObjectIndex++] = objectID;
         SDL_assert(gNextFreeObjectIndex < kMaxObjects);
         if (gNextFreeObjectIndex >= kMaxObjects)
@@ -101,6 +146,7 @@ void RemoveObjectFromArray(long objectID)
 
     if (!IsObjectInArray(objectID))
         return;
+    CoopNoteArrayChange(kCoopOpObjectRemove, objectID);
     index = gNextFreeObjectIndex;
     for (i = 0; i < gNextFreeObjectIndex; i++) {
         if (gObjectArray[i] == objectID) {
@@ -151,6 +197,7 @@ void RemoveSpriteFromDoOnceArray(SpritePtr spriteP)
 void AddObjectToDoOnceArray(long objectID)
 {
     if (!IsObjectInDoOnceArray(objectID)) {
+        CoopNoteArrayChange(kCoopOpDoOnceAdd, objectID);
         gDoOnceArray[gNextDoOnceIndex++] = objectID;
         if (gNextDoOnceIndex >= kMaxDoOnce - 1)
             gNextDoOnceIndex = 0;
@@ -163,6 +210,7 @@ void RemoveObjectFromDoOnceArray(long objectID)
 
     if (!IsObjectInDoOnceArray(objectID))
         return;
+    CoopNoteArrayChange(kCoopOpDoOnceRemove, objectID);
     index = gNextDoOnceIndex;
     for (i = 0; i < gNextDoOnceIndex; i++) {
         if (gDoOnceArray[i] == objectID) {
@@ -203,6 +251,7 @@ void InitRoomArray(void)
 void AddRoomToArray(short room)
 {
     if (!IsRoomInArray(room)) {
+        CoopNoteArrayChange(kCoopOpRoom, room);
         gRoomArray[gNextRoomArrayIndex++] = room;
         if (gNextRoomArrayIndex >= kMaxRooms)
             gNextRoomArrayIndex = 0;
@@ -243,6 +292,7 @@ void InitLitRoomArray(void)
 void AddRoomToLitRoomArray(short room)
 {
     if (!IsRoomInLitRoomArray(room)) {
+        CoopNoteArrayChange(kCoopOpLitRoom, room);
         gLitRoomArray[gNextLitRoomArrayIndex++] = room;
         if (gNextLitRoomArrayIndex >= kMaxRooms)
             gNextLitRoomArrayIndex = 0;
@@ -277,6 +327,7 @@ void InitMapArray(void)
 void AddRoomToMapArray(short room)
 {
     if (!IsRoomInMapArray(room)) {
+        CoopNoteArrayChange(kCoopOpMapRoom, room);
         gMapArray[gNextMapArrayIndex++] = room;
         if (gNextMapArrayIndex >= kMaxRooms)
             gNextMapArrayIndex = 0;
@@ -402,7 +453,7 @@ void WriteSaveDataToFile(SDL_RWops *file, float heroHoriz, float heroVert, Boole
     size = gNextLitRoomArrayIndex * 2;
     MyWriteDataToFile(file, 4, &size);
     MyWriteDataToFile(file, 2, &gNextLitRoomArrayIndex);
-    MyWriteDataToFile(file, size, gLitRoomArray);
+    WriteShortArray(file, gLitRoomArray, size);
 
     MyWriteDataToFile(file, 1, &flag);
     MyWriteDataToFile(file, 255, gMansionFilename);
@@ -438,12 +489,12 @@ void WriteSaveDataToFile(SDL_RWops *file, float heroHoriz, float heroVert, Boole
     size = gNextRoomArrayIndex * 2;
     MyWriteDataToFile(file, 4, &size);
     MyWriteDataToFile(file, 2, &gNextRoomArrayIndex);
-    MyWriteDataToFile(file, size, gRoomArray);
+    WriteShortArray(file, gRoomArray, size);
 
     size = gNextMapArrayIndex * 2;
     MyWriteDataToFile(file, 4, &size);
     MyWriteDataToFile(file, 2, &gNextMapArrayIndex);
-    MyWriteDataToFile(file, size, gMapArray);
+    WriteShortArray(file, gMapArray, size);
 
     WriteLong(file, kSaveDataEndMarker);
 }
@@ -465,8 +516,10 @@ int LoadSaveDataFromFile(SDL_RWops *file, float *heroHoriz, float *heroVert, Boo
     InitLitRoomArray();
     MyReadDataFromFile(file, 4, &size);
     SDL_assert(size >= 0 && size <= (Sint32)sizeof(gLitRoomArray));
+    if (size < 0 || size > (Sint32)sizeof(gLitRoomArray))
+        return -3;                      // damaged
     MyReadDataFromFile(file, 2, &gNextLitRoomArrayIndex);
-    MyReadDataFromFile(file, size, gLitRoomArray);
+    ReadShortArray(file, gLitRoomArray, size);
 
     MyReadDataFromFile(file, 1, &flag);
     MyReadDataFromFile(file, 255, gMansionFilename);
@@ -513,13 +566,17 @@ int LoadSaveDataFromFile(SDL_RWops *file, float *heroHoriz, float *heroVert, Boo
 
     MyReadDataFromFile(file, 4, &size);
     SDL_assert(size >= 0 && size <= (Sint32)sizeof(gRoomArray));
+    if (size < 0 || size > (Sint32)sizeof(gRoomArray))
+        return -3;                      // damaged
     MyReadDataFromFile(file, 2, &gNextRoomArrayIndex);
-    MyReadDataFromFile(file, size, gRoomArray);
+    ReadShortArray(file, gRoomArray, size);
 
     MyReadDataFromFile(file, 4, &size);
     SDL_assert(size >= 0 && size <= (Sint32)sizeof(gMapArray));
+    if (size < 0 || size > (Sint32)sizeof(gMapArray))
+        return -3;                      // damaged
     MyReadDataFromFile(file, 2, &gNextMapArrayIndex);
-    MyReadDataFromFile(file, size, gMapArray);
+    ReadShortArray(file, gMapArray, size);
 
     count = ReadLong(file);
     SDL_assert(count == kSaveDataEndMarker);

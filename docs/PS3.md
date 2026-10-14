@@ -23,7 +23,7 @@ The PS3 version is being built step by step (the roadmap is in `CLAUDE.md`). Whe
 3. Click the run you want (its title is the commit message).
 4. Scroll to the bottom of the page, to **Artifacts**. Click **After-Midnight-PS3-xxxxxxx**
    (the letters are the start of the commit's ID). Your browser downloads a `.zip`.
-5. Double-click the `.zip` in Downloads: inside is `After-Midnight-1.1-PS3.pkg` (about
+5. Double-click the `.zip` in Downloads: inside is `After-Midnight-1.2-PS3.pkg` (about
    230 MB).
 
 GitHub keeps the package for 3 days (it's big, and a free account has 500 MB for these). To
@@ -39,7 +39,7 @@ RPCS3 needs the PS3's system software once: download it from
 [playstation.com](https://www.playstation.com/en-us/support/hardware/ps3/system-software/)
 and install it with **File → Install Firmware**.
 
-1. **File → Install Packages/Raps/Edats**, choose `After-Midnight-1.1-PS3.pkg`, then
+1. **File → Install Packages/Raps/Edats**, choose `After-Midnight-1.2-PS3.pkg`, then
    **Install**. (Installing again replaces the program and keeps your saves.)
 2. **After Midnight** appears in RPCS3's game list. Double-click it. The first start takes a
    minute while RPCS3 prepares the game; later starts are quicker.
@@ -72,7 +72,7 @@ bigger. L1 / R1 switch the tabs.
 
 Your PS3 needs nothing extra: Evilnat's CFW installs packages from the XMB.
 
-1. On the Mac, copy `After-Midnight-1.1-PS3.pkg` to the top level of the USB flash drive
+1. On the Mac, copy `After-Midnight-1.2-PS3.pkg` to the top level of the USB flash drive
    (FAT32, not inside a folder). Eject the drive.
 2. Plug the drive into one of the PS3's USB ports.
 3. On the XMB go to **Game → Package Manager → Install Package Files → Standard**, choose
@@ -112,6 +112,7 @@ folder) can switch on the same testing aids as on the computer, one per line:
     MM_DEBUG_AUTOSTART=0           # start the first mansion (Normal) straight away
     MM_DEBUG_SPLIT=coop:2          # with AUTOSTART: split screen co-op for 2 (or race:2, coop:4)
     MM_DEBUG_VIRTUAL_PADS=2        # pretend controllers for the empty player slots
+    MM_DEBUG_LIVES=99              # start every game with 99 lives
     MM_PS3_DEBUG_PADS=1            # log every change on the controllers
     MM_PS3_DEBUG_FRAMES=1          # log the time of every frame
     MM_PS3_OVERSCAN=10             # "Fit the picture on a TV" makes it 10% smaller (7 if not set)
