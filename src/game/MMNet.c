@@ -62,7 +62,7 @@
 enum {
     kMsgHello = 1, kMsgStart = 2, kMsgReady = 3, kMsgFrame = 4, kMsgSave = 5, kMsgBye = 6, kMsgPhantom = 7,
     kMsgNoMansion = 8, kMsgChat = 9, kMsgRoster = 10, kMsgFrom = 11, kMsgLeft = 12, kMsgTeam = 13,
-    kMsgRoomSnap = 14
+    kMsgRoomSnap = 14, kMsgTeamSave = 15, kMsgTeamSavePart = 16
 };
 
 typedef struct NetFrame {
@@ -555,6 +555,22 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
             if (from >= 0 && from < kMaxPlayers && from != gNet.localPlayer)
                 RoomSyncReceive(from, payload, length);
             break;
+        case kMsgTeamSave:          // Arcade: someone stood on a save statue (the save's name)
+            if (length > 0 && length < 250) {
+                char name[256];
+                snprintf(name, sizeof(name), "%.*s", length, (const char *)payload);
+                SplitTeamSaveReceived(name);
+            }
+            break;
+        case kMsgTeamSavePart:      // Arcade: [name length][name][player ID: 14][their part]
+            if (length > 15 && 1 + payload[0] + 14 <= length) {
+                char name[256], id[16];
+                int nameLen = payload[0];
+                snprintf(name, sizeof(name), "%.*s", nameLen, (const char *)payload + 1);
+                snprintf(id, sizeof(id), "%.14s", (const char *)payload + 1 + nameLen);
+                MultiSaveStorePart(kMultiSaveArcade, name, id, payload + 15 + nameLen, length - 15 - nameLen);
+            }
+            break;
         case kMsgStart:
             if (!gNet.isHost && length <= (int)sizeof(gNet.startPayload)) {
                 memcpy(gNet.startPayload, payload, (size_t)length);
@@ -618,7 +634,8 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
         // the host passes on what the others need to hear
     if (gNet.isHost && link != NULL && link->player >= 0 && from == link->player &&
         (type == kMsgFrame || type == kMsgSave || type == kMsgPhantom || type == kMsgChat || type == kMsgReady ||
-         type == kMsgNoMansion || type == kMsgTeam || type == kMsgRoomSnap))
+         type == kMsgNoMansion || type == kMsgTeam || type == kMsgRoomSnap || type == kMsgTeamSave ||
+         type == kMsgTeamSavePart))
         ForwardToOthers(from, type, payload, length);
 }
 
@@ -1211,10 +1228,29 @@ static void SendStart(void)
             snprintf(sidecar, sizeof(sidecar), "%s.txt", gNet.continuePath);
             file = fopen(sidecar, "rb");
             if (file != NULL) {
-                sideLen = (long)fread(payload + n, 1, 2000, file);
+                sideLen = (long)fread(payload + n + 4, 1, 2000, file);
                 fclose(file);
             }
-            n += (int)sideLen;
+            PutU32(payload + n, (Uint32)sideLen);
+            n += 4 + (int)sideLen;
+            if (gNet.mode == kNetModeArcade) {
+                    // Arcade Split Screen: every player's part ("<save>.<ID>")
+                int p;
+                payload[n++] = (Uint8)gNet.numPlayers;
+                for (p = 0; p < gNet.numPlayers; p++) {
+                    char partPath[1600];
+                    long partLen = 0;
+                    snprintf(partPath, sizeof(partPath), "%s.%s", gNet.continuePath, gNet.ids[p]);
+                    memcpy(payload + n, gNet.ids[p], 14);
+                    file = fopen(partPath, "rb");
+                    if (file != NULL) {
+                        partLen = (long)fread(payload + n + 18, 1, (size_t)(sizeof(payload) - (size_t)n - 18 - 4), file);
+                        fclose(file);
+                    }
+                    PutU32(payload + n + 14, (Uint32)partLen);
+                    n += 18 + (int)partLen;
+                }
+            }
         }
         gNet.continuePath[0] = 0;
     }
@@ -1300,10 +1336,30 @@ Boolean NetClientWaitForStart(void)
         at += nameLen;
         saveLen = (int)GetU32(p + at);
         at += 4;
-        if (at + saveLen <= gNet.startLen && saveName[0] != 0 && strchr(saveName, '/') == NULL &&
-            !MultiSaveStoreReceived(kMultiSaveCoop, saveName, p + at, saveLen, p + at + saveLen,
-                                    gNet.startLen - at - saveLen, gNet.continuePath, sizeof(gNet.continuePath)))
-            gNet.continuePath[0] = 0;
+        if (at + saveLen + 4 <= gNet.startLen && saveName[0] != 0 && strchr(saveName, '/') == NULL) {
+            int sideAt = at + saveLen + 4, sideLen = (int)GetU32(p + at + saveLen), saveMode;
+            if (sideAt + sideLen > gNet.startLen)
+                sideLen = gNet.startLen - sideAt;
+            saveMode = gNet.mode == kNetModeArcade ? kMultiSaveArcade : kMultiSaveCoop;
+            if (!MultiSaveStoreReceived(saveMode, saveName, p + at, saveLen, p + sideAt, sideLen, gNet.continuePath,
+                                        sizeof(gNet.continuePath)))
+                gNet.continuePath[0] = 0;
+            at = sideAt + sideLen;
+            if (gNet.continuePath[0] && gNet.mode == kNetModeArcade && at < gNet.startLen) {
+                    // Arcade Split Screen: every player's part
+                int count = p[at++], k;
+                for (k = 0; k < count && at + 18 <= gNet.startLen; k++) {
+                    char id[16];
+                    int partLen = (int)GetU32(p + at + 14);
+                    snprintf(id, sizeof(id), "%.14s", (const char *)p + at);
+                    if (at + 18 + partLen > gNet.startLen)
+                        break;
+                    if (partLen > 0)
+                        MultiSaveStorePart(kMultiSaveArcade, saveName, id, p + at + 18, partLen);
+                    at += 18 + partLen;
+                }
+            }
+        }
     }
 
         // open the same mansion (as a replay does)
@@ -1395,6 +1451,28 @@ void NetSendTeamOps(const Uint8 *ops, int length)
 {
     if (NetArcadeActive() && length > 0 && length <= 65535)
         SendMessage(kMsgTeam, ops, (Uint16)length);
+}
+
+/// Arcade Split Screen: this player stood on a save statue; everyone saves the team's game.
+void NetSendTeamSave(const char *name)
+{
+    if (NetArcadeActive() && name[0] != 0)
+        SendMessage(kMsgTeamSave, name, (Uint16)strlen(name));
+}
+
+/// Arcade Split Screen: this computer's player's part of a team save, for the others' copies.
+void NetSendTeamSavePart(const char *name, const char *playerID, const Uint8 *data, int length)
+{
+    static Uint8 payload[65536];
+    int nameLen = (int)strlen(name) > 200 ? 200 : (int)strlen(name);
+
+    if (!NetArcadeActive() || strlen(playerID) != 14 || 15 + nameLen + length > 65535)
+        return;
+    payload[0] = (Uint8)nameLen;
+    memcpy(payload + 1, name, (size_t)nameLen);
+    memcpy(payload + 1 + nameLen, playerID, 14);
+    memcpy(payload + 15 + nameLen, data, (size_t)length);
+    SendMessage(kMsgTeamSavePart, payload, (Uint16)(15 + nameLen + length));
 }
 
 /// Arcade Split Screen: the room this computer's player keeps, for the others in it.
@@ -1879,6 +1957,11 @@ void NetPeerLeftDuringGame(void) {}
 void NetAskToLeave(void) {}
 void NetRaceSendState(const NetRaceState *st) { (void)st; }
 void NetSendTeamOps(const Uint8 *ops, int length) { (void)ops; (void)length; }
+void NetSendTeamSave(const char *name) { (void)name; }
+void NetSendTeamSavePart(const char *name, const char *playerID, const Uint8 *data, int length)
+{
+    (void)name; (void)playerID; (void)data; (void)length;
+}
 void NetSendRoomSnapshot(const Uint8 *data, int length) { (void)data; (void)length; }
 void NetRacePump(void) {}
 Boolean NetRaceGetState(int player, NetRaceState *st, Boolean *goneP) { (void)player; (void)st; *goneP = true; return false; }

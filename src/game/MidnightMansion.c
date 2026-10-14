@@ -896,12 +896,17 @@ int MyOpenStandardMansion(ConstStringPtr mansionName, short mansionNumber)
     return err;
 }
 
-int OpenMansionUsingFilePath(const char *filePath, const char *mansionName)
+int OpenMansionUsingFilePath(const char *filePath, const char *mansionNameIn)
 {
     Boolean needsMM2 = false;
     long version;
     Uint32 start;
     int err = 0;
+    char mansionName[255];
+
+        // (callers pass gMansionFilename itself, which is written below: copying a string onto
+        // itself with snprintf left it empty, so a game saved after loading one had no mansion)
+    snprintf(mansionName, sizeof(mansionName), "%s", mansionNameIn);
 
     printf("Attempting to open mansion at path: %s\n", filePath);
     printf("...with name: %s\n", mansionName);
@@ -981,9 +986,25 @@ void DebugAutoStart(void)
     short n;
 
     if (net != NULL && strncmp(net, "join:", 5) == 0) {
-        if (MultiplayerConnect(kNetModeRelay, false, net + 5) == kMultiplayerJoined)
-            StartCustomMansion();
+        if (MultiplayerConnect(kNetModeRelay, false, net + 5) == kMultiplayerJoined) {
+            if (NetContinuedSavePath() != NULL && NetMode() == kNetModeArcade)
+                SplitContinueSave(NetContinuedSavePath());
+            else
+                StartCustomMansion();
+        }
         return;
+    }
+    if (net != NULL && strncmp(net, "host:", 5) == 0 && getenv("MM_DEBUG_NET_CONTINUE") != NULL) {
+            // testing aid: the host carries on with the group's newest Arcade Split Screen save
+        MultiSaveInfo saves[1];
+        if (MultiplayerConnect(atoi(net + 5), true, NULL) != kMultiplayerNewGame)
+            return;
+        if (MultiSaveListForCurrentGroup(kMultiSaveArcade, saves, 1) == 1) {
+            NetSetContinueSave(saves[0].path);
+            SplitContinueSave(saves[0].path);
+            return;
+        }
+        net = NULL;     // nothing saved: a new game
     }
     if (autoStart == NULL)
         return;

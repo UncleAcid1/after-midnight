@@ -474,6 +474,10 @@ Boolean MultiSaveWrite(int mode, const char *saveName);
 int  MultiSaveList(int mode, char ids[][16], int count, MultiSaveInfo *out, int max);
 int  MultiSaveListForCurrentGroup(int mode, MultiSaveInfo *out, int max);
 Boolean MultiSaveReadInfo(const char *path, MultiSaveInfo *info);
+Boolean MultiSaveStorePart(int mode, const char *saveName, const char *playerID, const Uint8 *data, int length);
+void NetSendTeamSave(const char *name);
+void NetSendTeamSavePart(const char *name, const char *playerID, const Uint8 *data, int length);
+void SplitTeamSaveReceived(const char *name);
 Boolean MultiSaveStoreReceived(int mode, const char *saveName, const Uint8 *data, int length, const Uint8 *sidecar,
                                int sidecarLength, char *pathOut, size_t size);
 void MultiSaveDescribe(const MultiSaveInfo *info, char *text, size_t size);

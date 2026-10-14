@@ -249,6 +249,27 @@ Boolean MultiSaveStoreReceived(int mode, const char *saveName, const Uint8 *data
     return true;
 }
 
+/// Keeps one player's part of an Arcade Split Screen save ("<save>.<ID>"), sent by the computer
+/// they play on.
+Boolean MultiSaveStorePart(int mode, const char *saveName, const char *playerID, const Uint8 *data, int length)
+{
+    char ids[kMaxPlayers][16], names[kMaxPlayers][64], path[1600];
+    int characters[kMaxPlayers], n = CurrentGroup(ids, names, characters);
+    const char *folder = n >= 2 ? GroupFolder(mode, ids, n, true) : NULL;
+    FILE *file;
+
+    if (folder == NULL || strlen(playerID) != 14 || strchr(saveName, '/') != NULL || strchr(playerID, '/') != NULL ||
+        length <= 0)
+        return false;
+    snprintf(path, sizeof(path), "%s/%s.%s", folder, saveName, playerID);
+    file = fopen(path, "wb");
+    if (file == NULL)
+        return false;
+    fwrite(data, 1, (size_t)length, file);
+    fclose(file);
+    return true;
+}
+
 /// "Falcon Manor 3 — 2 hours ago".
 void MultiSaveDescribe(const MultiSaveInfo *info, char *text, size_t size)
 {

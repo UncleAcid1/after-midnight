@@ -778,7 +778,10 @@ static void StartNetworkGame(int rowKind, const char *address)
     ShutDownScreen();
     MMHideCursor();
     if (result == kMultiplayerJoined) {
-        if (NetContinuedSavePath() != NULL)
+        if (NetContinuedSavePath() != NULL && NetMode() == kNetModeArcade) {
+            if (SplitContinueSave(NetContinuedSavePath()) != 0)  // the host carries on with our team's game
+                NetEndSession();
+        } else if (NetContinuedSavePath() != NULL)
             MultiplayerContinueSave(NetContinuedSavePath());     // the host carries on with our saved game
         else
             StartCustomMansion();           // the host chose the mansion; it's open
@@ -786,11 +789,13 @@ static void StartNetworkGame(int rowKind, const char *address)
     }
     {
             // the host picks: one of the game's mansions, a custom one (the other computer needs
-            // that one too), or (Co-op) a game these two players saved together
+            // that one too), or (Co-op, Arcade Split Screen) a game these players saved together
         static char labels[5][300];
         const char *choices[5] = { "A mansion from the game", "A custom mansion" };
         MultiSaveInfo saves[3];
-        int numSaves = netMode == kNetModeRelay ? MultiSaveListForCurrentGroup(kMultiSaveCoop, saves, 3) : 0;
+        int numSaves = netMode == kNetModeRelay    ? MultiSaveListForCurrentGroup(kMultiSaveCoop, saves, 3)
+                       : netMode == kNetModeArcade ? MultiSaveListForCurrentGroup(kMultiSaveArcade, saves, 3)
+                                                   : 0;
         int i, choice;
         char detail[200];
 
@@ -802,7 +807,12 @@ static void StartNetworkGame(int rowKind, const char *address)
         choice = DoSimpleChoiceDialog("Choose a mansion", choices, 2 + numSaves, 0);
         if (choice >= 2) {
             NetSetContinueSave(saves[choice - 2].path);
-            MultiplayerContinueSave(saves[choice - 2].path);
+            if (netMode == kNetModeArcade) {
+                if (SplitContinueSave(saves[choice - 2].path) != 0)
+                    NetEndSession();
+            } else {
+                MultiplayerContinueSave(saves[choice - 2].path);
+            }
             return;
         }
         if (choice == 1 && MMDoOpenMansionDialog() == 0) {

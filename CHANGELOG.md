@@ -20,7 +20,11 @@
   stood on a platform in their view and floated in another's): the player who has been in the
   room longest keeps it for the others.
 - **Arcade Split Screen on the local network and online**, one player per computer, like Co-op
-  and Ghost Race: the team's progress, score and items are shared, and so are the rooms.
+  and Ghost Race: the team's progress, score and items are shared, and so are the rooms. Save
+  statues save the team's game on every computer, and the host can continue it later (Choose a
+  mansion lists the group's saves): everyone comes back where they were.
+- A game saved after loading a saved game could record no mansion, so it couldn't be loaded
+  again (the mansion's name was copied onto itself).
 - Split screen: a player on a controller can close a sign (it stayed open).
 - Ghost Race and Arcade Split Screen: save statues work (lives back, and you come back there),
   instead of cutting the animation short; they no longer restart the music.

@@ -188,7 +188,11 @@ computer sends what its player collects or puts back, the events done, the rooms
 and mapped, the changes to the score, secrets and items (kMsgTeam), and the levers, switches,
 doors, enemies and falling blocks; the keeper of a room sends its snapshot to the players in it
 elsewhere a few times a second (kMsgRoomSnap), written field by field so a PS3 and a PC agree.
-Anyone reaching the exit wins it for the team. (No team saves on several computers yet.)
+Anyone reaching the exit wins it for the team. A save statue saves the team's game on every
+computer: whoever stood on it names the save (kMsgTeamSave), each computer writes it from its own
+copy of the team's game with its own player's part, and sends that part to the others
+(kMsgTeamSavePart), so each keeps the whole save. The host's Choose a mansion offers the group's
+saves, and sends the save and every part along when continuing one.
 
 ### Online
 
@@ -249,6 +253,7 @@ gone (it comes back when the group does).
 | `MM_DEBUG_LIVES=<n>` | Every game starts with n lives |
 | `MM_DEBUG_NET=host:<mode>` / `join:<address>` | With AUTOSTART, hosts a game on the network (mode 0 Co-op, 1 Ghost Race, 2 Arcade Split Screen); or joins one |
 | `MM_DEBUG_NET_START=<n>` | The host starts once n players are in |
+| `MM_DEBUG_NET_CONTINUE=1` | With `MM_DEBUG_NET=host:2`: the host continues the group's newest Arcade Split Screen save |
 | `MM_DEBUG_NO_ROOM_SYNC=1` | Arcade Split Screen: each player's copy of a room runs on its own (to compare) |
 | `MM_DEBUG_CHEATS=1` | F6 loses a life (in a game on several computers, on the one with the turn, and the others follow); in split screen F5/F6 player 1 finishes/dies, F7/F8 player 2, F9/F10, F11/F12 |
 | `MM_OLD_MULTIPLAYER_DIALOG=1` | Multiplayer opens the old simple dialog instead of the screen |

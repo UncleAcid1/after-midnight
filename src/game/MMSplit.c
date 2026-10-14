@@ -119,6 +119,7 @@ typedef struct Split {
     char            notice[400];    ///< said once back at the title screen
     char            continuePath[1500]; ///< co-op: the team's saved game being continued
     Uint32          savedNoticeUntil[kMaxPlayers];  ///< "Team game saved" in that player's view
+    char            netSaveName[300];   ///< several computers: a team save to write here (from anyone)
 } Split;
 
 static Split *gSplit = NULL;
@@ -898,7 +899,8 @@ static void SyncCollectedObjects(void)
 /// The file with one player's part of a team save.
 static void PlayerSavePath(const char *base, int player, char *out, size_t size)
 {
-    snprintf(out, size, "%s.%s", base, OnlineProfileID(GetPlayerProfileName(player)));
+    const char *id = gSplit->network ? NetPlayerID(player) : OnlineProfileID(GetPlayerProfileName(player));
+    snprintf(out, size, "%s.%s", base, id);
 }
 
 /// Runs fn with another player's game in the program's globals (from inside a player's game).
@@ -967,7 +969,7 @@ void SplitSaveTeam(void)
 
     if (me == NULL)
         return;
-    if (s->mode != kSplitModeCoop || s->network) {
+    if (s->mode != kSplitModeCoop) {
         s->savedNoticeUntil[me->index] = SDL_GetTicks() + 2500;     // a race: lives back, a checkpoint
         return;
     }
@@ -983,12 +985,59 @@ void SplitSaveTeam(void)
         if (stat(base, &info) != 0)
             break;
     }
+    if (s->network) {
+            // several computers: every one writes the save (its own copy of the team's game and
+            // its own player's part) and sends its part to the others
+        NetSendTeamSave(name);
+        snprintf(s->netSaveName, sizeof(s->netSaveName), "%s", name);
+        return;
+    }
     for (i = 0; i < s->numPlayers; i++) {
         PlayerSavePath(base, i, path, sizeof(path));
         WithPlayerGlobals(&s->players[i], WritePlayerState, path);
     }
     if (MultiSaveWrite(kMultiSaveArcade, name))
         s->savedNoticeUntil[me->index] = SDL_GetTicks() + 2500;
+}
+
+/// Several computers: a team save, named by whoever stood on the statue. Written here between
+/// frames (the program's globals are this computer's player's then), and this player's part
+/// goes to the others.
+static void WriteNetworkTeamSave(Split *s)
+{
+    SplitPlayer *me = &s->players[s->firstLocal];
+    char base[1500], path[1600];
+    const char *folder = MultiSaveFolderForCurrentGame(kMultiSaveArcade);
+    SDL_RWops *file;
+    Uint8 *data;
+    Sint64 size;
+
+    if (s->netSaveName[0] == 0 || folder == NULL || gCurrentGameMode == kTitleScreenMode)
+        return;
+    snprintf(base, sizeof(base), "%s/%s", folder, s->netSaveName);
+    PlayerSavePath(base, me->index, path, sizeof(path));
+    WritePlayerState(path);
+    if (MultiSaveWrite(kMultiSaveArcade, s->netSaveName))
+        s->savedNoticeUntil[me->index] = SDL_GetTicks() + 2500;
+    file = SDL_RWFromFile(path, "rb");
+    if (file != NULL) {
+        size = SDL_RWsize(file);
+        data = size > 0 && size < 60000 ? malloc((size_t)size) : NULL;
+        if (data != NULL && SDL_RWread(file, data, 1, (size_t)size) == (size_t)size)
+            NetSendTeamSavePart(s->netSaveName, NetPlayerID(me->index), data, (int)size);
+        free(data);
+        SDL_RWclose(file);
+    }
+    s->netSaveName[0] = 0;
+}
+
+/// Several computers: another player stood on a save statue.
+void SplitTeamSaveReceived(const char *name)
+{
+    Split *s = gSplit;
+
+    if (s != NULL && s->active && s->network && s->mode == kSplitModeCoop && strchr(name, '/') == NULL)
+        snprintf(s->netSaveName, sizeof(s->netSaveName), "%s", name);
 }
 
 /// Continuing a team save: this player's part (in their own game). False if it's missing.
@@ -1831,8 +1880,10 @@ void SplitRunFrame(void)
     if (s->nextFrameAt < now - 100)
         s->nextFrameAt = now + kFrameMs;
     RouteEvents(s);
-    if (s->network)
+    if (s->network) {
         ExchangeWithOtherComputers(s);
+        WriteNetworkTeamSave(s);
+    }
     if (s->end == kEndQuit || s->end < 0 || gQuitGame) {
         EndSplit(s);
         return;
