@@ -180,7 +180,7 @@ Linux versions.
 
 1. **Get the package.** On GitHub, open the **Actions** tab, then the newest **Build** run with
    a green check, and download **After-Midnight-PS3-…** under **Artifacts**. Inside the `.zip`
-   is `After-Midnight-1.1-PS3.pkg`.
+   is `After-Midnight-1.2-PS3.pkg`.
 2. **On a PS3:** copy the `.pkg` to the top of a FAT32 USB flash drive, plug it in, and choose
    **Game → Package Manager → Install Package Files → Standard** on the XMB (or install it with
    multiMAN). **After Midnight** appears in the Game column.

@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## After Midnight 1.2
+
+Controllers and multiplayer: a Controllers menu, each player's own controls, and Arcade Split
+Screen kept in step, on the network and with team saves you can trust.
 
 ### Controllers
 - **Controllers menu** (Options → Controls → Controllers..., and in the Multiplayer lobby): every

@@ -64,8 +64,9 @@ render-target arena). Mansions are packed one file each in the `.pkg` (`pack_man
 `src/ps3/PS3Files.c`); custom mansions also load from the USB drive. LAN and online work
 PS3 <-> Linux in RPCS3 (`src/ps3/PS3Net.c`; RPCS3 needs Network "Connected"), and relay co-op
 stays in step (own sin/cos and GetRandom, `-ffp-contract=off`, a checksum every 60 frames).
-4-player split screen fits in memory. Left for step 8: the 1.1 version number (CHANGELOG, the
-owner's call) and tests on the real PS3. The Multiplayer screen remembers its mode in
+4-player split screen fits in memory. 1.1 released; 1.2 adds the
+Controllers menu, per-player controls, Arcade Split Screen room sync (`MMRoomSync.c`), Arcade on
+the network and host-made team saves (`MMTeamSave.c`, one checked `.mmteam` file). The Multiplayer screen remembers its mode in
 `Saves/Multiplayer.txt` (set `mode = 0` for Co-op before scripted tests).
 
 The owner has a PS3 Slim on the latest **Evilnat** CFW, multiMAN, moves files by **USB flash drive**
