@@ -119,7 +119,8 @@ typedef struct Split {
     char            notice[400];    ///< said once back at the title screen
     char            continuePath[1500]; ///< co-op: the team's saved game being continued
     Uint32          savedNoticeUntil[kMaxPlayers];  ///< "Team game saved" in that player's view
-    char            netSaveName[300];   ///< several computers: a team save to write here (from anyone)
+    char            savedNotice[kMaxPlayers][160];  ///< (or how a save on several computers went)
+    TeamSave        continueSave;   ///< co-op: the team save being continued (its parts)
 } Split;
 
 static Split *gSplit = NULL;
@@ -892,15 +893,14 @@ static void SyncCollectedObjects(void)
 }
 
 // ---------------------------------------------------------------------------
-// Arcade Split Screen saves: the team's game at a save pedestal (MMMultiSave.c keeps it for
-// the group): what everyone shares, and each player's own room, place and lives, one file
-// each ("<save>.<player ID>") beside the save itself.
+// Arcade Split Screen saves: the team's game at a save pedestal, in one checked file
+// ("<name>.mmteam", MMTeamSave.c) in the group's folder (MMMultiSave.c): what everyone shares,
+// and each player's own part (their room, place and lives).
 
-/// The file with one player's part of a team save.
-static void PlayerSavePath(const char *base, int player, char *out, size_t size)
+/// A player's ID in a team save.
+static const char *PlayerSaveID(int player)
 {
-    const char *id = gSplit->network ? NetPlayerID(player) : OnlineProfileID(GetPlayerProfileName(player));
-    snprintf(out, size, "%s.%s", base, id);
+    return gSplit->network ? NetPlayerID(player) : OnlineProfileID(GetPlayerProfileName(player));
 }
 
 /// Runs fn with another player's game in the program's globals (from inside a player's game).
@@ -928,135 +928,96 @@ static void WithPlayerGlobals(SplitPlayer *q, void (*fn)(void *), void *context)
     free(mine);
 }
 
-/// One player's part: where they are (or will come back, if they're down), their lives...
-static void WritePlayerState(void *context)
-{
-    const char *path = (const char *)context;
-    SpritePtr heroP = NULL;
-    short saveLevel = gCurrentLevel;
-    float h = gStartingCol, v = gStartingRow;
-    SDL_RWops *file;
+typedef struct PartCapture {
+    Uint8  *data;
+    int     length;
+} PartCapture;
 
-    if (gCurrentGameMode == kInGameMapMode)
-        gCurrentLevel = GetMapPlayerLevel();
-    else if (gCurrentGameMode == kPlayingGameMode || gCurrentGameMode == kReadingSignMode)
-        heroP = GetHeroSprite();
-    if (heroP != NULL && !HERO(heroP)->isDead) {
-        h = SWGetSpriteHorizLoc(heroP);
-        v = SWGetSpriteVertLoc(heroP);
-    } else if (gCurrentGameMode != kInGameMapMode) {
-        gCurrentLevel = gLastLevelPositionWasSaved;     // down: back where they'd come back
-    }
-    file = SDL_RWFromFile(path, "wb");
-    if (file != NULL) {
-        WriteSaveDataToFile(file, h, v, false);
-        SDL_RWclose(file);
-    }
-    gCurrentLevel = saveLevel;
+/// One player's part, in their own globals.
+static void CapturePart(void *context)
+{
+    PartCapture *c = (PartCapture *)context;
+    c->data = TeamSaveCapture(true, &c->length);
+}
+
+/// What a save says in a player's view for a moment.
+static void ShowSavedNotice(int player, const char *text)
+{
+    if (player < 0 || player >= kMaxPlayers)
+        return;
+    snprintf(gSplit->savedNotice[player], sizeof(gSplit->savedNotice[player]), "%s", text);
+    gSplit->savedNoticeUntil[player] = SDL_GetTicks() + (strcmp(text, "Team game saved") == 0 ? 2500 : 5000);
+}
+
+/// How a team save on several computers went (MMTeamSave.c), in this computer's view.
+void SplitShowTeamSaveNotice(const char *text, Boolean ok)
+{
+    (void)ok;
+    if (gSplit != NULL && gSplit->active)
+        ShowSavedNotice(gSplit->firstLocal, text);
 }
 
 /// From a save pedestal in Arcade Split Screen: saves the team's game, named after the
-/// mansion ("Falcon Manor Normal 3"), and says so in the saver's view. (In a race the statue
-/// only gives the lives back and brings the player back there: "Saved".)
+/// mansion ("Falcon Manor Normal 3"), and says so in the saver's view. On several computers the
+/// host makes the save for everyone (MMTeamSave.c). (In a race the statue only gives the lives
+/// back and brings the player back there: "Saved".)
 void SplitSaveTeam(void)
 {
     Split *s = gSplit;
     SplitPlayer *me = RunningPlayer();
-    char mansion[255], base[1500], name[300], path[1600];
+    char ids[kMaxPlayers][16];
     const char *folder;
-    struct stat info;
-    int i, n;
+    TeamSave t;
+    int i;
 
     if (me == NULL)
         return;
     if (s->mode != kSplitModeCoop) {
-        s->savedNoticeUntil[me->index] = SDL_GetTicks() + 2500;     // a race: lives back, a checkpoint
+        ShowSavedNotice(me->index, "Saved");     // a race: lives back, a checkpoint
+        return;
+    }
+    if (s->network) {
+        TeamSaveNetRequest();
         return;
     }
     folder = MultiSaveFolderForCurrentGame(kMultiSaveArcade);
     if (folder == NULL)
         return;
-    snprintf(mansion, sizeof(mansion), "%s", gCurOpenMansionFileName);
-    StripStringFromEndOfCString(".zip", mansion, NULL);
-    StripStringFromEndOfCString(".ZIP", mansion, NULL);
-    for (n = 1; n < 10000; n++) {
-        snprintf(name, sizeof(name), "%s %d", mansion, n);
-        snprintf(base, sizeof(base), "%s/%s", folder, name);
-        if (stat(base, &info) != 0)
-            break;
-    }
-    if (s->network) {
-            // several computers: every one writes the save (its own copy of the team's game and
-            // its own player's part) and sends its part to the others
-        NetSendTeamSave(name);
-        snprintf(s->netSaveName, sizeof(s->netSaveName), "%s", name);
-        return;
-    }
+    memset(&t, 0, sizeof(t));
+    for (i = 0; i < s->numPlayers; i++)
+        snprintf(ids[i], sizeof(ids[i]), "%s", PlayerSaveID(i));
+    TeamSaveDescribeGroup(&t, ids, s->numPlayers);
+    TeamSaveNewName(folder, t.name, sizeof(t.name));
+    t.team = TeamSaveCapture(false, &t.teamLength);
     for (i = 0; i < s->numPlayers; i++) {
-        PlayerSavePath(base, i, path, sizeof(path));
-        WithPlayerGlobals(&s->players[i], WritePlayerState, path);
+        PartCapture c = { NULL, 0 };
+        WithPlayerGlobals(&s->players[i], CapturePart, &c);
+        t.parts[i] = c.data;
+        t.partLengths[i] = c.length;
     }
-    if (MultiSaveWrite(kMultiSaveArcade, name))
-        s->savedNoticeUntil[me->index] = SDL_GetTicks() + 2500;
-}
-
-/// Several computers: a team save, named by whoever stood on the statue. Written here between
-/// frames (the program's globals are this computer's player's then), and this player's part
-/// goes to the others.
-static void WriteNetworkTeamSave(Split *s)
-{
-    SplitPlayer *me = &s->players[s->firstLocal];
-    char base[1500], path[1600];
-    const char *folder = MultiSaveFolderForCurrentGame(kMultiSaveArcade);
-    SDL_RWops *file;
-    Uint8 *data;
-    Sint64 size;
-
-    if (s->netSaveName[0] == 0 || folder == NULL || gCurrentGameMode == kTitleScreenMode)
-        return;
-    snprintf(base, sizeof(base), "%s/%s", folder, s->netSaveName);
-    PlayerSavePath(base, me->index, path, sizeof(path));
-    WritePlayerState(path);
-    if (MultiSaveWrite(kMultiSaveArcade, s->netSaveName))
-        s->savedNoticeUntil[me->index] = SDL_GetTicks() + 2500;
-    file = SDL_RWFromFile(path, "rb");
-    if (file != NULL) {
-        size = SDL_RWsize(file);
-        data = size > 0 && size < 60000 ? malloc((size_t)size) : NULL;
-        if (data != NULL && SDL_RWread(file, data, 1, (size_t)size) == (size_t)size)
-            NetSendTeamSavePart(s->netSaveName, NetPlayerID(me->index), data, (int)size);
-        free(data);
-        SDL_RWclose(file);
-    }
-    s->netSaveName[0] = 0;
-}
-
-/// Several computers: another player stood on a save statue.
-void SplitTeamSaveReceived(const char *name)
-{
-    Split *s = gSplit;
-
-    if (s != NULL && s->active && s->network && s->mode == kSplitModeCoop && strchr(name, '/') == NULL)
-        snprintf(s->netSaveName, sizeof(s->netSaveName), "%s", name);
+    ShowSavedNotice(me->index, t.team != NULL && TeamSaveStore(folder, &t) ? "Team game saved"
+                                                                         : "The team's game couldn't be saved");
+    TeamSaveFree(&t);
 }
 
 /// Continuing a team save: this player's part (in their own game). False if it's missing.
 static Boolean RestorePlayerState(SplitPlayer *p)
 {
-    char path[1600];
     float h, v;
     long version;
     Boolean isSaveFile;
     SpritePtr heroP;
-    SDL_RWops *file;
-    int err;
+    SDL_RWops *rw;
+    const Uint8 *part;
+    int err, length;
 
-    PlayerSavePath(gSplit->continuePath, p->index, path, sizeof(path));
-    file = SDL_RWFromFile(path, "rb");
-    if (file == NULL)
+    part = TeamSavePart(&gSplit->continueSave, PlayerSaveID(p->index), &length);
+    if (part == NULL)
         return false;
-    err = LoadSaveDataFromFile(file, &h, &v, &isSaveFile, &version);
-    SDL_RWclose(file);
+    rw = SDL_RWFromConstMem(part, length);
+    err = rw != NULL ? LoadSaveDataFromFile(rw, &h, &v, &isSaveFile, &version) : -1;
+    if (rw != NULL)
+        SDL_RWclose(rw);
     if (err != 0)
         return false;
     RestoreStatsFromObjectsCarried();
@@ -1085,15 +1046,25 @@ int SplitContinueSave(const char *path)
     float h, v;
     long version;
     Boolean isSaveFile;
-    SDL_RWops *file = SDL_RWFromFile(path, "rb");
+    SDL_RWops *rw;
     int err;
 
-    if (file == NULL || GetSplit() == NULL)
+    if (GetSplit() == NULL)
         return -1;
-    err = LoadSaveDataFromFile(file, &h, &v, &isSaveFile, &version);
-    SDL_RWclose(file);
-    if (err != 0)
+    TeamSaveFree(&gSplit->continueSave);
+    if (!MultiSaveLoadTeam(path, &gSplit->continueSave)) {
+        MMDoCustomDialog(gSpriteWorldP, "This saved game is damaged or incomplete, so it can't be continued.", 3);
+        SplitCancel();
+        return -1;
+    }
+    rw = SDL_RWFromConstMem(gSplit->continueSave.team, gSplit->continueSave.teamLength);
+    err = rw != NULL ? LoadSaveDataFromFile(rw, &h, &v, &isSaveFile, &version) : -1;
+    if (rw != NULL)
+        SDL_RWclose(rw);
+    if (err != 0) {
+        TeamSaveFree(&gSplit->continueSave);
         return err;
+    }
     SetCurMansionAsCustomMansion(gCurrentMansionNumber == -1);
     snprintf(mansionName, sizeof(mansionName), "%s", gMansionFilename);
     StripStringFromEndOfCString(".zip", mansionName, NULL);
@@ -1114,6 +1085,7 @@ int SplitContinueSave(const char *path)
         snprintf(message, sizeof(message), "The mansion \"%s\" this game was saved in couldn't be found.", mansionName);
         MMDoCustomDialog(gSpriteWorldP, message, 3);
         SplitCancel();
+        TeamSaveFree(&gSplit->continueSave);
         return err;
     }
     snprintf(gSplit->continuePath, sizeof(gSplit->continuePath), "%s", path);
@@ -1382,8 +1354,8 @@ static void DrawPlayerOverlay(Split *s, SplitPlayer *p, Uint32 now)
         DrawText(s->font, small, text, x1 - 8 * unit, y0 + 66 * unit, 2, 1, 1, 1, 0.9f);
     }
     if (now < s->savedNoticeUntil[p->index])
-        DrawText(s->titleFont, (int)(30 * unit), s->mode == kSplitModeCoop && !s->network ? "Team game saved" : "Saved", (x0 + x1) / 2, y0 + h * 0.3f, 0, 1, 0.85f, 0.3f,
-                 (float)(s->savedNoticeUntil[p->index] - now) / 2500.0f);
+        DrawText(s->titleFont, (int)((strlen(s->savedNotice[p->index]) > 22 ? 19 : 30) * unit), s->savedNotice[p->index], (x0 + x1) / 2, y0 + h * 0.3f, 0, 1, 0.85f, 0.3f,
+                 SDL_min(1.0f, (float)(s->savedNoticeUntil[p->index] - now) / 2500.0f));
     if (p->status == kPlayerFinished || p->status == kPlayerOut) {
         static const char *places[] = { "", "1st", "2nd", "3rd", "4th" };
         FillRect(x0, y0, x1, y1, 0, 0, 0, 0.55f);
@@ -1764,6 +1736,7 @@ static void EndSplit(Split *s)
     s->active = false;
     s->running = -1;
     s->continuePath[0] = 0;
+    TeamSaveFree(&s->continueSave);
     StopAllChannels();
     MultiplayerSplitEnded();
 
@@ -1880,10 +1853,8 @@ void SplitRunFrame(void)
     if (s->nextFrameAt < now - 100)
         s->nextFrameAt = now + kFrameMs;
     RouteEvents(s);
-    if (s->network) {
+    if (s->network)
         ExchangeWithOtherComputers(s);
-        WriteNetworkTeamSave(s);
-    }
     if (s->end == kEndQuit || s->end < 0 || gQuitGame) {
         EndSplit(s);
         return;
@@ -1904,6 +1875,7 @@ void SplitRunFrame(void)
                 // Arcade Split Screen on several computers: what happened here, to the others
             CoopSyncNetFrame(s->players[s->firstLocal].status != kPlayerStarting);
             RoomSyncNetFrame();
+            TeamSaveNetFrame();     // (after the changes went out: the host's save then has them)
         }
         MMSoundsSplitFrameEnd();
         if (s->end == kEndNone && playing == 0)

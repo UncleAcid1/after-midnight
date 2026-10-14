@@ -62,7 +62,8 @@
 enum {
     kMsgHello = 1, kMsgStart = 2, kMsgReady = 3, kMsgFrame = 4, kMsgSave = 5, kMsgBye = 6, kMsgPhantom = 7,
     kMsgNoMansion = 8, kMsgChat = 9, kMsgRoster = 10, kMsgFrom = 11, kMsgLeft = 12, kMsgTeam = 13,
-    kMsgRoomSnap = 14, kMsgTeamSave = 15, kMsgTeamSavePart = 16
+    kMsgRoomSnap = 14,      // 15-19: Arcade Split Screen team saves (MMExtras.h, MMTeamSave.c)
+    kMsgRefused = 20        ///< host to a guest it won't take: why (text)
 };
 
 typedef struct NetFrame {
@@ -131,6 +132,7 @@ typedef struct NetSession {
         // a guest's own Fun settings, while the host's are in use
     ExtrasSettings savedExtras;
     Boolean extrasSaved;
+    char    refusal[256];       ///< guest: why the host wouldn't take this computer
 } NetSession;
 
 static NetSession gNet = { false };
@@ -491,6 +493,19 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
                 CloseSocket(&link->sock);
                 break;
             }
+            for (i = 0; i < gNet.numPlayers; i++)
+                if (strncmp(gNet.ids[i], (const char *)payload + 2, 14) == 0) {
+                        // the same player (a profile copied from another computer): no
+                    static const char why[] = "That player is already in this game (the same player profile, "
+                                              "copied from another computer?). Choose or make another player "
+                                              "profile on this computer, and join again.";
+                    SendTo(link, kMsgRefused, why, (Uint16)(sizeof(why) - 1));
+                    SendTo(link, kMsgBye, NULL, 0);
+                    CloseSocket(&link->sock);
+                    break;
+                }
+            if (i < gNet.numPlayers)
+                break;
             p = gNet.numPlayers++;
             link->player = p;
             gNet.characters[p] = payload[1] < kNumCharacters ? payload[1] : 0;
@@ -555,20 +570,14 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
             if (from >= 0 && from < kMaxPlayers && from != gNet.localPlayer)
                 RoomSyncReceive(from, payload, length);
             break;
-        case kMsgTeamSave:          // Arcade: someone stood on a save statue (the save's name)
-            if (length > 0 && length < 250) {
-                char name[256];
-                snprintf(name, sizeof(name), "%.*s", length, (const char *)payload);
-                SplitTeamSaveReceived(name);
-            }
+        case kMsgSaveRequest: case kMsgSaveCollect: case kMsgSaveData: case kMsgSaveAck: case kMsgSaveDone:
+            if (from >= 0 && from < kMaxPlayers && from != gNet.localPlayer)
+                TeamSaveNetMessage(type, from, payload, length);
             break;
-        case kMsgTeamSavePart:      // Arcade: [name length][name][player ID: 14][their part]
-            if (length > 15 && 1 + payload[0] + 14 <= length) {
-                char name[256], id[16];
-                int nameLen = payload[0];
-                snprintf(name, sizeof(name), "%.*s", nameLen, (const char *)payload + 1);
-                snprintf(id, sizeof(id), "%.14s", (const char *)payload + 1 + nameLen);
-                MultiSaveStorePart(kMultiSaveArcade, name, id, payload + 15 + nameLen, length - 15 - nameLen);
+        case kMsgRefused:           // the host won't take this computer: why
+            if (!gNet.isHost) {
+                snprintf(gNet.refusal, sizeof(gNet.refusal), "%.*s", length > 250 ? 250 : length, (const char *)payload);
+                gNet.peerLeft = true;
             }
             break;
         case kMsgStart:
@@ -634,8 +643,7 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
         // the host passes on what the others need to hear
     if (gNet.isHost && link != NULL && link->player >= 0 && from == link->player &&
         (type == kMsgFrame || type == kMsgSave || type == kMsgPhantom || type == kMsgChat || type == kMsgReady ||
-         type == kMsgNoMansion || type == kMsgTeam || type == kMsgRoomSnap || type == kMsgTeamSave ||
-         type == kMsgTeamSavePart))
+         type == kMsgNoMansion || type == kMsgTeam || type == kMsgRoomSnap))
         ForwardToOthers(from, type, payload, length);
 }
 
@@ -768,6 +776,8 @@ static void ResetSession(void)
     gNet.saveChoice = -1;
     gNet.lastSaveName[0] = 0;
     gNet.continuePath[0] = 0;
+    TeamSaveNetReset();
+    TeamSaveNetForgetContinue();
 }
 
 /// Host: player 1, alone so far.
@@ -977,8 +987,11 @@ static void ConnectingMessage(char *text, size_t size, void *unused)
 static Boolean GreetHost(const char *title)
 {
     SendHello();
+    gNet.refusal[0] = 0;
     if (!RunLiveWaitDialog(title, ConnectingMessage, GuestHelloPoll, NULL, NULL)) {
-        if (gNet.peerLeft || gNet.links[0].sock < 0)
+        if (gNet.refusal[0])
+            MMDoCustomDialog(gSpriteWorldP, gNet.refusal, 3);
+        else if (gNet.peerLeft || gNet.links[0].sock < 0)
             MMDoCustomDialog(gSpriteWorldP, "Couldn't join: that game is full, has started, or is from another version "
                              "of the game.", 3);
         SendMessage(kMsgBye, NULL, 0);
@@ -1207,7 +1220,12 @@ static void SendStart(void)
     payload[n + 254] = 0;
     n += 255;
     payload[n++] = (Uint8)gNet.mode;
-    if (gNet.continuePath[0]) {
+    if (gNet.continuePath[0] && gNet.mode == kNetModeArcade) {
+            // Arcade Split Screen: the team save went just before, whole and checked (MMTeamSave.c)
+        if (TeamSaveNetSendContinue(gNet.continuePath))
+            payload[n++] = 2;
+        gNet.continuePath[0] = 0;
+    } else if (gNet.continuePath[0]) {
             // continuing a saved game: the save and who played it go along
         char sidecar[1600];
         const char *name = strrchr(gNet.continuePath, '/');
@@ -1233,24 +1251,6 @@ static void SendStart(void)
             }
             PutU32(payload + n, (Uint32)sideLen);
             n += 4 + (int)sideLen;
-            if (gNet.mode == kNetModeArcade) {
-                    // Arcade Split Screen: every player's part ("<save>.<ID>")
-                int p;
-                payload[n++] = (Uint8)gNet.numPlayers;
-                for (p = 0; p < gNet.numPlayers; p++) {
-                    char partPath[1600];
-                    long partLen = 0;
-                    snprintf(partPath, sizeof(partPath), "%s.%s", gNet.continuePath, gNet.ids[p]);
-                    memcpy(payload + n, gNet.ids[p], 14);
-                    file = fopen(partPath, "rb");
-                    if (file != NULL) {
-                        partLen = (long)fread(payload + n + 18, 1, (size_t)(sizeof(payload) - (size_t)n - 18 - 4), file);
-                        fclose(file);
-                    }
-                    PutU32(payload + n + 14, (Uint32)partLen);
-                    n += 18 + (int)partLen;
-                }
-            }
         }
         gNet.continuePath[0] = 0;
     }
@@ -1340,26 +1340,21 @@ Boolean NetClientWaitForStart(void)
             int sideAt = at + saveLen + 4, sideLen = (int)GetU32(p + at + saveLen), saveMode;
             if (sideAt + sideLen > gNet.startLen)
                 sideLen = gNet.startLen - sideAt;
-            saveMode = gNet.mode == kNetModeArcade ? kMultiSaveArcade : kMultiSaveCoop;
+            saveMode = kMultiSaveCoop;
             if (!MultiSaveStoreReceived(saveMode, saveName, p + at, saveLen, p + sideAt, sideLen, gNet.continuePath,
                                         sizeof(gNet.continuePath)))
                 gNet.continuePath[0] = 0;
-            at = sideAt + sideLen;
-            if (gNet.continuePath[0] && gNet.mode == kNetModeArcade && at < gNet.startLen) {
-                    // Arcade Split Screen: every player's part
-                int count = p[at++], k;
-                for (k = 0; k < count && at + 18 <= gNet.startLen; k++) {
-                    char id[16];
-                    int partLen = (int)GetU32(p + at + 14);
-                    snprintf(id, sizeof(id), "%.14s", (const char *)p + at);
-                    if (at + 18 + partLen > gNet.startLen)
-                        break;
-                    if (partLen > 0)
-                        MultiSaveStorePart(kMultiSaveArcade, saveName, id, p + at + 18, partLen);
-                    at += 18 + partLen;
-                }
-            }
         }
+    } else if (gNet.startLen > n + 256 && p[n + 256] == 2) {
+            // Arcade Split Screen: the team save came just before, checked and kept (MMTeamSave.c)
+        if (TeamSaveNetContinuePath() == NULL) {
+            MMDoCustomDialog(gSpriteWorldP, "The host's saved game didn't arrive whole, so it can't be continued here.", 3);
+            SendMessage(kMsgBye, NULL, 0);
+            NetEndSession();
+            return false;
+        }
+        snprintf(gNet.continuePath, sizeof(gNet.continuePath), "%s", TeamSaveNetContinuePath());
+        TeamSaveNetForgetContinue();
     }
 
         // open the same mansion (as a replay does)
@@ -1453,26 +1448,11 @@ void NetSendTeamOps(const Uint8 *ops, int length)
         SendMessage(kMsgTeam, ops, (Uint16)length);
 }
 
-/// Arcade Split Screen: this player stood on a save statue; everyone saves the team's game.
-void NetSendTeamSave(const char *name)
+/// Arcade Split Screen team saves (MMTeamSave.c): the host to every guest, a guest to the host.
+void NetSendSaveMessage(int type, const void *payload, int length)
 {
-    if (NetArcadeActive() && name[0] != 0)
-        SendMessage(kMsgTeamSave, name, (Uint16)strlen(name));
-}
-
-/// Arcade Split Screen: this computer's player's part of a team save, for the others' copies.
-void NetSendTeamSavePart(const char *name, const char *playerID, const Uint8 *data, int length)
-{
-    static Uint8 payload[65536];
-    int nameLen = (int)strlen(name) > 200 ? 200 : (int)strlen(name);
-
-    if (!NetArcadeActive() || strlen(playerID) != 14 || 15 + nameLen + length > 65535)
-        return;
-    payload[0] = (Uint8)nameLen;
-    memcpy(payload + 1, name, (size_t)nameLen);
-    memcpy(payload + 1 + nameLen, playerID, 14);
-    memcpy(payload + 15 + nameLen, data, (size_t)length);
-    SendMessage(kMsgTeamSavePart, payload, (Uint16)(15 + nameLen + length));
+    if (gNet.active && length >= 0 && length <= 65535)
+        SendMessage((Uint8)type, payload, (Uint16)length);
 }
 
 /// Arcade Split Screen: the room this computer's player keeps, for the others in it.
@@ -1957,11 +1937,7 @@ void NetPeerLeftDuringGame(void) {}
 void NetAskToLeave(void) {}
 void NetRaceSendState(const NetRaceState *st) { (void)st; }
 void NetSendTeamOps(const Uint8 *ops, int length) { (void)ops; (void)length; }
-void NetSendTeamSave(const char *name) { (void)name; }
-void NetSendTeamSavePart(const char *name, const char *playerID, const Uint8 *data, int length)
-{
-    (void)name; (void)playerID; (void)data; (void)length;
-}
+void NetSendSaveMessage(int type, const void *payload, int length) { (void)type; (void)payload; (void)length; }
 void NetSendRoomSnapshot(const Uint8 *data, int length) { (void)data; (void)length; }
 void NetRacePump(void) {}
 Boolean NetRaceGetState(int player, NetRaceState *st, Boolean *goneP) { (void)player; (void)st; *goneP = true; return false; }

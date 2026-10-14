@@ -22,7 +22,16 @@
 - **Arcade Split Screen on the local network and online**, one player per computer, like Co-op
   and Ghost Race: the team's progress, score and items are shared, and so are the rooms. Save
   statues save the team's game on every computer, and the host can continue it later (Choose a
-  mansion lists the group's saves): everyone comes back where they were.
+  mansion lists the group's saves): everyone comes back where they were. The host makes each
+  save from everyone's part and every computer checks and keeps a copy; if a computer doesn't
+  answer, the message says whose part or copy is missing.
+- **Team saves are one checked file** (`.mmteam`), on one computer too: written whole or not at
+  all, and a damaged one isn't offered. Older Arcade Split Screen saves still load.
+- Joining with a player profile that's already in the game (one copied from another computer)
+  is refused with a message, instead of the two players' saves overwriting each other.
+- Saved games read the same on a PS3 and a computer (three room lists were written in the
+  computer's own byte order). A PS3's saved games from 1.1 keep everything except which rooms
+  the map had shown.
 - A game saved after loading a saved game could record no mansion, so it couldn't be loaded
   again (the mansion's name was copied onto itself).
 - Split screen: a player on a controller can close a sign (it stayed open).

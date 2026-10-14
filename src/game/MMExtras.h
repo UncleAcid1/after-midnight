@@ -474,10 +474,43 @@ Boolean MultiSaveWrite(int mode, const char *saveName);
 int  MultiSaveList(int mode, char ids[][16], int count, MultiSaveInfo *out, int max);
 int  MultiSaveListForCurrentGroup(int mode, MultiSaveInfo *out, int max);
 Boolean MultiSaveReadInfo(const char *path, MultiSaveInfo *info);
-Boolean MultiSaveStorePart(int mode, const char *saveName, const char *playerID, const Uint8 *data, int length);
-void NetSendTeamSave(const char *name);
-void NetSendTeamSavePart(const char *name, const char *playerID, const Uint8 *data, int length);
-void SplitTeamSaveReceived(const char *name);
+// Arcade Split Screen team saves: one checked file (MMTeamSave.c)
+#define kTeamSaveExtension ".mmteam"
+typedef struct TeamSave {
+    char    name[128];
+    char    mansion[256];
+    Uint32  savedAt;
+    int     numPlayers;
+    char    ids[kMaxPlayers][16];
+    char    names[kMaxPlayers][64];
+    int     characters[kMaxPlayers];
+    Uint8  *team;               ///< the team's game, as a save file holds it
+    int     teamLength;
+    Uint8  *parts[kMaxPlayers]; ///< each player's part (where they are, their lives), by ids[]
+    int     partLengths[kMaxPlayers];
+} TeamSave;
+Uint8 *TeamSaveCapture(Boolean part, int *lengthOut);
+Boolean MultiSaveLoadTeam(const char *path, TeamSave *t);   ///< a team save, or an older one
+Uint8 *TeamSaveEncode(const TeamSave *t, int *lengthOut);
+Boolean TeamSaveDecode(const Uint8 *data, int length, TeamSave *t, Boolean infoOnly);
+Boolean TeamSaveRead(const char *path, TeamSave *t, Boolean infoOnly);
+Boolean TeamSaveWriteBytes(const char *path, const Uint8 *data, int length);
+Boolean TeamSaveStore(const char *folder, const TeamSave *t);
+void TeamSaveFree(TeamSave *t);
+void TeamSaveNewName(const char *folder, char *name, size_t size);
+void TeamSaveDescribeGroup(TeamSave *t, char ids[][16], int numPlayers);
+const Uint8 *TeamSavePart(const TeamSave *t, const char *id, int *lengthOut);
+// several computers
+enum { kMsgSaveRequest = 15, kMsgSaveCollect = 16, kMsgSaveData = 17, kMsgSaveAck = 18, kMsgSaveDone = 19 };
+void TeamSaveNetRequest(void);
+void TeamSaveNetFrame(void);
+void TeamSaveNetMessage(int type, int from, const Uint8 *p, int length);
+Boolean TeamSaveNetSendContinue(const char *path);
+const char *TeamSaveNetContinuePath(void);
+void TeamSaveNetReset(void);
+void TeamSaveNetForgetContinue(void);
+void NetSendSaveMessage(int type, const void *payload, int length);
+void SplitShowTeamSaveNotice(const char *text, Boolean ok);
 Boolean MultiSaveStoreReceived(int mode, const char *saveName, const Uint8 *data, int length, const Uint8 *sidecar,
                                int sidecarLength, char *pathOut, size_t size);
 void MultiSaveDescribe(const MultiSaveInfo *info, char *text, size_t size);

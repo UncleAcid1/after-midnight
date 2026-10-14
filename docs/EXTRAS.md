@@ -188,11 +188,10 @@ computer sends what its player collects or puts back, the events done, the rooms
 and mapped, the changes to the score, secrets and items (kMsgTeam), and the levers, switches,
 doors, enemies and falling blocks; the keeper of a room sends its snapshot to the players in it
 elsewhere a few times a second (kMsgRoomSnap), written field by field so a PS3 and a PC agree.
-Anyone reaching the exit wins it for the team. A save statue saves the team's game on every
-computer: whoever stood on it names the save (kMsgTeamSave), each computer writes it from its own
-copy of the team's game with its own player's part, and sends that part to the others
-(kMsgTeamSavePart), so each keeps the whole save. The host's Choose a mansion offers the group's
-saves, and sends the save and every part along when continuing one.
+Anyone reaching the exit wins it for the team. Save statues save the team's game on every
+computer (see Saved games below); the host's Choose a mansion offers the group's saves. A
+computer playing a profile that's already in the game (one copied from another computer has
+the same ID) is turned away with a message saying so.
 
 ### Online
 
@@ -239,7 +238,18 @@ gone (it comes back when the group does).
   computers with the start, so it doesn't matter who hosts this time.
 - **Arcade Split Screen**: a save pedestal saves the team's game there and then (no question:
   the others are still playing), "Team game saved" shows in that player's view, and they carry
-  on. The save keeps what everyone shares and each player's room, place and lives.
+  on. The save is one file, `<name>.mmteam` (`src/game/MMTeamSave.c`): who played, the team's
+  game, and each player's part (room, place, lives), every section with a CRC-32 and the whole
+  file too. It's written to `<name>.tmp` and renamed, so a save is whole or not there, and a
+  damaged one isn't offered. (Saves from before, a file per player, still load.)
+- **Arcade Split Screen on several computers**: the host makes the save, since every message
+  goes through it in order. A statue anywhere asks the host; it asks every computer for its
+  player's part, and each sends what its player changed in the team's game before that part, so
+  the host's copy then has everything. The host writes the file and sends it to every computer
+  (in pieces); each checks it, keeps it and says so; then everyone sees how it went: "Team game
+  saved", or "... without where Bob was" (his part didn't come in 8 seconds) or "(not on Bob's
+  computer)". Continuing, the host sends the file before the game starts and each computer
+  checks it.
 - Ghost Race games aren't saved (they're races), and multiplayer games can't be suspended.
 
 ## Testing aids
@@ -253,7 +263,9 @@ gone (it comes back when the group does).
 | `MM_DEBUG_LIVES=<n>` | Every game starts with n lives |
 | `MM_DEBUG_NET=host:<mode>` / `join:<address>` | With AUTOSTART, hosts a game on the network (mode 0 Co-op, 1 Ghost Race, 2 Arcade Split Screen); or joins one |
 | `MM_DEBUG_NET_START=<n>` | The host starts once n players are in |
-| `MM_DEBUG_NET_CONTINUE=1` | With `MM_DEBUG_NET=host:2`: the host continues the group's newest Arcade Split Screen save |
+| `MM_DEBUG_NET_CONTINUE=1` | With `MM_DEBUG_NET=host:2` (or `host:0`): the host continues the group's newest Arcade Split Screen (or Co-op) save |
+| `MM_DEBUG_PROFILES=Ann,Bob` | With `MM_DEBUG_SPLIT`: the players' profiles (so saves have IDs) |
+| `MM_DEBUG_SPLIT_CONTINUE=1` | With `MM_DEBUG_PROFILES`: split screen continues those players' newest Arcade Split Screen save |
 | `MM_DEBUG_NO_ROOM_SYNC=1` | Arcade Split Screen: each player's copy of a room runs on its own (to compare) |
 | `MM_DEBUG_CHEATS=1` | F6 loses a life (in a game on several computers, on the one with the turn, and the others follow); in split screen F5/F6 player 1 finishes/dies, F7/F8 player 2, F9/F10, F11/F12 |
 | `MM_OLD_MULTIPLAYER_DIALOG=1` | Multiplayer opens the old simple dialog instead of the screen |
