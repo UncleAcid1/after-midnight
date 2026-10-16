@@ -23,6 +23,10 @@ done
 # Homebrew's "sdl2" is now sdl2-compat, which loads SDL3 at start-up; without SDL3 next to it
 # the app aborts on a Mac that doesn't have Homebrew's sdl3 ("couldn't load SDL3").
 SDL3=$(brew --prefix sdl3 2>/dev/null)/lib/libSDL3.0.dylib
+if [ ! -f "$SDL3" ] && otool -L "$FW"/libSDL2*.dylib | grep -q . && [ -n "$(strings "$FW"/libSDL2*.dylib | grep -m1 libSDL3)" ]; then
+    echo "ERROR: this SDL2 needs SDL3 but it was not found. Run: brew install sdl3" >&2
+    exit 1
+fi
 if [ -f "$SDL3" ]; then
     cp -fL "$SDL3" "$FW/libSDL3.0.dylib"
     chmod u+w "$FW/libSDL3.0.dylib"
@@ -33,4 +37,5 @@ if [ -f "$SDL3" ]; then
         echo "warning: libSDL3 links other Homebrew libraries; the app may not open on other Macs" >&2
     fi
 fi
+echo "Bundled libraries:"; ls "$FW"
 codesign --force --deep --sign - "$APP"
