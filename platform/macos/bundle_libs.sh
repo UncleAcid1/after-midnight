@@ -14,6 +14,10 @@ otool -L "$EXE" | awk '/libSDL2/ {print $1}' | while read -r LIB; do
     cp -fL "$LIB" "$FW/$NAME"
     chmod u+w "$FW/$NAME"
     install_name_tool -id "@executable_path/../Frameworks/$NAME" "$FW/$NAME"
+    # Homebrew builds SDL2 for the Mac's own macOS (e.g. 26), which older macOS then refuses
+    # to open ("too new"); mark it as running on macOS 11 and later like the game itself.
+    SDK=$(vtool -show-build "$FW/$NAME" | awk '/sdk/ {print $2; exit}')
+    vtool -set-build-version macos 11.0 "${SDK:-11.0}" -replace -output "$FW/$NAME" "$FW/$NAME"
     install_name_tool -change "$LIB" "@executable_path/../Frameworks/$NAME" "$EXE"
 done
 codesign --force --deep --sign - "$APP"

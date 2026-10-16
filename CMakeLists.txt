@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
+# Build for macOS 11+ even on a newer Mac (otherwise the app refuses to open on older macOS).
+set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum macOS version")
 project(MidnightMansionHD C)
 
 set(CMAKE_C_STANDARD 99)
