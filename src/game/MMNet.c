@@ -76,6 +76,7 @@ typedef struct NetFrame {
 } NetFrame;
 
 #define kCheckEvery     60      ///< frames between the relay co-op checksums
+#define kDesyncChecks   5       ///< consecutive differing checksums before the game is stopped
 #define kCheckMark      'C'     ///< after a frame's events: then the checksum (older versions ignore it)
 
 /// A connection to another computer: on the host, one per guest; on a guest, the host.
@@ -1713,7 +1714,6 @@ static Uint32 GameStateChecksum(void)
     Uint32 h = 2166136261u;
     long seed;
     float f;
-    Uint32 bits;
 
     if (getenv("MM_DEBUG_CHECKSUM") != NULL) {      // testing aid: what goes into the checksum
         long s0;
@@ -1730,12 +1730,11 @@ static Uint32 GameStateChecksum(void)
     GetSeed(&seed);
     h = Mix(h, (Uint32)seed);
     if (heroP != NULL) {
+            // only roughly where: tiny float differences between computers aren't a different game
         f = SWGetSpriteHorizLoc(heroP);
-        memcpy(&bits, &f, 4);
-        h = Mix(h, bits);
+        h = Mix(h, (Uint32)(int)(f / 16.0f));
         f = SWGetSpriteVertLoc(heroP);
-        memcpy(&bits, &f, 4);
-        h = Mix(h, bits);
+        h = Mix(h, (Uint32)(int)(f / 16.0f));
         h = Mix(h, (Uint32)HERO(heroP)->isDead);
     }
     return h;
@@ -1799,7 +1798,13 @@ void NetFrameBegin(void)
             }
             if (f->hasCheck) {
                 Uint32 here = GameStateChecksum();
-                if (here != f->check) {
+                static int mismatches = 0;
+                    // lax: a difference only counts when it stays through several checks in a row
+                    // (one a second), so a hiccup or a tiny difference doesn't end the game
+                if (here == f->check)
+                    mismatches = 0;
+                else if (++mismatches >= kDesyncChecks) {
+                    mismatches = 0;
                     NetDesync(f->frame, here, f->check);
                     break;
                 }

@@ -5,6 +5,10 @@
 Controllers and multiplayer: a Controllers menu, each player's own controls, and Arcade Split
 Screen kept in step, on the network and with team saves you can trust.
 
+### Fixes
+- Relay co-op is much more forgiving about the computers' games differing: the check ignores tiny
+  position differences and only stops the game when it differs five times in a row.
+
 ### Controllers
 - **Controllers menu** (Options → Controls → Controllers..., and in the Multiplayer lobby): every
   controller plugged in, by name, lighting up while it's used so you can tell them apart; which
