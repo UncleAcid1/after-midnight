@@ -55,9 +55,10 @@
 #define kNetVersion     5           ///< 5: Arcade Split Screen, numbers in a fixed byte order
 #define kBeaconMagic    "MMHD-LAN 4"
 #define kMaxFoundGames  16
-#define kMaxQueuedFrames 4096
+#define kMaxQueuedFrames (60 * 60 * 3)  ///< frames a watching computer can be behind (3 minutes)
 #define kMaxLinks       (kMaxPlayers - 1)
 #define kLinkBufSize    70000
+#define kMaxOutQueue    (4 * 1024 * 1024)   ///< a computer this far behind with reading has gone
 
 enum {
     kMsgHello = 1, kMsgStart = 2, kMsgReady = 3, kMsgFrame = 4, kMsgSave = 5, kMsgBye = 6, kMsgPhantom = 7,
@@ -84,6 +85,9 @@ typedef struct NetLink {
     int     player;             ///< the player at the other end (-1: a guest that hasn't said hello)
     Uint8   in[kLinkBufSize];
     int     inLen;
+    Uint8  *out;                ///< what's waiting to go (the connection takes it as it can)
+    int     outStart, outLen, outSize;
+    Boolean broken;             ///< it failed, or the other end stopped reading: NetPump hangs up
 } NetLink;
 
 typedef struct NetSession {
@@ -91,6 +95,7 @@ typedef struct NetSession {
     Boolean isHost;
     Boolean inGame;             ///< a game was started together
     Boolean peerLeft;           ///< someone left (relay co-op ends then)
+    Boolean fellBehind;         ///< this computer fell more than kMaxQueuedFrames behind
     Boolean peerHasNoMansion;   ///< someone doesn't have the mansion: they went back to the menu
     int     noMansionPlayer;
     Boolean missingMansion;     ///< this computer doesn't have the host's mansion
@@ -310,40 +315,89 @@ static void CloseSocket(int *sockP)
     *sockP = -1;
 }
 
+/*  Sending never waits: each message goes on the link's queue, and the queue goes out as the
+    connection takes it (now, and at every NetPump). Waiting for a computer that isn't reading
+    (in a menu, say) used to hold up the game for seconds, then give up halfway through a
+    message, which garbled everything after it. */
+
+/// Sends what's queued, as much as the connection takes now.
+static void FlushLink(NetLink *link)
+{
+    int sent, flags = 0;
+
+#ifdef MSG_NOSIGNAL
+    flags = MSG_NOSIGNAL;
+#endif
+    while (link->outLen > 0 && link->sock >= 0 && !link->broken) {
+        sent = (int)send(link->sock, link->out + link->outStart, (size_t)link->outLen, flags);
+        if (sent > 0) {
+            link->outStart += sent;
+            link->outLen -= sent;
+        } else if (sent < 0 && (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)) {
+            break;                  // full for now: the rest goes later
+        } else {
+            link->broken = true;
+        }
+    }
+    if (link->outLen == 0)
+        link->outStart = 0;
+}
+
+static void QueueOnLink(NetLink *link, const Uint8 *data, int length)
+{
+    int need;
+    Uint8 *bigger;
+
+    if (link->broken || length <= 0)
+        return;
+    if (link->outStart > 0 && link->outStart + link->outLen + length > link->outSize) {
+        memmove(link->out, link->out + link->outStart, (size_t)link->outLen);
+        link->outStart = 0;
+    }
+    need = link->outStart + link->outLen + length;
+    if (need > link->outSize) {
+        if (need > kMaxOutQueue) {
+            link->broken = true;    // it stopped reading long ago
+            return;
+        }
+        bigger = realloc(link->out, (size_t)(need * 2 > kMaxOutQueue ? kMaxOutQueue : need * 2));
+        if (bigger == NULL) {
+            link->broken = true;
+            return;
+        }
+        link->out = bigger;
+        link->outSize = need * 2 > kMaxOutQueue ? kMaxOutQueue : need * 2;
+    }
+    memcpy(link->out + link->outStart + link->outLen, data, (size_t)length);
+    link->outLen += length;
+}
+
+/// Hangs up, giving what's still queued (a goodbye, say) a moment to go first.
+static void CloseLink(NetLink *link)
+{
+    Uint32 start = SDL_GetTicks();
+
+    while (link->sock >= 0 && link->outLen > 0 && !link->broken && SDL_GetTicks() - start < 300) {
+        FlushLink(link);
+        if (link->outLen > 0)
+            SDL_Delay(1);
+    }
+    CloseSocket(&link->sock);
+    free(link->out);
+    link->out = NULL;
+    link->outStart = link->outLen = link->outSize = 0;
+    link->broken = false;
+}
+
 static void Disconnect(void)
 {
     int i;
 
     for (i = 0; i < gNet.numLinks; i++)
-        CloseSocket(&gNet.links[i].sock);
+        CloseLink(&gNet.links[i]);
     gNet.numLinks = 0;
     CloseSocket(&gNet.listenSock);
     gNet.active = false;
-}
-
-/// Sends it all (or gives up on that computer after a few seconds).
-static Boolean SendAll(NetLink *link, const Uint8 *data, int length)
-{
-    int sent, flags = 0;
-    Uint32 start = SDL_GetTicks();
-
-#ifdef MSG_NOSIGNAL
-    flags = MSG_NOSIGNAL;
-#endif
-    while (length > 0 && link->sock >= 0) {
-        sent = (int)send(link->sock, data, (size_t)length, flags);
-        if (sent > 0) {
-            data += sent;
-            length -= sent;
-        } else if (sent < 0 && (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)) {
-            if (SDL_GetTicks() - start > 5000)
-                break;
-            SDL_Delay(1);
-        } else {
-            break;
-        }
-    }
-    return length == 0;
 }
 
 static void PutU32(Uint8 *p, Uint32 v)
@@ -365,8 +419,9 @@ static void SendTo(NetLink *link, Uint8 type, const void *payload, Uint16 length
     header[0] = type;
     header[1] = (Uint8)(length & 0xff);
     header[2] = (Uint8)(length >> 8);
-    if (SendAll(link, header, 3) && length > 0)
-        SendAll(link, (const Uint8 *)payload, length);
+    QueueOnLink(link, header, 3);
+    QueueOnLink(link, (const Uint8 *)payload, length);
+    FlushLink(link);
 }
 
 /// To everyone: the host sends it to every guest; a guest to the host (who passes it on).
@@ -442,10 +497,13 @@ static void RemoveGuestBeforeStart(int linkIndex)
 {
     int player = gNet.links[linkIndex].player, i, p;
 
-    CloseSocket(&gNet.links[linkIndex].sock);
+    CloseLink(&gNet.links[linkIndex]);
     for (i = linkIndex; i < gNet.numLinks - 1; i++)
         gNet.links[i] = gNet.links[i + 1];
     gNet.numLinks--;
+    gNet.links[gNet.numLinks].out = NULL;           // (moved up: it's the one before's now)
+    gNet.links[gNet.numLinks].outStart = gNet.links[gNet.numLinks].outLen = gNet.links[gNet.numLinks].outSize = 0;
+    gNet.links[gNet.numLinks].sock = -1;
     if (player < 0)
         return;
     for (p = player; p < gNet.numPlayers - 1; p++) {
@@ -490,7 +548,7 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
                 break;
             if (length < 17 || payload[0] < kNetVersion || gNet.inGame || gNet.numPlayers >= kMaxPlayers) {
                 SendTo(link, kMsgBye, NULL, 0);     // an older version, or full: no
-                CloseSocket(&link->sock);
+                CloseLink(link);
                 break;
             }
             for (i = 0; i < gNet.numPlayers; i++)
@@ -501,7 +559,7 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
                                               "profile on this computer, and join again.";
                     SendTo(link, kMsgRefused, why, (Uint16)(sizeof(why) - 1));
                     SendTo(link, kMsgBye, NULL, 0);
-                    CloseSocket(&link->sock);
+                    CloseLink(link);
                     break;
                 }
             if (i < gNet.numPlayers)
@@ -592,8 +650,12 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
                 gNet.beaten[from] = payload[0];
             break;
         case kMsgFrame:
-            if (length < 7 || gNet.queueCount >= kMaxQueuedFrames)
+            if (length < 7)
                 break;
+            if (gNet.queueCount >= kMaxQueuedFrames) {
+                gNet.fellBehind = gNet.peerLeft = true;     // the frames can't all be kept: it ends
+                break;
+            }
             f = &gNet.queue[(gNet.queueHead + gNet.queueCount) % kMaxQueuedFrames];
             f->frame = GetU32(payload);
             f->keys = (Uint16)(payload[4] | payload[5] << 8);
@@ -653,6 +715,9 @@ static Boolean PumpLink(NetLink *link)
     int got, length, used = 0;
     Boolean open = true;
 
+    FlushLink(link);                // what's still queued for it
+    if (link->broken)
+        return false;
     while (link->sock >= 0 && link->inLen < kLinkBufSize) {
         got = (int)recv(link->sock, link->in + link->inLen, (size_t)(kLinkBufSize - link->inLen), 0);
         if (got > 0)
@@ -691,7 +756,7 @@ Boolean NetPump(void)
         if (link->sock < 0)
             continue;
         if (!PumpLink(link)) {
-            CloseSocket(&link->sock);
+            CloseLink(link);
             if (gNet.isHost && !gNet.inGame) {
                 RemoveGuestBeforeStart(i);
                 i--;
@@ -722,6 +787,8 @@ static NetLink *AddLink(int sock, const Uint8 *leftover, int leftoverLen)
     link = &gNet.links[gNet.numLinks++];
     link->sock = sock;
     link->player = gNet.isHost ? -1 : 0;
+    link->outStart = link->outLen = 0;      // (a buffer from before is used again)
+    link->broken = false;
     link->inLen = leftoverLen < kLinkBufSize ? leftoverLen : kLinkBufSize;
     if (link->inLen > 0)
         memcpy(link->in, leftover, (size_t)link->inLen);
@@ -762,6 +829,7 @@ static void ResetSession(void)
     int i;
 
     gNet.active = gNet.inGame = gNet.peerLeft = gNet.startReceived = gNet.rosterReceived = false;
+    gNet.fellBehind = false;
     gNet.peerHasNoMansion = gNet.missingMansion = gNet.online = false;
     gNet.noMansionPlayer = -1;
     gNet.listenSock = -1;
@@ -1107,6 +1175,8 @@ static int OnlineGatherPoll(void *unused)
             AddLink(sock, leftover, len);
     }
     NetPump();
+    if (getenv("MM_DEBUG_NET_START") != NULL && gNet.numPlayers >= atoi(getenv("MM_DEBUG_NET_START")))
+        return 1;       // testing aid: starts once this many are in
     return OnlineFailed() ? -1 : 0;
 }
 
@@ -1951,7 +2021,10 @@ void NetPeerLeftDuringGame(void)
     for (p = 0; p < gNet.numPlayers && who < 0; p++)
         if (gNet.left[p] && p != gNet.localPlayer)
             who = p;
-    if (gNet.peerHasNoMansion)
+    if (gNet.fellBehind)
+        snprintf(message, sizeof(message), "This computer fell too far behind %s's game (it stopped for minutes), "
+                 "so the game can't go on.", NetPlayerName(GetActivePlayer()));
+    else if (gNet.peerHasNoMansion)
         snprintf(message, sizeof(message), "%s doesn't have the mansion \"%s\" installed, so they went back to the "
                  "main menu, and the game can't go on without them.", NetPlayerName(gNet.noMansionPlayer)[0]
                  ? NetPlayerName(gNet.noMansionPlayer) : "A player", gNet.missingMansionName);

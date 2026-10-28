@@ -68,11 +68,23 @@ static unsigned long ElapsedMillisecs(unsigned long start)
 // ---------------------------------------------------------------------------
 // Entering and running the map screen
 
+/// Relay co-op: the map draws rooms from the mansion, which uses the game's random numbers on
+/// this computer only; they are put back on leaving, so every computer plays on alike.
+static long gMapSavedSeed;
+static unsigned int gMapSavedRandom;
+static Boolean gMapSavedRandomNumbers = false;
+
 void SetUpInGameMapScreen(void)
 {
     unsigned long start;
     float frameTime;
     SWError err;
+
+    gMapSavedRandomNumbers = NetGameActive();
+    if (gMapSavedRandomNumbers) {
+        GetSeed(&gMapSavedSeed);
+        gMapSavedRandom = SWRandomState();
+    }
 
     InitMapCache();
     gUseOptimizedCaching = true;
@@ -893,6 +905,11 @@ void ExitInGameMapScreen(Boolean returnToGame)
     }
     if (gPlayingGameMovie)
         memcpy(gKeys, gKeysCopy, sizeof(gKeysCopy));
+    if (gMapSavedRandomNumbers) {
+        PutSeed(gMapSavedSeed);
+        SWSeedRandom(gMapSavedRandom);
+        gMapSavedRandomNumbers = false;
+    }
     MMShieldCursor();
 }
 

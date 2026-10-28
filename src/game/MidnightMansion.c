@@ -1022,17 +1022,54 @@ void DebugBotMoveToEdge(int dir)
         SWMoveSprite(heroP, (float)workArea->right - 2.0f, SWGetSpriteVertLoc(heroP));
 }
 
+/// A key press, as if typed (from SDL's timer thread too: SDL_PushEvent may be called there).
+static void BotPressKey(SDL_Scancode scancode)
+{
+    SDL_Event event;
+
+    memset(&event, 0, sizeof(event));
+    event.type = SDL_KEYDOWN;
+    event.key.state = SDL_PRESSED;
+    event.key.keysym.scancode = scancode;
+    event.key.keysym.sym = SDL_GetKeyFromScancode(scancode);
+    SDL_PushEvent(&event);
+    event.type = SDL_KEYUP;
+    event.key.state = SDL_RELEASED;
+    SDL_PushEvent(&event);
+}
+
+static Uint32 BotPressKeyLater(Uint32 interval, void *param)
+{
+    (void)interval;
+    BotPressKey((SDL_Scancode)(intptr_t)param);
+    return 0;
+}
+
 /// Once a game frame, before the keys are read (and sent, in relay co-op).
 void DebugBotFrame(void)
 {
     static int enabled = -1, walk = 0, walkFrames = 0, jumpFrames = 0, upDownFrames = 0, upDown = 0;
-    static int actionFrames = 0, tripIn = 0, tripDir = 0;
+    static int actionFrames = 0, tripIn = 0, tripDir = 0, mapIn = 0, pauseIn = 0;
     SpritePtr heroP;
 
     if (enabled < 0)
         enabled = getenv("MM_DEBUG_BOT") != NULL;
     if (!enabled || gCurrentGameMode != kPlayingGameMode || gGameIsPaused || NetIsFollower())
         return;
+        // now and then a look at the map, or a pause, for a few seconds
+    if (mapIn <= 0)
+        mapIn = BotRandom(60 * 40, 60 * 90);
+    if (pauseIn <= 0)
+        pauseIn = BotRandom(60 * 60, 60 * 120);
+    if (--mapIn == 0) {
+        BotPressKey((SDL_Scancode)gKeyPrefs.primaryKeys[kKeyMap]);
+        SDL_AddTimer((Uint32)BotRandom(1500, 4000), BotPressKeyLater,
+                     (void *)(intptr_t)gKeyPrefs.primaryKeys[kKeyMap]);
+    }
+    if (--pauseIn == 0 && !SplitScreenActive()) {      // (split screen's pause menu is its own)
+        BotPressKey(SDL_SCANCODE_ESCAPE);
+        SDL_AddTimer((Uint32)BotRandom(1000, 3000), BotPressKeyLater, (void *)(intptr_t)SDL_SCANCODE_ESCAPE);
+    }
     heroP = GetHeroSprite();        // (none while Jack blinks after dying: a key brings him back)
     if (tripIn <= 0)
         tripIn = BotRandom(60 * 15, 60 * 45);
@@ -1076,10 +1113,16 @@ void DebugAutoStart(void)
     const char *autoStart = getenv("MM_DEBUG_AUTOSTART");
     const char *net = getenv("MM_DEBUG_NET");       // testing aid: "host:<net mode>" or "join:<address>"
     unsigned char mansionName[256] = { 0 };
+    Boolean online = false;
     short n;
 
+    if (net != NULL && strncmp(net, "online-", 7) == 0) {
+        net += 7;           // "online-host:<net mode>", "online-join:<host's player ID>": through the lobby
+        online = true;
+    }
     if (net != NULL && strncmp(net, "join:", 5) == 0) {
-        if (MultiplayerConnect(kNetModeRelay, false, net + 5) == kMultiplayerJoined) {
+        if ((online ? MultiplayerConnectOnline(kNetModeRelay, false, false, NULL, net + 5)
+                    : MultiplayerConnect(kNetModeRelay, false, net + 5)) == kMultiplayerJoined) {
             if (NetContinuedSavePath() != NULL && NetMode() == kNetModeArcade)
                 SplitContinueSave(NetContinuedSavePath());
             else if (NetContinuedSavePath() != NULL)
@@ -1132,7 +1175,8 @@ void DebugAutoStart(void)
     if (autoStart == NULL)
         return;
     if (net != NULL && strncmp(net, "host:", 5) == 0 &&
-        MultiplayerConnect(atoi(net + 5), true, NULL) != kMultiplayerNewGame)     // (MM_DEBUG_NET_START)
+        (online ? MultiplayerConnectOnline(atoi(net + 5), true, false, NULL, NULL)
+                : MultiplayerConnect(atoi(net + 5), true, NULL)) != kMultiplayerNewGame)     // (MM_DEBUG_NET_START)
         return;
     n = (short)atoi(autoStart);
     SWConcatPascalStrings(mansionName, GetMansionNameFromIndex(n));
