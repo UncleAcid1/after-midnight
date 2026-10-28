@@ -977,6 +977,99 @@ void StartTutorialMansion(void)
     }
 }
 
+/*  Testing aid: MM_DEBUG_BOT=1 plays by itself, to stress-test games on several computers.
+    It walks one way for a while, jumps, climbs and pulls things now and then, and every half
+    minute or so walks out of the room through a side that has a room behind it (moving Jack
+    to that edge first), so it gets round the mansion. Its numbers are its own, so it draws
+    none of the game's. In relay co-op it plays only on the computer with the turn, and its
+    trips to the next room go to the others like the F6 testing key. */
+static Uint32 gBotRandom;
+
+static int BotRandom(int min, int max)
+{
+    if (gBotRandom == 0)
+        gBotRandom = (Uint32)SDL_GetPerformanceCounter() ^ (Uint32)(uintptr_t)&gBotRandom ^ 0x9e3779b9u;
+    gBotRandom ^= gBotRandom << 13;
+    gBotRandom ^= gBotRandom >> 17;
+    gBotRandom ^= gBotRandom << 5;
+    return min + (int)(gBotRandom % (Uint32)(max - min + 1));
+}
+
+/// There's a room beside this one, left (dir < 0) or right, and Jack can be taken to it.
+static Boolean BotRoomBeside(int dir)
+{
+    SpritePtr heroP = GetHeroSprite();
+    short row, col;
+
+    if (heroP == NULL || HERO(heroP)->isDead || HERO(heroP)->platformP != NULL)
+        return false;
+    GEGetRowAndColFromLevelNumber(gCurrentLevel, &row, &col, 200);
+    col = (short)(col + (dir < 0 ? -1 : 1));
+    return col >= 0 && Resource1Exists("TMAP", GEGetLevelResID(GEGetLevelNumberFromRowAndCol(row, col, 200), 1, 200));
+}
+
+/// Moves Jack just past the left (dir < 0) or right edge of the room; walking on takes him out.
+void DebugBotMoveToEdge(int dir)
+{
+    SpritePtr heroP = GetHeroSprite();
+    SWRect *workArea = &gSpriteWorldP->workAreaRect;
+
+    if (!BotRoomBeside(dir))
+        return;
+    if (dir < 0)
+        SWMoveSprite(heroP, (float)workArea->left - SWGetSpriteWidth(heroP) + 2.0f, SWGetSpriteVertLoc(heroP));
+    else
+        SWMoveSprite(heroP, (float)workArea->right - 2.0f, SWGetSpriteVertLoc(heroP));
+}
+
+/// Once a game frame, before the keys are read (and sent, in relay co-op).
+void DebugBotFrame(void)
+{
+    static int enabled = -1, walk = 0, walkFrames = 0, jumpFrames = 0, upDownFrames = 0, upDown = 0;
+    static int actionFrames = 0, tripIn = 0, tripDir = 0;
+    SpritePtr heroP;
+
+    if (enabled < 0)
+        enabled = getenv("MM_DEBUG_BOT") != NULL;
+    if (!enabled || gCurrentGameMode != kPlayingGameMode || gGameIsPaused || NetIsFollower())
+        return;
+    heroP = GetHeroSprite();        // (none while Jack blinks after dying: a key brings him back)
+    if (tripIn <= 0)
+        tripIn = BotRandom(60 * 15, 60 * 45);
+    if (--tripIn == 0 && heroP != NULL) {
+        tripDir = BotRandom(0, 1) ? 1 : -1;
+        if (!BotRoomBeside(tripDir))
+            tripDir = -tripDir;
+        if (BotRoomBeside(tripDir)) {
+            if (NetGameActive())        // (every computer takes him there as this frame begins)
+                NetRecordEvent((char)(tripDir < 0 ? kNetEventDebugTripLeft : kNetEventDebugTripRight), true);
+            else
+                DebugBotMoveToEdge(tripDir);
+            walk = tripDir;
+            walkFrames = 30;
+        }
+    }
+    if (--walkFrames <= 0) {
+        walk = BotRandom(0, 4) == 0 ? 0 : BotRandom(0, 1) ? 1 : -1;
+        walkFrames = BotRandom(20, 200);
+    }
+    if (--jumpFrames < -BotRandom(20, 120))
+        jumpFrames = BotRandom(5, 25);
+    if (--upDownFrames <= 0) {
+        upDown = BotRandom(0, 3) == 0 ? (BotRandom(0, 1) ? 1 : -1) : 0;
+        upDownFrames = BotRandom(30, 150);
+    }
+    if (--actionFrames < -BotRandom(100, 400))
+        actionFrames = 3;
+    gKeys[kKeyLeft] = walk < 0;
+    gKeys[kKeyRight] = walk > 0;
+    gKeys[kKeyUp] = upDown < 0;
+    gKeys[kKeyDown] = upDown > 0;
+    gKeys[kKeyJump] = jumpFrames > 0;
+    gKeys[kKeyJumpLeft] = gKeys[kKeyJumpRight] = false;
+    gKeys[kKeyAction] = actionFrames > 0;
+}
+
 /// Testing aid: MM_DEBUG_AUTOSTART=<n> starts standard mansion n (Normal) from the title screen.
 void DebugAutoStart(void)
 {
@@ -1508,8 +1601,12 @@ void TileChangeProc(SpriteWorldPtr w)
     short frames, i, next;
     Boolean updateLava = false;
 
-    if (gCurrentGameMode == kPlayingGameMode || gCurrentGameMode == kReadingSignMode)
+    if ((gCurrentGameMode == kPlayingGameMode || gCurrentGameMode == kReadingSignMode) && !gGameIsPaused) {
+            // (the pause screen's frames come here too, but aren't the game's: on several
+            // computers they would go to the others and be played there)
+        DebugBotFrame();                // testing aid (MM_DEBUG_BOT)
         NetFrameBegin();                // two computers: send or take this frame's keys
+    }
     if (IsMoviePlaying())
         GetKeyEventsFromMovie();
     if (gCurrentGameMode == kPlayingGameMode || gCurrentGameMode == kReadingSignMode)
@@ -2159,6 +2256,13 @@ void DoFadeToBlack(short numFrames, Boolean animateEverything)
     SWSetTileChangeProc(gSpriteWorldP, savedTileChangeProc);
 }
 
+/// A fade steps every 16 ms; in a game on several computers once a frame instead, so every
+/// computer runs the same number of frames meanwhile (the game clock stands still in fades).
+static long FadeMoveTime(void)
+{
+    return gSWUseGameClock ? 0 : 16;
+}
+
 /// Fades the black overlay out again (instantly if numFrames < 1).
 void DoFadeToNormal(short numFrames, Boolean animateEverything)
 {
@@ -2189,7 +2293,7 @@ void DoFadeToNormal(short numFrames, Boolean animateEverything)
         }
         fadeP->userData = 0xffff / numFrames;
         SWSetSpriteMoveProc(fadeP, FadeToNormalMoveProc);
-        SWSetSpriteMoveTime(fadeP, 16);
+        SWSetSpriteMoveTime(fadeP, FadeMoveTime());
     }
     if (statsFadeP != NULL) {
         if (numFrames < 1) {
@@ -2199,7 +2303,7 @@ void DoFadeToNormal(short numFrames, Boolean animateEverything)
         }
         statsFadeP->userData = 0xffff / numFrames;
         SWSetSpriteMoveProc(statsFadeP, FadeToNormalMoveProc);
-        SWSetSpriteMoveTime(statsFadeP, 16);
+        SWSetSpriteMoveTime(statsFadeP, FadeMoveTime());
     }
     savedTileChangeProc = gSpriteWorldP->tileChangeProc;
     SWSetTileChangeProc(gSpriteWorldP, NULL);
@@ -2280,7 +2384,7 @@ SpritePtr NewFadeSprite(SpriteWorldPtr spriteWorldP, short numFrames)
     } else {
         fadeP->userData = 0xffff / numFrames;
         SWSetSpriteMoveProc(fadeP, FadeToBlackMoveProc);
-        SWSetSpriteMoveTime(fadeP, 16);
+        SWSetSpriteMoveTime(fadeP, FadeMoveTime());
     }
     return fadeP;
 }

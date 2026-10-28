@@ -522,6 +522,8 @@ void NetSetContinueSave(const char *path);
 const char *NetContinuedSavePath(void);
 const char *NetLastSaveName(void);
 #define kNetEventDebugKill  0x7e     ///< the F6 testing key (MM_DEBUG_CHEATS), sent like a replay event
+#define kNetEventDebugTripLeft  0x7c  ///< MM_DEBUG_BOT took Jack to the left edge (DebugBotMoveToEdge)
+#define kNetEventDebugTripRight 0x7d  ///< ... or the right one
 Boolean NetGameActive(void);
 Boolean NetIsConnected(void);
 Boolean NetIsFollower(void);

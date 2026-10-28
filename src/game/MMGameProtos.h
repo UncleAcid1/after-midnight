@@ -388,6 +388,8 @@ void MMSoundsShareState(void (*share)(void *, size_t));
 
 // MidnightMansion.c
 void DebugAutoStart(void);
+void DebugBotFrame(void);
+void DebugBotMoveToEdge(int dir);
 void MMSyncHardwareCursor(void);
 
 // MoveProcSupport.c

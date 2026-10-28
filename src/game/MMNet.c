@@ -1004,7 +1004,7 @@ static Boolean GreetHost(const char *title)
 static Boolean ConnectTo(const char *host)
 {
     struct addrinfo hints, *result = NULL;
-    char port[16];
+    char port[16], name[64], *colon;
     fd_set writable;
     struct timeval timeout;
     int err = 0, sock;
@@ -1014,7 +1014,12 @@ static Boolean ConnectTo(const char *host)
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     snprintf(port, sizeof(port), "%d", kNetPort);
-    if (getaddrinfo(host, port, &hints, &result) != 0 || result == NULL)
+    snprintf(name, sizeof(name), "%s", host);
+    if ((colon = strchr(name, ':')) != NULL) {      // "address:port" (testing through a proxy, say)
+        *colon = 0;
+        snprintf(port, sizeof(port), "%d", atoi(colon + 1));
+    }
+    if (getaddrinfo(name, port, &hints, &result) != 0 || result == NULL)
         return false;
     sock = (int)socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (sock < 0) {
@@ -1581,7 +1586,19 @@ Boolean NetBrowsing(void)
     return gBrowse.open;
 }
 
-/// Seeds the game's random numbers the same on every computer (just before the first room).
+/// Sprites' frame and move timers count game time in relay co-op (SpriteWorld's game clock):
+/// a 60th of a second a frame. On the real clock each computer would animate a little
+/// differently (a flame, a zapper, Jack's own frames), and pixel collisions and the random
+/// numbers drawn as frames change would soon differ too.
+static void SetGameClock(void)
+{
+    gSWGameClock = (unsigned long)((Uint64)gNet.frame * 1000 / 60);
+    if (gSpriteWorldP != NULL)
+        gSpriteWorldP->runningTimeCount = gSWGameClock;
+}
+
+/// Seeds the game's random numbers the same on every computer (just before the first room),
+/// and starts the game clock.
 void NetSeedRandom(void)
 {
     if (!NetGameActive())
@@ -1589,6 +1606,8 @@ void NetSeedRandom(void)
     SelectStream(0);
     PutSeed((long)(gNet.seed & 0x7fffffff));
     SWSeedRandom(gNet.seed);        // GetRandom's numbers too
+    gSWUseGameClock = true;
+    SetGameClock();
 }
 
 /// The join failed because this computer doesn't have the host's mansion: its name, else NULL.
@@ -1617,6 +1636,7 @@ Boolean NetPlayerHasBeatenMansion(int player)
 /// When the game ends: back to this computer's own settings and stats, and hang up.
 void NetEndSession(void)
 {
+    gSWUseGameClock = false;
     if (gNet.active) {
         SendMessage(kMsgBye, NULL, 0);
         Disconnect();
@@ -1657,7 +1677,8 @@ void NetRecordEvent(char event, Boolean isDown)
     if (!NetGameActive() || NetIsFollower())
         return;
         // keys travel as the key state; these are the other events a replay records
-    if (e == 0xc || e == 0xd || (e >= 0xe && e <= 0x2e) || e == kNetEventDebugKill) {
+    if (e == 0xc || e == 0xd || (e >= 0xe && e <= 0x2e) || e == kNetEventDebugKill || e == kNetEventDebugTripLeft ||
+        e == kNetEventDebugTripRight) {
         if (gNet.numPending < (int)sizeof(gNet.pending))
             gNet.pending[gNet.numPending++] = (Uint8)(e | (isDown ? 0 : 0x80));
     }
@@ -1703,6 +1724,35 @@ static Uint32 Mix(Uint32 h, Uint32 v)
     return h;
 }
 
+/// Testing aid (MM_DEBUG_CHECKSUM): each sprite layer's sprites (frame and place) in one number,
+/// "layer:sprites:fingerprint", to compare the computers' logs by and see what drifted first.
+static void PrintSpriteFingerprints(void)
+{
+    SpriteLayerPtr layerP = NULL;
+    SpritePtr spriteP;
+    Uint32 h, bits;
+    float f;
+    int layer, n;
+
+    printf("  layers:");
+    for (layer = 0; (layerP = SWGetNextSpriteLayer(gSpriteWorldP, layerP)) != NULL; layer++) {
+        h = 2166136261u;
+        for (spriteP = SWGetNextSprite(layerP, NULL), n = 0; spriteP != NULL; spriteP = SWGetNextSprite(layerP, spriteP), n++) {
+            h = Mix(h, (Uint32)spriteP->curFrameIndex);
+            f = SWGetSpriteHorizLoc(spriteP);
+            memcpy(&bits, &f, 4);
+            h = Mix(h, bits);
+            f = SWGetSpriteVertLoc(spriteP);
+            memcpy(&bits, &f, 4);
+            h = Mix(h, bits);
+        }
+        if (n > 0)
+            printf(" %d:%d:%08x", layer, n, h);
+    }
+    printf("\n");
+    fflush(stdout);
+}
+
 /// What relay co-op's computers must agree on: the hero, the score and lives, the room, and
 /// the game's random numbers (CustomRandom: any difference in what happened shows up there).
 /// Not GetRandom's: effects draw from it as they are drawn, and the computers draw different
@@ -1721,6 +1771,7 @@ static Uint32 GameStateChecksum(void)
         printf("checksum frame %u: score %ld lives %d items %d level %d seed %ld rand %08x hero %.3f,%.3f\n",
                (unsigned)gNet.frame, (long)gScore, gNumLivesLeft, gNumItemsBeingCarried, gCurrentLevel, s0,
                SWRandomState(), heroP ? SWGetSpriteHorizLoc(heroP) : -1.0f, heroP ? SWGetSpriteVertLoc(heroP) : -1.0f);
+        PrintSpriteFingerprints();
     }
     h = Mix(h, gNet.frame);
     h = Mix(h, (Uint32)gScore);
@@ -1739,6 +1790,16 @@ static Uint32 GameStateChecksum(void)
         h = Mix(h, (Uint32)HERO(heroP)->isDead);
     }
     return h;
+}
+
+/// Frames between the checksums (testing aid: every other frame with MM_DEBUG_CHECKSUM).
+static Uint32 CheckEvery(void)
+{
+    static int debug = -1;
+
+    if (debug < 0)
+        debug = getenv("MM_DEBUG_CHECKSUM") != NULL;
+    return debug ? 2 : kCheckEvery;
 }
 
 /// The computers' games differ: say so and end it, rather than play on in different games.
@@ -1770,13 +1831,16 @@ void NetFrameBegin(void)
         payload[5] = (Uint8)(KeysMask() >> 8);
         payload[6] = (Uint8)gNet.numPending;
         memcpy(payload + 7, gNet.pending, (size_t)gNet.numPending);
-        if (gNet.frame % kCheckEvery == 0) {
+        if (gNet.frame % CheckEvery() == 0) {
             payload[7 + gNet.numPending] = kCheckMark;
             PutU32(payload + 8 + gNet.numPending, GameStateChecksum());
             SendMessage(kMsgFrame, payload, (Uint16)(7 + gNet.numPending + 5));
         } else {
             SendMessage(kMsgFrame, payload, (Uint16)(7 + gNet.numPending));
         }
+        for (i = 0; i < gNet.numPending; i++)       // (the others take Jack there at this point too)
+            if (gNet.pending[i] == kNetEventDebugTripLeft || gNet.pending[i] == kNetEventDebugTripRight)
+                DebugBotMoveToEdge(gNet.pending[i] == kNetEventDebugTripLeft ? -1 : 1);
         gNet.numPending = 0;
     } else {
             // normally there: play only goes on once it has arrived (NetMustWait)
@@ -1810,6 +1874,9 @@ void NetFrameBegin(void)
                 if ((f->events[i] & 0x7f) == kNetEventDebugKill) {
                     if (GetHeroSprite() != NULL && !HERO(GetHeroSprite())->isDead)
                         KillHero(GetHeroSprite());
+                } else if ((f->events[i] & 0x7f) == kNetEventDebugTripLeft ||
+                           (f->events[i] & 0x7f) == kNetEventDebugTripRight) {
+                    DebugBotMoveToEdge((f->events[i] & 0x7f) == kNetEventDebugTripLeft ? -1 : 1);
                 } else
                     ApplyMovieEvent(f->events[i] & 0x7f, (f->events[i] & 0x80) == 0);
             }
@@ -1817,6 +1884,7 @@ void NetFrameBegin(void)
         }
     }
     gNet.frame++;
+    SetGameClock();
 }
 
 /// The watcher, waiting: a redraw now and then so "Waiting for..." shows.

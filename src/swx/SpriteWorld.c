@@ -21,6 +21,8 @@ static CleanUpCallBackPtr gSWCleanUpCallBackP = NULL;
 SWPresentHookPtr    gSWPresentHook = NULL;
 SWBoolean           gSWForceFrames = false;
 SWBoolean           gSWSkipDrawing = false;     ///< run this frame without drawing it (catching up)
+SWBoolean           gSWUseGameClock = false;
+unsigned long       gSWGameClock = 0;
 
 static void SWDrawWorldContents(SpriteWorldPtr spriteWorldP);
 
@@ -830,17 +832,18 @@ void SWUpdateSpriteWorld(SpriteWorldPtr spriteWorldP, int updateWindow)
 static SWBoolean SWStartFrame(SpriteWorldPtr w)
 {
     double pseudoInterval;
+    unsigned long now = SWGetMilliseconds(w);       // (frames start by the real clock either way)
 
-    w->runningTimeCount = SWGetMilliseconds(w);
-    if (!gSWForceFrames && w->runningTimeCount - w->timeOfLastFrame < (unsigned long)(long)w->fpsTimeInterval) {
+    w->runningTimeCount = gSWUseGameClock ? gSWGameClock : now;
+    if (!gSWForceFrames && now - w->timeOfLastFrame < (unsigned long)(long)w->fpsTimeInterval) {
         w->frameHasOccurred = false;
         return false;
     }
-    w->millisecsSinceLastFrame = w->runningTimeCount - w->timeOfLastFrame;
+    w->millisecsSinceLastFrame = now - w->timeOfLastFrame;
     if (w->millisecsSinceLastFrame > w->minimumFrameRate)
         w->millisecsSinceLastFrame = w->minimumFrameRate;
     w->frameHasOccurred = true;
-    w->timeOfLastFrame = w->runningTimeCount;
+    w->timeOfLastFrame = now;
     w->pseudoFrameAccum += (double)w->millisecsSinceLastFrame;
     pseudoInterval = (w->pseudoFPS >= 0.0) ? w->pseudoFPS : (double)w->fpsTimeInterval;
     if (pseudoInterval <= w->pseudoFrameAccum) {
@@ -853,6 +856,8 @@ static SWBoolean SWStartFrame(SpriteWorldPtr w)
         SWFindSpritesToBeRemoved(w);
     if (w->tileChangeProc != NULL)
         w->tileChangeProc(w);
+    if (gSWUseGameClock)
+        w->runningTimeCount = gSWGameClock;     // (the game's frame, just begun, moved it on)
     w->thereAreNonScrollingLayers = false;
     return true;
 }
@@ -1095,6 +1100,36 @@ static void SWDrawWorldContents(SpriteWorldPtr w)
     SWPaintRectToSidesOfWorldRect(w);
 }
 
+/*  A frame that isn't drawn (gSWSkipDrawing) still leaves the sprites as drawing would:
+    each drawn sprite's oldFrameRect, which the game reads (how far a sprite moved, which
+    way it left the room), becomes where it is now. Otherwise a computer catching up in
+    relay co-op would play on differently from the others. */
+static void SWSkipWorldContents(SpriteWorldPtr w)
+{
+    SpriteLayerPtr layerP;
+    SpritePtr s, rider;
+
+    for (layerP = w->headSpriteLayerP; layerP != NULL; layerP = layerP->nextSpriteLayerP) {
+        if (!layerP->layerIsVisible)
+            continue;
+        for (s = layerP->headSpriteP; s != NULL; s = s->nextSpriteP) {
+            if (!s->isVisible)
+                continue;
+            rider = s->mountedSpriteP;
+            if (rider != NULL && rider->isVisible && s->mountIsDrawn) {
+                rider->deltaFrameRect = rider->destFrameRect;
+                rider->oldFrameRect = rider->destFrameRect;
+                rider->needsToBeDrawn = false;
+                rider->needsToBeErased = false;
+            }
+            s->deltaFrameRect = s->destFrameRect;
+            s->oldFrameRect = s->destFrameRect;
+            s->needsToBeDrawn = false;
+            s->needsToBeErased = false;
+        }
+    }
+}
+
 /// Draws the frame that SWProcessSpriteWorld produced, if one occurred, and shows it.
 void SWAnimateSpriteWorld(SpriteWorldPtr spriteWorldP)
 {
@@ -1106,6 +1141,12 @@ void SWAnimateSpriteWorld(SpriteWorldPtr spriteWorldP)
         SWDrawWorldContents(spriteWorldP);
         if (spriteWorldP->useOpenGL)
             SWPresentWindow(spriteWorldP);
+        if (spriteWorldP->deadSpriteLayerP->headSpriteP != NULL)
+            SWRemoveSpriteLayer(spriteWorldP, spriteWorldP->deadSpriteLayerP);
+    } else if (spriteWorldP->frameHasOccurred) {
+        if (spriteWorldP->deadSpriteLayerP->headSpriteP != NULL)
+            SWAddSpriteLayer(spriteWorldP, spriteWorldP->deadSpriteLayerP);
+        SWSkipWorldContents(spriteWorldP);
         if (spriteWorldP->deadSpriteLayerP->headSpriteP != NULL)
             SWRemoveSpriteLayer(spriteWorldP, spriteWorldP->deadSpriteLayerP);
     }

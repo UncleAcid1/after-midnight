@@ -272,6 +272,11 @@ struct SpriteWorldRec {
 
 /// Set while every SWProcessSpriteWorld must start a frame (split screen paces frames itself).
 extern SWBoolean gSWForceFrames;
+/// Set while a game runs in step on several computers (relay co-op): sprites' frame and move
+/// timers then run on gSWGameClock (milliseconds of game time, moved on by the game once a
+/// game frame) instead of the real clock, so every computer animates every sprite alike.
+extern SWBoolean gSWUseGameClock;
+extern unsigned long gSWGameClock;
 extern SWBoolean gSWSkipDrawing;
 extern float gSWPixelAspect;
 /// A new main SpriteWorld drawing into mainWorldP's window, with its size and settings.

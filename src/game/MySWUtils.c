@@ -37,18 +37,26 @@ SWBoolean SWBestMaskCollision(SpritePtr srcSpriteP, SpritePtr dstSpriteP)
     return SWPixelCollision(srcSpriteP, dstSpriteP);
 }
 
+/// Makes the frame-rate timer let the next frame start at once.
+static void MakeFrameDue(SpriteWorldPtr spriteWorldP)
+{
+        // (with the game clock in use, runningTimeCount isn't the real time the timer counts in)
+    unsigned long now = gSWUseGameClock ? SWGetMilliseconds(spriteWorldP) : spriteWorldP->runningTimeCount;
+
+    if (now - spriteWorldP->timeOfLastFrame < (unsigned long)spriteWorldP->fpsTimeInterval)
+        spriteWorldP->timeOfLastFrame = now - spriteWorldP->fpsTimeInterval;
+}
+
 /// Process one frame immediately, regardless of the frame-rate timer.
 void ProcessOneFrame(SpriteWorldPtr spriteWorldP)
 {
-    if (spriteWorldP->runningTimeCount - spriteWorldP->timeOfLastFrame < (unsigned long)spriteWorldP->fpsTimeInterval)
-        spriteWorldP->timeOfLastFrame = spriteWorldP->runningTimeCount - spriteWorldP->fpsTimeInterval;
+    MakeFrameDue(spriteWorldP);
     SWProcessSpriteWorld(spriteWorldP);
 }
 
 void AnimateOneFrame(SpriteWorldPtr spriteWorldP)
 {
-    if (spriteWorldP->runningTimeCount - spriteWorldP->timeOfLastFrame < (unsigned long)spriteWorldP->fpsTimeInterval)
-        spriteWorldP->timeOfLastFrame = spriteWorldP->runningTimeCount - spriteWorldP->fpsTimeInterval;
+    MakeFrameDue(spriteWorldP);
     SWProcessSpriteWorld(spriteWorldP);
     SWAnimateSpriteWorld(spriteWorldP);
 }
