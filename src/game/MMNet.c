@@ -52,8 +52,8 @@
 
 #define kNetPort        47474
 #define kBeaconPort     47475
-#define kNetVersion     5           ///< 5: Arcade Split Screen, numbers in a fixed byte order
-#define kBeaconMagic    "MMHD-LAN 4"
+#define kNetVersion     6           ///< 6: relay co-op on the game clock (1.3); 5: Arcade Split Screen
+#define kBeaconMagic    "MMHD-LAN 5"
 #define kMaxFoundGames  16
 #define kMaxQueuedFrames (60 * 60 * 3)  ///< frames a watching computer can be behind (3 minutes)
 #define kMaxLinks       (kMaxPlayers - 1)
@@ -546,8 +546,8 @@ static void HandleMessage(NetLink *link, int from, Uint8 type, const Uint8 *payl
         case kMsgHello:         // guest to host: who they are
             if (!gNet.isHost || link == NULL || link->player >= 0)
                 break;
-            if (length < 17 || payload[0] < kNetVersion || gNet.inGame || gNet.numPlayers >= kMaxPlayers) {
-                SendTo(link, kMsgBye, NULL, 0);     // an older version, or full: no
+            if (length < 17 || payload[0] != kNetVersion || gNet.inGame || gNet.numPlayers >= kMaxPlayers) {
+                SendTo(link, kMsgBye, NULL, 0);     // another version, or full: no
                 CloseLink(link);
                 break;
             }
@@ -1880,7 +1880,8 @@ static void NetDesync(Uint32 frame, Uint32 here, Uint32 driver)
     printf("Relay co-op out of step at frame %u: checksum %08x here, %08x on %s's computer\n", (unsigned)frame,
            (unsigned)here, (unsigned)driver, NetPlayerName(GetActivePlayer()));
     snprintf(message, sizeof(message), "The game on this computer got out of step with %s's (at frame %u), so it "
-             "stops here. This is a bug: please send the log.", NetPlayerName(GetActivePlayer()), (unsigned)frame);
+             "stops here. This is a bug: please send the log (After Midnight log.txt, next to the game's "
+             "preferences).", NetPlayerName(GetActivePlayer()), (unsigned)frame);
     SendMessage(kMsgBye, NULL, 0);
     MMDoCustomDialog(gSpriteWorldP, message, 3);
     gEndGame = true;

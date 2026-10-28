@@ -9,6 +9,12 @@
  */
 
 #include "MMGame.h"
+#if !defined(MM_PS3) && !defined(_WIN32)
+#include <execinfo.h>
+#include <signal.h>
+#include <unistd.h>
+#define MM_HAVE_CRASH_LOG 1
+#endif
 
 // ---------------------------------------------------------------------------
 // Globals
@@ -179,12 +185,79 @@ SpriteLayerPtr gBackgroundScreenSpriteLayerP, gRearBackgroundPictureSpriteLayerP
 // ---------------------------------------------------------------------------
 // Startup
 
+#ifdef MM_HAVE_CRASH_LOG
+/// Where it was, into the log (stderr), as the game goes down.
+static void WriteBacktrace(void)
+{
+    void *frames[64];
+    int n = backtrace(frames, 64);
+
+    backtrace_symbols_fd(frames, n, STDERR_FILENO);
+}
+
+static void CrashHandler(int sig)
+{
+    static const char text[] = "\nThe game crashed (signal ";
+    char number[4] = { (char)('0' + sig / 10 % 10), (char)('0' + sig % 10), ')', '\n' };
+
+    if (write(STDERR_FILENO, text, sizeof(text) - 1) < 0 || write(STDERR_FILENO, number, 4) < 0)
+        _exit(1);
+    WriteBacktrace();
+    signal(sig, SIG_DFL);
+    raise(sig);
+}
+
+static void AssertFailed(const char *filename, const char *functionname, int lineNum)
+{
+    SW_UNUSED(filename);
+    SW_UNUSED(functionname);
+    SW_UNUSED(lineNum);
+    WriteBacktrace();       // (SWAssertFail said which check, and quits after this)
+}
+
+/*  A Mac app has no terminal, so what the game prints (and a crash or a failed check, with
+    where it happened) goes to "After Midnight log.txt" next to the preferences; the last run's
+    is kept as "After Midnight log previous.txt". Run from a terminal, it prints there. */
+static void StartLog(void)
+{
+    char path[1100], old[1100];
+
+    signal(SIGSEGV, CrashHandler);
+    signal(SIGBUS, CrashHandler);
+    signal(SIGILL, CrashHandler);
+    signal(SIGFPE, CrashHandler);
+    signal(SIGABRT, CrashHandler);
+    SWSetAssertionFailureCallback(AssertFailed);
+#ifdef __APPLE__
+    if (isatty(STDOUT_FILENO))
+        return;
+    snprintf(path, sizeof(path), "%s", GetAppSupportPath("After Midnight log.txt"));
+    snprintf(old, sizeof(old), "%s", GetAppSupportPath("After Midnight log previous.txt"));
+    remove(old);
+    rename(path, old);
+    if (freopen(path, "w", stdout) == NULL)
+        return;
+    setvbuf(stdout, NULL, _IOLBF, 0);
+    dup2(fileno(stdout), STDERR_FILENO);    // one file, in the order things happened
+    setvbuf(stderr, NULL, _IONBF, 0);
+#else
+    SW_UNUSED(path);
+    SW_UNUSED(old);
+    setvbuf(stdout, NULL, _IOLBF, 0);       // (a log being kept by whoever started it is up to date)
+#endif
+}
+#endif
+
 int main(int argc, char *argv[])
 {
     SW_UNUSED(argc);
     SW_UNUSED(argv);
 #ifdef MM_PS3
     PS3PlatformInit(argc, argv);    // folders, the log on the USB drive
+#endif
+#ifdef MM_HAVE_CRASH_LOG
+    CreateAppSupportDirectories();  // (the log goes there)
+    StartLog();
 #endif
     InitVariables();
     Randomize();
@@ -782,6 +855,13 @@ void LoadPreferences(void)
             else
                 ErrorMessage("Your player profile has been corrupted or is missing. Please create or select a different player.", 0);
         }
+    }
+    if (getenv("MM_DEBUG_PLAYER") != NULL && getenv("MM_DEBUG_PLAYER")[0] != '\0') {
+            // testing aid: plays as this profile (made if it isn't there)
+        unsigned char name[256];
+        SWCopyCStringToPascalString(getenv("MM_DEBUG_PLAYER"), name);
+        if (LoadProfileFromDisk(name) != 0)
+            CreateNewProfile(name);
     }
 }
 

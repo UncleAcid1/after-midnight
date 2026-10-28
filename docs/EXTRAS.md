@@ -176,7 +176,10 @@ Over the internet: see **Online** below.
 
 Relay co-op: every computer runs the same game from the same random seed and the host's Fun
 settings; the one whose player has the turn sends its keys every frame and the others show the
-same game. The turn goes round everyone in order. Escape on the watching computer offers to leave. Suspend is off in these games, and
+same game. Sprites animate by game frames there (SpriteWorld's game clock), not by each
+computer's clock, and a computer catching up still notes where every sprite was in the frames
+it doesn't draw, so the games can't drift apart; every second the computers compare a checksum
+of the game, and stop with a message if they ever differ. The turn goes round everyone in order. Escape on the watching computer offers to leave. Suspend is off in these games, and
 the Fun tab is locked until the game ends.
 
 Ghost Race: each computer plays its own copy of the mansion, full window, and sends where
@@ -261,8 +264,12 @@ gone (it comes back when the group does).
 | `MM_DEBUG_SPLIT=<game>:<players>` | With it: `coop:2`, `race:4`, `relay:3`... (no profiles needed); `coop:2:pads` plays on controllers 1, 2... |
 | `MM_DEBUG_VIRTUAL_PADS=<n>` | n pretend controllers: pad 1 is J L I K (d-pad), U (A), O (B), H (X), Y (Y); pad 2 the number row 4 6 8 5, 7, 9, 3, 0 |
 | `MM_DEBUG_LIVES=<n>` | Every game starts with n lives |
-| `MM_DEBUG_NET=host:<mode>` / `join:<address>` | With AUTOSTART, hosts a game on the network (mode 0 Co-op, 1 Ghost Race, 2 Arcade Split Screen); or joins one |
-| `MM_DEBUG_NET_START=<n>` | The host starts once n players are in |
+| `MM_DEBUG_NET=host:<mode>` / `join:<address>` | With AUTOSTART, hosts a game on the network (mode 0 Co-op, 1 Ghost Race, 2 Arcade Split Screen); or joins one (`join:127.0.0.1:47490`: another port, a proxy say) |
+| `MM_DEBUG_NET=online-host:<mode>` / `online-join:<host's player ID>` | The same through the lobby server (`MM_LOBBY`) |
+| `MM_DEBUG_NET_START=<n>` | The host starts once n players are in (on the network or online) |
+| `MM_DEBUG_PLAYER=<name>` | Plays as that player profile (made if it isn't there) |
+| `MM_DEBUG_BOT=1` | Plays by itself: walks, jumps, climbs, pulls things, now and then walks out of the room (taken to a side with a room behind it, on every computer at the same frame in Co-op), looks at the map, pauses (not in split screen) |
+| `MM_DEBUG_CHECKSUM=1` | Co-op on several computers: the computers compare their games every other frame (instead of every second), and each prints what it compared and a fingerprint of every sprite layer, to find what drifted first |
 | `MM_DEBUG_NET_CONTINUE=1` | With `MM_DEBUG_NET=host:2` (or `host:0`): the host continues the group's newest Arcade Split Screen (or Co-op) save |
 | `MM_DEBUG_PROFILES=Ann,Bob` | With `MM_DEBUG_SPLIT`: the players' profiles (so saves have IDs) |
 | `MM_DEBUG_SPLIT_CONTINUE=1` | With `MM_DEBUG_PROFILES`: split screen continues those players' newest Arcade Split Screen save |
@@ -272,6 +279,21 @@ gone (it comes back when the group does).
 | `MM_DEBUG_PAD=1` | F5-F8 d-pad, F9 A, F10 B, F11 X, F12 Y (controller menus without a controller) |
 | `MM_LOBBY=<host:port>` | The lobby server for online play (instead of `Online.txt`) |
 | `MM_EXTRAS_DIR=<folder>` | Where to find the "Game Data Extras" files |
+
+**Soak test for games on several computers** (`tools/net_soak.py`, Linux with Xvfb): two to four
+copies of the game on one computer, each with its own profile, playing by themselves through a
+connection that delivers data in bursts with now and then a stall (as Wi-Fi does), or through a
+lobby server of its own (`--online`). It reports crashes, failed checks and games that stop, and
+in Co-op compares the copies' games frame by frame. `--hog` keeps the processors busy half the
+time, `--stall` freezes one game for 30 seconds, `--lives 3` lets the players run out:
+
+    python3 tools/net_soak.py --mode coop --players 2 --minutes 10 --hog --stall
+    python3 tools/net_soak.py --mode arcade --players 4 --online --minutes 10
+
+**The log**: on a Mac the game writes what it prints to `After Midnight log.txt` next to the
+preferences (`~/Library/Application Support/ActionSoft/Midnight Mansion/`; the last run's is
+`After Midnight log previous.txt`), with where it was if it ever crashes or a check fails. Run
+from a terminal, it prints there instead (as on Linux).
 
 ## Notes
 

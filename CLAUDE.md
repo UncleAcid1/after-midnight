@@ -33,7 +33,10 @@ for the details.
 Build with CMake, run under Xvfb (`MM_RESOURCES_DIR=".../original/Midnight Mansion HD.app/Contents/Resources"`),
 drive with xdotool, screenshot with ImageMagick `import`. Testing aids: `MM_DEBUG_AUTOSTART=<n>`,
 `MM_DEBUG_SPLIT=coop:4` / `race:2`, `MM_DEBUG_CHEATS=1` (F6 loses a life), `MM_DEBUG_START_ROOM`,
-`MM_LOBBY=127.0.0.1:<port>` with a local `server/mmhd_lobby.py`. In RPCS3, drive the pad one
+`MM_LOBBY=127.0.0.1:<port>` with a local `server/mmhd_lobby.py`. For games on several
+computers run `tools/net_soak.py` (copies playing by themselves, `MM_DEBUG_BOT`, through a bursty
+connection or a local lobby; it reports crashes and desyncs) before changing the network or game
+logic: relay co-op only works while every computer computes the same frames. In RPCS3, drive the pad one
 step at a time with a screenshot after each: keys sent during a fade are lost. Separate `HOME`s give separate
 profiles for several instances.
 

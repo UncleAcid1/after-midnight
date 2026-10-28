@@ -1,5 +1,37 @@
 # Changelog
 
+## After Midnight 1.3
+
+Playing on several computers, fixed: games on the local network and online no longer stop a
+few minutes in.
+
+### Multiplayer on several computers
+- **Co-op stays in step.** The computers' games drifted apart and stopped with "got out of
+  step", mostly over Wi-Fi and the internet: sprites animated by each computer's clock (flames,
+  zappers, trap doors, Jack himself), so their frames, the collisions that hang on them and the
+  random numbers drawn as they changed soon differed. In Co-op on several computers sprites now
+  animate by game frames, the same everywhere.
+- A computer catching up (frames arrive in bursts over Wi-Fi) skipped drawing some frames, and
+  drawing was what noted where each sprite had been, which the game reads (leaving a room,
+  among others): the computers then played on differently.
+- Pausing the game with the turn sent frames to the others, who played on without them.
+- Looking at the map used the game's random numbers on that computer only; they're put back.
+- Sending never holds up the game now: a computer that wasn't reading for a moment (in a menu,
+  or a stalled Mac) froze the others for up to 5 seconds a message, then the message went
+  half-sent and the connection was garbled for good. Each connection keeps a queue instead, and
+  only a computer that stops reading for minutes is let go (the others are told who left).
+- A computer far behind (a dialog left open) dropped frames past a minute and played on out of
+  step; it now keeps 3 minutes, and says so if it falls further behind.
+- Games from 1.2 and 1.3 don't play together (each says it's another version).
+
+### Other
+- **A log on the Mac**: what the game notes, and where it was if it ever crashes or a check
+  fails, goes to `After Midnight log.txt` next to the preferences (the last run's is kept as
+  `After Midnight log previous.txt`), so "please send the log" has a log to send.
+- Testing aids for multiplayer: `MM_DEBUG_BOT=1` plays by itself; `MM_DEBUG_NET=online-host:<n>`
+  and `online-join:<host ID>` through the lobby; `tools/net_soak.sh` runs games on two to four
+  copies with a bursty connection between them and compares them (docs/EXTRAS.md, Testing aids).
+
 ## After Midnight 1.2
 
 Controllers and multiplayer: a Controllers menu, each player's own controls, and Arcade Split
